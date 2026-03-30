@@ -1,0 +1,15 @@
+{
+  "name": "rook-servicechannel-spec",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Build tooling for the RooK service channel specification site.",
+  "scripts": {
+    "build:pages": "node scripts/build-pages.mjs",
+    "serve:pages": "node scripts/preview-pages.mjs",
+    "preview:pages": "npm run build:pages && node scripts/preview-pages.mjs"
+  },
+  "dependencies": {
+    "marked": "^16.4.1",
+    "yaml": "^2.8.1"
+  }
+}

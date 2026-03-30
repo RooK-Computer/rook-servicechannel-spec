@@ -31,6 +31,12 @@ The artifacts are intended to support future implementation work without forcing
   - Supporting protocol and domain catalogs grouped by interface area
 - `models/`
   - Supporting state, event, and error documents used by the interface drafts
+- `scripts/`
+  - Build scripts for generating the GitHub Pages documentation site
+- `site-assets/`
+  - Static assets used by the generated documentation portal
+- `.github/workflows/`
+  - GitHub Actions workflow for building and deploying the documentation site to GitHub Pages
 
 ## Current Status
 
@@ -61,6 +67,52 @@ The repository can still be hosted publicly on GitHub, but the documentation lan
 The main architectural starting point is:
 
 - `docs/architecture/servicechannel-concept.md`
+
+## GitHub Pages Documentation Site
+
+The repository is prepared for publication as a GitHub Pages site.
+
+The setup includes:
+
+- static HTML rendering for the published specification Markdown documents in `docs/`, `schemas/`, and `models/`
+- a standalone interactive viewer for every OpenAPI draft in `openapi/`
+- a generated portal index that links the published specification documents and viewers
+- a GitHub Actions workflow that builds and deploys the site to GitHub Pages
+
+Internal planning documents under `plans/` are intentionally excluded from the published Pages output.
+
+For non-HTTP drafts that intentionally do not define `paths`, the generated site uses a structured schema-oriented contract page instead of a mostly empty Redoc view.
+
+### Local build
+
+```bash
+npm install
+npm run build:pages
+```
+
+The generated site is written to `dist/`.
+
+### Local preview
+
+```bash
+npm run preview:pages
+```
+
+This builds the site and starts a local preview server at `http://localhost:4173`.
+
+If you already built the site and only want to serve the current `dist/` output, use:
+
+```bash
+npm run serve:pages
+```
+
+You can override the port via `PORT`, for example `PORT=8080 npm run preview:pages`.
+
+### GitHub deployment
+
+The workflow file `.github/workflows/deploy-pages.yml` is already included.
+
+After pushing the repository, the remaining GitHub-side step is to enable GitHub Pages for the repository and select GitHub Actions as the deployment source.
 
 ## Next Steps
 
