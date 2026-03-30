@@ -1,0 +1,159 @@
+openapi: 3.1.0
+info:
+  title: RooK Browser-Gateway WebSocket Draft
+  version: 0.2.0-draft
+  description: |
+    Erster Arbeitsstand fuer die Browser-zu-Gateway-Schnittstelle.
+
+    Dieser Entwurf haelt nur die aus dem Konzept eindeutig ableitbaren fachlichen
+    Elemente fest. Die Grundentscheidungen zu Grant-Uebergabe,
+    Nachrichtenarten, Frame-Typen und Reconnect-Semantik sind eingearbeitet.
+    Offen bleiben derzeit nur Payload-Details, Close-Codes, das Fehlerformat
+    und der finale Header-Name.
+servers: []
+paths:
+  /gateway/terminal:
+    get:
+      tags:
+        - browser-terminal
+      summary: Browser terminal websocket handshake
+      description: |
+        Der initiale Handshake fuer die Browser-zu-Gateway-Kommunikation. Die
+        Terminal-Berechtigung wird per Header uebergeben.
+      parameters:
+        - name: X-Rook-Terminal-Grant
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '101':
+          description: WebSocket-Upgrade erfolgreich
+        default:
+          description: Fehlerhafter Handshake
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+tags:
+  - name: browser-terminal
+    description: WebSocket-basierte Browser-Terminal-Sitzung
+x-draftScope:
+  transport: websocket
+  knownFacts:
+    - gateway-validates-terminal-grant
+    - gateway-connects-to-console-after-validation
+    - browser-and-console-stream-is-forwarded
+  unresolvedTopics:
+    - concrete-payload-models
+    - close-codes
+    - error-format-details
+    - header-name-finalization
+  decisionsFromClarification:
+    openApiScope: handshake-and-message-protocol
+    grantDelivery: header
+    frameTypes: text-and-binary
+    controlMessagesFrameType: text
+    terminalDataMayUseBinaryFrames: true
+    reconnectSemantics: always-new-session
+    terminalMetadataReturned: none
+    minimumMessageTypes:
+      - authorize
+      - authorized
+      - input
+      - output
+      - resize
+      - error
+      - close
+components:
+  schemas:
+    BrowserTerminalSession:
+      type: object
+      description: |
+        Fachliche Sicht auf eine Browser-Terminal-Sitzung. Konkrete Felder bleiben
+        bis zur Klaerung des Protokolls offen.
+      additionalProperties: false
+      properties: {}
+
+    TerminalGrantReference:
+      type: object
+      description: |
+        Verweis auf die vom Backend ausgestellte Terminal-Berechtigung.
+      additionalProperties: false
+      required:
+        - token
+      properties:
+        token:
+          type: string
+          minLength: 1
+
+    ControlMessageBase:
+      type: object
+      additionalProperties: false
+      required:
+        - type
+      properties:
+        type:
+          type: string
+
+    AuthorizeMessage:
+      allOf:
+        - $ref: '#/components/schemas/ControlMessageBase'
+        - type: object
+          properties:
+            type:
+              const: authorize
+
+    AuthorizedMessage:
+      allOf:
+        - $ref: '#/components/schemas/ControlMessageBase'
+        - type: object
+          properties:
+            type:
+              const: authorized
+
+    InputMessage:
+      allOf:
+        - $ref: '#/components/schemas/ControlMessageBase'
+        - type: object
+          properties:
+            type:
+              const: input
+
+    OutputMessage:
+      allOf:
+        - $ref: '#/components/schemas/ControlMessageBase'
+        - type: object
+          properties:
+            type:
+              const: output
+
+    ResizeMessage:
+      allOf:
+        - $ref: '#/components/schemas/ControlMessageBase'
+        - type: object
+          properties:
+            type:
+              const: resize
+
+    ProtocolErrorMessage:
+      allOf:
+        - $ref: '#/components/schemas/ControlMessageBase'
+        - type: object
+          properties:
+            type:
+              const: error
+
+    CloseMessage:
+      allOf:
+        - $ref: '#/components/schemas/ControlMessageBase'
+        - type: object
+          properties:
+            type:
+              const: close
+
+    ErrorMessage:
+      type: object
+      additionalProperties: false
+      description: Fehlerformat bleibt bis zur Klaerung offen.
+      properties: {}

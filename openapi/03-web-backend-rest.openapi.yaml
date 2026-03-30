@@ -1,0 +1,195 @@
+openapi: 3.1.0
+info:
+  title: RooK Web-Frontend Backend REST API Draft
+  version: 0.4.0-draft
+  description: |
+    Erster Arbeitsstand fuer die vom RooK-Team genutzte REST-Schnittstelle
+    zwischen Web-Frontend und RooK Backend.
+
+    Dieser Entwurf haelt nur die aus dem Konzept eindeutig ableitbaren fachlichen
+    Elemente fest. Die Grundentscheidungen zu Login-Abgrenzung, Rollen,
+    PIN-Kopplung, Sichtbarkeit und Terminal-Grant sind eingearbeitet.
+    Offen bleiben derzeit nur detailliertere Request-/Response-Modelle und die
+    fachliche Fehlercode-Liste.
+servers: []
+paths:
+  /api/client/1/pinlookup:
+    post:
+      tags:
+        - team-frontend
+      summary: Lookup and couple session by PIN
+      operationId: pinLookup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PinLookupRequest'
+      responses:
+        '200':
+          description: Session erfolgreich gekoppelt
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionStatusResponse'
+        default:
+          description: Fehlerhafte Operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/client/1/sessionstatus:
+    post:
+      tags:
+        - team-frontend
+      summary: Get session status for frontend
+      operationId: sessionStatus
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SessionStatusRequest'
+      responses:
+        '200':
+          description: Sessionstatus erfolgreich geliefert
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionStatusResponse'
+        default:
+          description: Fehlerhafte Operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/client/1/requestshell:
+    post:
+      tags:
+        - team-frontend
+      summary: Request terminal access token
+      operationId: requestShell
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestShellRequest'
+      responses:
+        '200':
+          description: Terminal-Grant erfolgreich erstellt
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestShellResponse'
+        default:
+          description: Fehlerhafte Operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+tags:
+  - name: team-frontend
+    description: Frontend-seitige Bedienung von Support-Sitzungen
+x-draftScope:
+  operationsKnownFromConcept:
+    - submit-pin
+    - request-terminal-access
+    - show-session-status
+  unresolvedTopics:
+    - request-response-model-details
+    - detailed-error-code-list
+  decisionsFromClarification:
+    loginHandledBy: drupal-standards
+    pinSemantics: couples-or-reserves-session
+    multiSessionHandling: parallel-via-multiple-browser-windows
+    visibleSessionFields:
+      - status
+    terminalGrantFormat: opaque-token
+    terminalGrantValidity: while-session-runs-or-until-terminal-disconnect
+    terminalGrantReusable: false
+    terminalGrantReconnectReuseWithinGraceWindow: true
+    requiredRole: Service
+    manualSessionEndEndpoint: false
+    urlPattern: /api/client/{version}/{operation}
+    versionPathValue: '1'
+    operationNames:
+      - pinlookup
+      - sessionstatus
+      - requestshell
+    httpMethods: post-only
+    couplingVisibility: implicit-in-terminal-request-flow
+    httpStatusStrategy:
+      success: 200
+      error: 500
+components:
+  schemas:
+    SupportSessionView:
+      type: object
+      description: |
+        Fachliche Sicht auf eine Support-Sitzung im Frontend.
+      additionalProperties: false
+      required:
+        - status
+      properties:
+        status:
+          type: string
+
+    PinLookupRequest:
+      type: object
+      additionalProperties: false
+      properties: {}
+
+    SessionStatusRequest:
+      type: object
+      additionalProperties: false
+      properties: {}
+
+    RequestShellRequest:
+      type: object
+      additionalProperties: false
+      properties: {}
+
+    SessionStatusResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - session
+      properties:
+        session:
+          $ref: '#/components/schemas/SupportSessionView'
+
+    TerminalGrant:
+      type: object
+      description: |
+        Kurzlebige Berechtigung zum Oeffnen des Browser-Terminals.
+      additionalProperties: false
+      required:
+        - token
+      properties:
+        token:
+          type: string
+          minLength: 1
+
+    RequestShellResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - grant
+      properties:
+        grant:
+          $ref: '#/components/schemas/TerminalGrant'
+
+    ErrorResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          minLength: 1
+        message:
+          type: string
+          minLength: 1

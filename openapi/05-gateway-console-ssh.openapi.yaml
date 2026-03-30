@@ -1,0 +1,89 @@
+openapi: 3.1.0
+info:
+  title: RooK Gateway-Console SSH Draft
+  version: 0.3.0-draft
+  description: |
+    Erster Arbeitsstand fuer die serverseitige Gateway-zu-Konsole-Verbindung.
+
+    Diese Schnittstelle ist keine HTTP-API, sondern eine SSH-Verbindung ueber das
+    OpenVPN-Netz. OpenAPI wird hier nur als strukturierendes Vertragsartefakt fuer
+    fachliche Modelle verwendet, nicht als Beschreibung realer HTTP-Endpunkte.
+
+    Die Grundentscheidungen zu Zielidentifikation, Credential-Modell und
+    PTY-Parametern sind eingearbeitet. Offen bleiben derzeit nur moegliche
+    zusaetzliche Audit-Daten sowie das detaillierte Fehlerverhalten.
+servers: []
+paths: {}
+tags:
+  - name: gateway-console
+    description: Serverseitige SSH-Sitzung zur Konsole
+x-draftScope:
+  transport: ssh-over-openvpn
+  knownFacts:
+    - gateway-connects-server-side-to-console
+    - browser-has-no-direct-console-access
+    - connection-starts-after-terminal-grant-validation
+    - session-end-or-reboot-ends-support-state
+  unresolvedTopics:
+    - audit-data
+    - detailed-error-code-list
+    - error-classification
+    - final-documentation-form
+  decisionsFromClarification:
+    targetIdentification: session-metadata-ip-from-backend-via-token
+    sshAuthentication: gateway-key-in-authorized-keys
+    perSessionAccount: false
+    credentialOwnership: gateway-team
+    sshLoginAccount: pi
+    keyRotationInSpec: false
+    shellBehavior: regular-terminal-behavior
+    ptyMinimum:
+      term: xterm-256color
+      passRowsAndColumns: true
+      propagateResize: true
+      requireUtf8Locale: true
+    auditMinimumFields:
+      - pin
+      - mitarbeiteraccount
+    documentationForm: openapi-plus-markdown
+components:
+  schemas:
+    ConsoleTarget:
+      type: object
+      description: Fachliche Sicht auf die Zielkonsole im Supportfall.
+      additionalProperties: false
+      required:
+        - ipAddress
+      properties:
+        ipAddress:
+          type: string
+
+    SshSession:
+      type: object
+      description: Fachliche Sicht auf die serverseitige SSH-Sitzung.
+      additionalProperties: false
+      properties:
+        target:
+          $ref: '#/components/schemas/ConsoleTarget'
+        account:
+          type: string
+          enum:
+            - pi
+
+    SessionAuditInfo:
+      type: object
+      additionalProperties: false
+      required:
+        - pin
+        - mitarbeiteraccount
+      properties:
+        pin:
+          type: string
+        mitarbeiteraccount:
+          type: string
+
+    ErrorModel:
+      type: object
+      additionalProperties: false
+      description: Fehlerstruktur bleibt bis zur Klaerung offen.
+      properties: {}

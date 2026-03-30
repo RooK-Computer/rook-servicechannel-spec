@@ -1,0 +1,111 @@
+openapi: 3.1.0
+info:
+  title: RooK Backend-Gateway Terminal Grant Draft
+  version: 0.4.0-draft
+  description: |
+    Erster Arbeitsstand fuer die implizite Schnittstelle zwischen RooK Backend
+    und Terminal-Gateway zur Ausgabe und Validierung von Terminal-Grants.
+
+    Dieser Entwurf haelt nur die aus Konzept und bereits geklaerten Nachbarplaenen
+    belastbar ableitbaren Elemente fest. Die Grundentscheidungen zu
+    Online-Validierung, Einloesung, Auditierung und Reconnect-Ausnahme sind
+    eingearbeitet. Offen bleiben derzeit nur die detaillierte Fehlercode-Liste
+    und ihre Klassifikation gegenueber Backend-Ausfaellen.
+servers: []
+paths:
+  /api/gateway/1/validateToken:
+    post:
+      tags:
+        - terminal-grants
+      summary: Validate and redeem terminal grant
+      operationId: validateToken
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TerminalGrant'
+      responses:
+        '200':
+          description: Grant erfolgreich validiert
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GrantValidationResult'
+        default:
+          description: Fehlerhafte Validierung
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+tags:
+  - name: terminal-grants
+    description: Ausgabe und Validierung von Terminal-Berechtigungen
+x-draftScope:
+  knownFacts:
+    - backend-issues-terminal-grant
+    - gateway-validates-grant-before-console-connection
+    - token-is-opaque
+    - token-is-passed-to-gateway-via-header
+    - token-is-generally-not-reusable
+    - gateway-fetches-session-metadata-using-token
+  unresolvedTopics:
+    - detailed-error-code-list
+    - error-classification
+  decisionsFromClarification:
+    validationMode: online-via-backend-https-url
+    colocatedDeployment: true
+    validationUrlPattern: /api/gateway/{version}/{operation}
+    validationOperationName: validateToken
+    validationHttpMethod: POST
+    grantBinding:
+      - drupal-user
+      - support-session
+      - console-ip
+    grantRedeemedOnValidation: true
+    grantReconnectReuseWithinGraceWindow: true
+    grantReconnectReuseLimit: unlimited-within-30-seconds
+    grantCarriesNoAdditionalFields: true
+    validationAuditRequired: false
+    browserDisconnectGraceSeconds: 30
+    validationResponseMinimum:
+      - console-ip
+    revocationBehavior: close-browser-and-console-connections
+    planSpecificityConstraint: not-more-specific-than-plans-03-to-05
+components:
+  schemas:
+    TerminalGrant:
+      type: object
+      additionalProperties: false
+      required:
+        - token
+      properties:
+        token:
+          type: string
+          minLength: 1
+
+    GrantValidationResult:
+      type: object
+      description: |
+        Fachliche Sicht auf das Ergebnis einer Grant-Pruefung. Konkrete Felder
+        bleiben bis zur Klaerung offen.
+      additionalProperties: false
+      required:
+        - ipAddress
+      properties:
+        ipAddress:
+          type: string
+
+    ErrorResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          minLength: 1
+        message:
+          type: string
+          minLength: 1
