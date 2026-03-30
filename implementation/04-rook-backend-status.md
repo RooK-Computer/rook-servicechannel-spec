@@ -23,6 +23,16 @@ Das RooK Backend ist die zentrale Control Plane. Es verwaltet Support-Sitzungen,
   * `drush status` meldet erfolgreichen Bootstrap und verbundene Datenbank
   * HTTP-Antwort auf `http://localhost:8080` liefert `200 OK`
 * Fuer dieses Repository gilt zusaetzlich die Projektentscheidung, dass ein ausfuehrbarer Stand eingecheckt werden soll; benoetigte Runtime- und Build-Artefakte werden daher nicht pauschal per `.gitignore` ausgeschlossen.
+* Das Domain-Modell fuer den Backend-Kern wurde initial umgesetzt:
+  * Custom-Modul `rook_servicechannel_core`
+  * Content Entities `support_session` und `terminal_grant`
+  * PIN als Feld auf `support_session`, nicht als eigene Entity
+  * dedizierte Tabellen `rook_support_session_participant` und `rook_support_audit_log`
+  * erste Domain-Services fuer Session-, Grant- und Audit-Logik
+* Das Modell wurde gegen die laufende Drupal-Instanz verifiziert:
+  * Modul ist aktiviert
+  * alle vier Kern-Tabellen existieren in MariaDB
+  * Smoke-Tests fuer Session-Erzeugung, Grant-Ausgabe, Audit-Log und Teilnehmer-Tabelle liefen erfolgreich
 * Fuer die lokale Entwicklungsumgebung sind damit die zentralen Strukturentscheidungen bereits technisch verankert:
   * `composer.json` direkt im Repo-Root
   * `docroot/` als oeffentlicher Webroot
@@ -49,9 +59,9 @@ Das RooK Backend ist die zentrale Control Plane. Es verwaltet Support-Sitzungen,
 ## Nächste sinnvolle Schritte
 
 1. Support-Session-Datenmodell und Session-Lifecycle im Backend anlegen.
-2. Modulgrenzen fuer Domain-Logik, REST-Endpunkte und Laufzeitprozesse konkretisieren.
-3. Agent-seitige REST-Endpunkte zuerst implementieren.
-4. Danach Web-API, Grant-Logik und Gateway-seitige Validierung ergänzen.
+2. Agent-seitige REST-Endpunkte auf das neue Domain-Modell aufsetzen.
+3. Danach Web-API, Grant-Logik und Gateway-seitige Validierung ergänzen.
+4. Laufzeitjobs fuer Timeout, Cleanup und Revocation an das Modell anbinden.
 
 ## Hinweise für spätere Aktualisierung
 
