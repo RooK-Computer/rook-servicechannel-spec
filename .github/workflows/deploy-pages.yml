@@ -40,19 +40,10 @@ jobs:
       - name: Build Pages site
         run: npm run build:pages
 
-      - name: Package Pages artifact
-        run: |
-          rm -f github-pages.tar github-pages.tar.gz
-          tar --directory dist --create --file github-pages.tar .
-          gzip --stdout github-pages.tar > github-pages.tar.gz
-
       - name: Upload Pages artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-pages-artifact@v4
         with:
-          name: github-pages
-          path: github-pages.tar.gz
-          if-no-files-found: error
-          compression-level: 0
+          path: dist
 
   deploy:
     needs: build
