@@ -23,6 +23,12 @@ Es dient als gemeinsamer Einstiegspunkt für alle Teams, damit der aktuelle Entw
 4. `04-rook-backend-status.md` – RooK Web-/API-Backend
 5. `05-browser-terminal-gateway-status.md` – Browser-Terminal-Gateway
 
+## Einordnung der OpenVPN-Infrastruktur
+
+* Die OpenVPN-Infrastruktur ist eine eigenstaendige, im Architekturkonzept explizit benannte Infrastrukturkomponente.
+* Sie ist nicht identisch mit dem RooK Web-/API-Backend, auch wenn ihre technische Verantwortung organisatorisch beim gleichen Team liegen kann.
+* Falls es kein separates Plattform- oder Infrastrukturteam gibt, kann die OpenVPN-Infrastruktur pragmatisch durch das Backend-nahe Team mitverantwortet werden.
+
 ## Aktueller Gesamtstand
 
 * Für alle aktuell identifizierten Hauptkomponenten liegt ein initiales Statusdokument vor.
@@ -33,6 +39,7 @@ Es dient als gemeinsamer Einstiegspunkt für alle Teams, damit der aktuelle Entw
 
 * Die empfohlene Umsetzungsreihenfolge ist in `10-komponentenuebergreifender-entwicklungsplan.md` beschrieben.
 * Dieser Plan soll als gemeinsame Leitlinie dienen und bei belastbaren neuen Erkenntnissen aktualisiert werden.
+* OpenVPN-bezogene Konfigurations- und Paketierungsartefakte werden innerhalb der OpenVPN-Komponente betrachtet.
 
 ## Pflegehinweis
 

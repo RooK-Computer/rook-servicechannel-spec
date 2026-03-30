@@ -25,7 +25,7 @@ Der gewünschte Ablauf ist:
 
 ## Architekturüberblick
 
-Das System besteht aus fünf Hauptbausteinen:
+Das Laufzeitsystem besteht aus fünf Hauptbausteinen:
 
 1. **RooK UI auf der Konsole**
 2. **RooK Agent auf der Konsole**
@@ -128,6 +128,8 @@ OpenVPN stellt die Netzverbindung zwischen Konsole und zentraler Server-Infrastr
 OpenVPN ist ausschließlich der Transportkanal.
 
 Die Zuordnung einer Browser-Sitzung zu einer Konsole erfolgt nicht durch manuelle Auswahl von IP-Adressen, sondern über den vom Server verwalteten **PIN-basierten Session-Flow**.
+
+Reale OpenVPN-Konfigurationsdateien und Skripte fuer deren Debian-Paketierung sind Umsetzungsartefakte dieser OpenVPN-Komponente und gehoeren nicht in dieses Spezifikations-Repository.
 
 ---
 
@@ -533,6 +535,7 @@ Die Servicechannel-Plattform wird über mehrere Repositories mit klaren Verantwo
 * `rook-servicechannel-spec`
 * `rook-servicechannel-console-ui`
 * `rook-servicechannel-console-agent`
+* `rook-servicechannel-openvpn`
 * `rook-servicechannel-backend`
 * `rook-servicechannel-gateway`
 
@@ -625,7 +628,20 @@ Hier werden Nachrichtenformate, Endpunkte, Fehlercodes und Zustandsübergänge f
 
 Implementierungen in UI, Agent, Backend und Gateway richten sich nach dieser Spezifikation.
 
-### 4. `rook-servicechannel-backend`
+### 4. `rook-servicechannel-openvpn`
+
+**Inhalt:**
+
+* OpenVPN-Server-Konfigurationen
+* Konsolen- bzw. Client-Konfigurationen fuer die Cartridge-Seite
+* Skripte und Debian-Paketdefinitionen fuer die Auslieferung dieser OpenVPN-Artefakte
+* betriebsnahe Hilfsdateien fuer Zertifikate, Profile und Rollout der VPN-Komponente
+
+**Ergebnis:**
+
+* installierbare OpenVPN-bezogene Debian-Pakete und gepflegte Konfigurationsartefakte ausserhalb des Spec-Repositories
+
+### 5. `rook-servicechannel-backend`
 
 **Inhalt:**
 
@@ -634,7 +650,7 @@ Implementierungen in UI, Agent, Backend und Gateway richten sich nach dieser Spe
 * React-Frontend für das RooK-Team
 * Datenmodell und Admin-Funktionalität
 
-### 5. `rook-servicechannel-gateway`
+### 6. `rook-servicechannel-gateway`
 
 **Inhalt:**
 
@@ -643,7 +659,7 @@ Implementierungen in UI, Agent, Backend und Gateway richten sich nach dieser Spe
 * WebSocket-Handling
 * Integration mit xterm.js-Frontend und Backend
 
-### Optional 6. `rook-servicechannel-deploy`
+### Optional 7. `rook-servicechannel-deploy`
 
 Optional kann ein zusätzliches Repository sinnvoll sein für:
 

@@ -22,10 +22,20 @@ Ziel ist es, zuerst den fachlichen Kern des Systems zu stabilisieren und anschli
 
 Die OpenVPN-Infrastruktur sollte sehr früh in einer minimal funktionsfähigen Form verfügbar sein.
 
+Einordnung:
+
+* Die OpenVPN-Infrastruktur ist eine eigenstaendige Infrastrukturkomponente.
+* Sie sollte nicht mit dem RooK Web-/API-Backend zusammengezogen werden, auch wenn beide organisatorisch vom gleichen Team betreut werden koennen.
+
 Begründung:
 
 * Agent und Gateway hängen technisch an der Erreichbarkeit über das VPN.
 * Frühe Netzwerkpfade reduzieren späteres Debugging in mehreren Teams gleichzeitig.
+
+Hinweis:
+
+* OpenVPN-Konfigurationsdateien und die Skripte zu ihrer Debian-Paketierung sollen frueh mitgedacht werden.
+* Diese Artefakte gehoeren fachlich zur OpenVPN-Infrastruktur und nicht in einen generischen, separaten Paketierungs-Track.
 
 ### Phase 1 – Fachlichen Kern aufbauen
 
@@ -76,11 +86,14 @@ Begründung:
 Wenn nur mit einer kleinen Zahl paralleler Teams gestartet wird, ist folgende Startfolge am sinnvollsten:
 
 1. OpenVPN-Infrastruktur minimal funktionsfähig aufsetzen.
-2. Backend-Datenmodell und Agent-REST-API implementieren.
-3. Agent-Grunddienst und Session-Lifecycle gegen das Backend implementieren.
-4. Gateway-Kern für Grant-Validierung und SSH-Aufbau ergänzen.
-5. Browser-Terminal-Protokoll und Web-Zugriff darauf aufbauen.
-6. Lokale UI vollständig auf den Agent-Kern aufsetzen.
+2. OpenVPN-Konfigurationsablage und Debian-Paketierung fuer die VPN-Artefakte festlegen.
+3. Backend-Datenmodell und Agent-REST-API implementieren.
+4. Agent-Grunddienst und Session-Lifecycle gegen das Backend implementieren.
+5. Gateway-Kern für Grant-Validierung und SSH-Aufbau ergänzen.
+6. Browser-Terminal-Protokoll und Web-Zugriff darauf aufbauen.
+7. Lokale UI vollständig auf den Agent-Kern aufsetzen.
+
+Wenn OpenVPN und Backend vom gleichen Team umgesetzt werden, ist das in Ordnung. Fuer Planung, Status und Risikoanalyse sollten beide Themen aber weiterhin getrennt dokumentiert werden.
 
 ## Erwarteter Nutzen dieser Reihenfolge
 
