@@ -33,6 +33,11 @@ Noch offen:
 Aktuell festgelegt:
 
 * verbindliche Zustandswerte: `connected`, `disconnected`
+* aus der aktuellen OpenVPN-Implementierung liegt als Integrationshinweis vor:
+  * clientseitiger Dienst `rook-openvpn-client.service`
+  * TUN-Interface `rookvpn`
+  * Statusdatei `/var/log/rook-openvpn/client-status.log`
+* der Agent kann den beobachtbaren VPN-Zustand daher mindestens aus Dienststatus und vorhandenem Tunnel-Interface ableiten
 
 ### VPN-Zustand
 

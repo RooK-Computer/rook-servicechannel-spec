@@ -35,3 +35,9 @@ Der RooK Agent ist der zentrale lokale Systemdienst für den Support-Modus. Er s
 ## Hinweise für spätere Aktualisierung
 
 * Sobald die Implementierung beginnt, sollen hier insbesondere der Stand von Backend-Integration, VPN-Steuerung und lokalem Cleanup gepflegt werden.
+* Aus dem OpenVPN-Repository liegen bereits konkrete Integrationshinweise vor, die bei Start der Agent-Implementierung direkt genutzt werden sollten:
+  * clientseitiger systemd-Dienst: `rook-openvpn-client.service`
+  * fester TUN-Name: `rookvpn`
+  * OpenVPN-Statusdatei: `/var/log/rook-openvpn/client-status.log`
+  * grober VPN-Status kann damit ueber Dienststatus plus Vorhandensein und IP des Interfaces `rookvpn` ermittelt werden.
+* Diese Beobachtungspfade sind nicht nur konzeptionell festgelegt, sondern stammen aus einer bereits praktisch erfolgreich getesteten OpenVPN-Basis.

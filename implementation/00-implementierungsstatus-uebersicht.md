@@ -32,8 +32,9 @@ Es dient als gemeinsamer Einstiegspunkt für alle Teams, damit der aktuelle Entw
 ## Aktueller Gesamtstand
 
 * Für alle aktuell identifizierten Hauptkomponenten liegt ein initiales Statusdokument vor.
-* Alle Komponenten stehen derzeit auf `Nicht begonnen`.
-* Die Spezifikationsarbeit ist vorläufig abgeschlossen; die nächste Phase ist die schrittweise Umsetzung.
+* Die OpenVPN-Infrastruktur ist für den aktuell geplanten Scope auf einem praktisch verifizierten Stand und kann in `03-openvpn-infrastruktur-status.md` als `Abgeschlossen` betrachtet werden.
+* RooK UI, RooK Agent, RooK Backend und Browser-Terminal-Gateway stehen weiterhin auf `Nicht begonnen`.
+* Die Spezifikationsarbeit ist vorläufig abgeschlossen; die nächste Phase ist die schrittweise Umsetzung der verbleibenden Komponenten auf Basis der bereits stehenden OpenVPN-Grundlage.
 
 ## Komponentenübergreifender Plan
 

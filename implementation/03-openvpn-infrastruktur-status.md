@@ -1,6 +1,6 @@
 # Implementierungsstatus – OpenVPN-Infrastruktur
 
-Status: In Arbeit
+Status: Abgeschlossen
 
 ## Zweck der Komponente
 
@@ -30,6 +30,14 @@ Die OpenVPN-Infrastruktur stellt den ausgehenden Transportkanal zwischen Konsole
 * Fuer dieses Projekt ist jetzt explizit festgezogen, dass alle Cartridges dasselbe clientseitige Secret-Set verwenden. Die Serverkonfiguration ist daher auf gleichzeitige Verbindungen mit identischem Client-Zertifikat ausgelegt.
 * Das Repository enthaelt jetzt auch einen Secret-Generierungs- und Paketierungsfluss: Secrets koennen lokal erzeugt oder aus einem externen Secret-Root eingebunden und beim Paketbau in Server- und Client-Paket zusammengesetzt werden.
 * Praktisch nutzbare Build-Einstiege sind jetzt insbesondere `make generate-secrets`, `make validate-secrets` und `make package-dpkg`; fuer externe Secret-Ablage kann der Build ueber `SECRETS_ROOT=/pfad/zum/secret-store` gespeist werden.
+* Server- und Client-Pakete wurden in einer Testumgebung erfolgreich installiert.
+* Eine erste VPN-Verbindung zwischen Client und Server konnte erfolgreich aufgebaut werden.
+* Der Parallelbetrieb mit zwei Clients bei gemeinsamem Client-Secret-Set wurde erfolgreich verifiziert.
+* Der erfolgreiche Paralleltest wurde praktisch dadurch nachgewiesen, dass von einem Client per SSH zum Server und von dort weiter per SSH auf den zweiten Client zugegriffen wurde, waehrend beide VPN-Verbindungen gleichzeitig aktiv waren.
+* Fuer die spaetere Agent-Integration ist der clientseitige Beobachtungspfad jetzt konkretisiert:
+  * systemd-Dienst `rook-openvpn-client.service`
+  * festes Tunnel-Interface `rookvpn`
+  * Statusdatei `/var/log/rook-openvpn/client-status.log`
 
 ## Ablage der OpenVPN-Konfigurationsdateien und Debian-Paketierung
 
@@ -68,10 +76,9 @@ Fuer den aktuell gestarteten Arbeitsstand ist zusaetzlich sinnvoll:
 
 ## Nächste sinnvolle Schritte
 
-1. Die erzeugten Paketartefakte in einer Testumgebung installieren und den OpenVPN-Start mit realen Secrets pruefen.
-2. Netzwerkpfade zwischen Konsole, Backend und Gateway über die erste VPN-Strecke verifizieren.
-3. Routing-, Firewall- und Erreichbarkeitsdetails für die Zielumgebung haerten.
-4. Die Infrastruktur als frühe Voraussetzung für Agent- und Gateway-Integration stabilisieren.
+1. Netzwerkpfade zwischen Konsole, Backend und Gateway über die bestehende VPN-Strecke in den nachgelagerten Komponenten nutzen und verifizieren.
+2. Routing-, Firewall- und Erreichbarkeitsdetails für die Zielumgebung in der Integrationsphase haerten.
+3. Die vorhandene OpenVPN-Basis als frühe Voraussetzung für Agent- und Gateway-Integration weiterverwenden.
 
 ## Hinweise für spätere Aktualisierung
 
@@ -79,3 +86,4 @@ Fuer den aktuell gestarteten Arbeitsstand ist zusaetzlich sinnvoll:
 * Sobald die ersten Artefakte im OpenVPN-Repository vorliegen, sollte dieses Dokument den Stand getrennt fuer Server, Client, Secrets-Handling und Paketierung ausweisen.
 * Bei der naechsten Aktualisierung sollten die tatsaechlich verwendeten Secrets-Dateinamen, das gewaehlte VPN-Subnetz und die Erkenntnisse aus dem ersten Paket- und Installationslauf dokumentiert werden.
 * Die bewusste Einschraenkung durch gemeinsame Client-Secrets sollte in spaeteren Betriebsdokumenten fuer Audit und Sperrprozesse sichtbar bleiben.
+* Bei weiteren Erkenntnissen aus Agent-, Backend- oder Gateway-Integration sollten hier nur noch betriebliche Detailanpassungen, bekannte Randprobleme oder notwendige Netzhaertungen nachgezogen werden.
