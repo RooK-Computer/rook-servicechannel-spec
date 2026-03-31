@@ -33,6 +33,12 @@ Das RooK Backend ist die zentrale Control Plane. Es verwaltet Support-Sitzungen,
   * Modul ist aktiviert
   * alle vier Kern-Tabellen existieren in MariaDB
   * Smoke-Tests fuer Session-Erzeugung, Grant-Ausgabe, Audit-Log und Teilnehmer-Tabelle liefen erfolgreich
+* Die erste Agent-API-Schicht wurde auf das Domain-Modell aufgesetzt:
+  * Custom-Modul `rook_servicechannel_console_api`
+  * REST-Endpunkte `POST /api/console/1/beginsession`, `status`, `ping`, `endsession`
+  * Lifecycle-Service fuer PIN-Ausgabe, Heartbeat-Verarbeitung, Session-Ende und "latest start wins"
+  * optionales Hardening-Modul `rook_servicechannel_console_ip_guard` fuer produktive Quell-IP-Restriktionen
+  * OpenAPI-basierte Contract-Validierung gegen `spec/openapi/02-agent-backend-rest.openapi.yaml`
 * Fuer die lokale Entwicklungsumgebung sind damit die zentralen Strukturentscheidungen bereits technisch verankert:
   * `composer.json` direkt im Repo-Root
   * `docroot/` als oeffentlicher Webroot
@@ -58,10 +64,9 @@ Das RooK Backend ist die zentrale Control Plane. Es verwaltet Support-Sitzungen,
 
 ## Nächste sinnvolle Schritte
 
-1. Support-Session-Datenmodell und Session-Lifecycle im Backend anlegen.
-2. Agent-seitige REST-Endpunkte auf das neue Domain-Modell aufsetzen.
-3. Danach Web-API, Grant-Logik und Gateway-seitige Validierung ergänzen.
-4. Laufzeitjobs fuer Timeout, Cleanup und Revocation an das Modell anbinden.
+1. Agent-API gegen die laufende Drupal-Instanz und lokale HTTP-Erreichbarkeit fertig validieren.
+2. Danach Web-API, Grant-Logik und Gateway-seitige Validierung ergänzen.
+3. Laufzeitjobs fuer Timeout, Cleanup und Revocation an das Modell anbinden.
 
 ## Hinweise für spätere Aktualisierung
 
