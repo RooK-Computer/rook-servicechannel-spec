@@ -51,6 +51,11 @@ Das RooK Backend ist die zentrale Control Plane. Es verwaltet Support-Sitzungen,
   * Grant-Validierung mit Redeem- und Reconnect-Regeln
   * Cron-basierte Maintenance fuer Grant-Expiry und das Aufraeumen alter geschlossener Sessions
   * OpenAPI-basierte Contract-Validierung gegen `spec/openapi/06-backend-gateway-terminal-grant.openapi.yaml`
+* Der Test-, Delivery- und Statuspflege-Slice wurde initial konsolidiert:
+  * dokumentierter Drupal-PHPUnit-Entrypoint fuer Kernel-Tests ueber `docroot/core/phpunit.xml.dist`
+  * lokaler Workflow fuer Testlauf, API-Checks und Reset im `README.md`
+  * eigener Core-Kernel-Test fuer gemeinsam genutzte Domain-Services
+  * fortgeschriebene Teilplaene und Statusartefakte fuer den realen Implementierungsstand
 * Fuer die lokale Entwicklungsumgebung sind damit die zentralen Strukturentscheidungen bereits technisch verankert:
   * `composer.json` direkt im Repo-Root
   * `docroot/` als oeffentlicher Webroot
@@ -77,8 +82,8 @@ Das RooK Backend ist die zentrale Control Plane. Es verwaltet Support-Sitzungen,
 ## Nächste sinnvolle Schritte
 
 1. Fehlercode- und Revocation-Semantik nach den bisherigen API-Implementierungen nachschärfen.
-2. Teilplan 06 fuer Test-/Delivery-/Statuspflege vervollstaendigen.
-3. Die echte Ende-zu-Ende-Integration gegen eine laufende Gateway-Komponente nachvalidieren.
+2. Die echte Ende-zu-Ende-Integration gegen eine laufende Gateway-Komponente nachvalidieren.
+3. Weitere Integrations- oder Delivery-Anforderungen nur bei belastbarem Bedarf ergänzen, statt vorschnell neue Toolketten einzuführen.
 
 ## Hinweise für spätere Aktualisierung
 
