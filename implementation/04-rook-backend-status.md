@@ -21,7 +21,7 @@ Das RooK Backend ist die zentrale Control Plane. Es verwaltet Support-Sitzungen,
   * persistenter Host-Mount fuer Datenbankdaten unter `.docker/db-data/`
 * Drupal wurde lokal gegen die Compose-Datenbank installiert und erfolgreich validiert:
   * `drush status` meldet erfolgreichen Bootstrap und verbundene Datenbank
-  * HTTP-Antwort auf `http://localhost:8080` liefert `200 OK`
+  * HTTP-Antwort auf die konfigurierte lokale Basis-URL liefert `200 OK`
 * Fuer dieses Repository gilt zusaetzlich die Projektentscheidung, dass ein ausfuehrbarer Stand eingecheckt werden soll; benoetigte Runtime- und Build-Artefakte werden daher nicht pauschal per `.gitignore` ausgeschlossen.
 * Das Domain-Modell fuer den Backend-Kern wurde initial umgesetzt:
   * Custom-Modul `rook_servicechannel_core`
@@ -39,6 +39,12 @@ Das RooK Backend ist die zentrale Control Plane. Es verwaltet Support-Sitzungen,
   * Lifecycle-Service fuer PIN-Ausgabe, Heartbeat-Verarbeitung, Session-Ende und "latest start wins"
   * optionales Hardening-Modul `rook_servicechannel_console_ip_guard` fuer produktive Quell-IP-Restriktionen
   * OpenAPI-basierte Contract-Validierung gegen `spec/openapi/02-agent-backend-rest.openapi.yaml`
+* Die erste Web-API-Schicht wurde auf das Domain-Modell und die Agent-API aufgesetzt:
+  * Custom-Modul `rook_servicechannel_client_api`
+  * REST-Endpunkte `POST /api/client/1/pinlookup`, `sessionstatus`, `requestshell`
+  * reproduzierbare Drupal-Rolle `Service` inklusive Zugriff auf die Client-API
+  * Session-Kopplung ueber `rook_support_session_participant`
+  * OpenAPI-basierte Contract-Validierung gegen `spec/openapi/03-web-backend-rest.openapi.yaml`
 * Fuer die lokale Entwicklungsumgebung sind damit die zentralen Strukturentscheidungen bereits technisch verankert:
   * `composer.json` direkt im Repo-Root
   * `docroot/` als oeffentlicher Webroot
@@ -64,9 +70,9 @@ Das RooK Backend ist die zentrale Control Plane. Es verwaltet Support-Sitzungen,
 
 ## Nächste sinnvolle Schritte
 
-1. Agent-API gegen die laufende Drupal-Instanz und lokale HTTP-Erreichbarkeit fertig validieren.
-2. Danach Web-API, Grant-Logik und Gateway-seitige Validierung ergänzen.
-3. Laufzeitjobs fuer Timeout, Cleanup und Revocation an das Modell anbinden.
+1. Gateway-seitige Token-Validierung auf die vorhandene Grant-Logik aufsetzen.
+2. Laufzeitjobs fuer Timeout, Cleanup und Revocation an das Modell anbinden.
+3. Offene Fehlercode- und Grant-Semantik nach den bisherigen API-Implementierungen nachschärfen.
 
 ## Hinweise für spätere Aktualisierung
 

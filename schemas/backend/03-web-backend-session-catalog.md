@@ -54,6 +54,7 @@ Es dient als Arbeitsgrundlage fuer die spaetere OpenAPI-Spezifikation. Nicht fes
 * Die Kopplung der Session an den Mitarbeiter bleibt fuer das Frontend implizit.
 * Wenn ein Mitarbeiter fuer eine Session ein Terminal anfordert, erzeugt das Backend automatisch ein Token, das Mitarbeiter und Session koppelt.
 * Es ist erlaubt, dass mehrere Mitarbeiter gleichzeitig an dieselbe Session gekoppelt sind.
+* Fuer die erste technische Umsetzung tragen `pinlookup`, `sessionstatus` und `requestshell` jeweils explizite Session-/PIN-Daten im Request.
 
 ## Fachliche Hauptressourcen
 
@@ -83,7 +84,6 @@ Noch offen:
 
 ## Offene Architekturfragen
 
-* Welche konkreten Request- und Response-Modelle werden fuer `pinlookup`, `sessionstatus` und `requestshell` verwendet?
 * Welche fachlichen Fehlercodes sollen als erste verbindliche Eintraege reserviert werden?
 
 ## Verbindliche Arbeitsregel

@@ -138,17 +138,32 @@ components:
     PinLookupRequest:
       type: object
       additionalProperties: false
-      properties: {}
+      required:
+        - pin
+      properties:
+        pin:
+          type: string
+          minLength: 1
 
     SessionStatusRequest:
       type: object
       additionalProperties: false
-      properties: {}
+      required:
+        - pin
+      properties:
+        pin:
+          type: string
+          minLength: 1
 
     RequestShellRequest:
       type: object
       additionalProperties: false
-      properties: {}
+      required:
+        - pin
+      properties:
+        pin:
+          type: string
+          minLength: 1
 
     SessionStatusResponse:
       type: object
