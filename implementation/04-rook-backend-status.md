@@ -45,6 +45,12 @@ Das RooK Backend ist die zentrale Control Plane. Es verwaltet Support-Sitzungen,
   * reproduzierbare Drupal-Rolle `Service` inklusive Zugriff auf die Client-API
   * Session-Kopplung ueber `rook_support_session_participant`
   * OpenAPI-basierte Contract-Validierung gegen `spec/openapi/03-web-backend-rest.openapi.yaml`
+* Die erste Gateway- und Runtime-Schicht wurde auf die vorhandene Grant-Logik aufgesetzt:
+  * Custom-Modul `rook_servicechannel_gateway_api`
+  * REST-Endpunkt `POST /api/gateway/1/validateToken`
+  * Grant-Validierung mit Redeem- und Reconnect-Regeln
+  * Cron-basierte Maintenance fuer Grant-Expiry und das Aufraeumen alter geschlossener Sessions
+  * OpenAPI-basierte Contract-Validierung gegen `spec/openapi/06-backend-gateway-terminal-grant.openapi.yaml`
 * Fuer die lokale Entwicklungsumgebung sind damit die zentralen Strukturentscheidungen bereits technisch verankert:
   * `composer.json` direkt im Repo-Root
   * `docroot/` als oeffentlicher Webroot
@@ -70,9 +76,9 @@ Das RooK Backend ist die zentrale Control Plane. Es verwaltet Support-Sitzungen,
 
 ## Nächste sinnvolle Schritte
 
-1. Gateway-seitige Token-Validierung auf die vorhandene Grant-Logik aufsetzen.
-2. Laufzeitjobs fuer Timeout, Cleanup und Revocation an das Modell anbinden.
-3. Offene Fehlercode- und Grant-Semantik nach den bisherigen API-Implementierungen nachschärfen.
+1. Fehlercode- und Revocation-Semantik nach den bisherigen API-Implementierungen nachschärfen.
+2. Teilplan 06 fuer Test-/Delivery-/Statuspflege vervollstaendigen.
+3. Die echte Ende-zu-Ende-Integration gegen eine laufende Gateway-Komponente nachvalidieren.
 
 ## Hinweise für spätere Aktualisierung
 
