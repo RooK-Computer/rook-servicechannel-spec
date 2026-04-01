@@ -51,6 +51,12 @@ Das RooK Backend ist die zentrale Control Plane. Es verwaltet Support-Sitzungen,
   * Grant-Validierung mit Redeem- und Reconnect-Regeln
   * Cron-basierte Maintenance fuer Grant-Expiry und das Aufraeumen alter geschlossener Sessions
   * OpenAPI-basierte Contract-Validierung gegen `spec/openapi/06-backend-gateway-terminal-grant.openapi.yaml`
+* Die erste Team-UI-Schicht wurde im Backend-Repository ergänzt:
+  * Custom-Modul `rook_servicechannel_team_ui`
+  * geschuetzte Drupal-Route `/servicechannel/team` fuer Service-Mitarbeiter
+  * Browser-UI fuer PIN-Eingabe, Session-Status und `requestshell`
+  * `xterm.js`-basierte Terminal-Oberflaeche mit konfigurierbarer Gateway-URL und WebSocket-Autorisierung ueber `authorize`/`authorized`
+  * eigener Kernel-Test fuer Rollen-Provisionierung, Seitenzugriff und Laufzeit-Settings
 * Der Test-, Delivery- und Statuspflege-Slice wurde initial konsolidiert:
   * dokumentierter Drupal-PHPUnit-Entrypoint fuer Kernel-Tests ueber `docroot/core/phpunit.xml.dist`
   * lokaler Workflow fuer Testlauf, API-Checks und Reset im `README.md`
@@ -82,8 +88,9 @@ Das RooK Backend ist die zentrale Control Plane. Es verwaltet Support-Sitzungen,
 ## Nächste sinnvolle Schritte
 
 1. Fehlercode- und Revocation-Semantik nach den bisherigen API-Implementierungen nachschärfen.
-2. Die echte Ende-zu-Ende-Integration gegen eine laufende Gateway-Komponente nachvalidieren.
-3. Weitere Integrations- oder Delivery-Anforderungen nur bei belastbarem Bedarf ergänzen, statt vorschnell neue Toolketten einzuführen.
+2. Die echte Ende-zu-Ende-Integration der neuen Team-UI gegen eine laufende Gateway-Komponente nachvalidieren.
+3. Die Browser-Gateway-Protokolldetails fuer `resize` explizit nachschaerfen; der aktuelle Integrationsstand zeigt, dass die Feldnamen `columns` und `rows` belastbar festgehalten werden muessen.
+4. Weitere Integrations- oder Delivery-Anforderungen nur bei belastbarem Bedarf ergänzen, statt vorschnell neue Toolketten einzuführen.
 
 ## Hinweise für spätere Aktualisierung
 

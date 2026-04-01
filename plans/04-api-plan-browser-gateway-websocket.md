@@ -57,15 +57,15 @@ Diese Artefakte enthalten die aus dem Konzept, der Dokumentationsrecherche und d
 * Welche konkreten Payload-Modelle tragen `input`, `output`, `resize`, `error` und `close`?
 * Welche Close-Codes und Fehlertexte werden standardisiert?
 * Wie sieht das finale Fehlerformat aus?
-* Wie soll der Header fuer die Terminal-Berechtigung final heissen?
+* Welche zusaetzlichen Payload-Felder braucht `authorize` langfristig neben dem Token, falls ueberhaupt?
 
 ## Aktueller Umsetzungsstand
 
 * Die aus dem Konzept ableitbaren Verbindungsphasen und Nachrichtenklassen wurden in erste Draft-Artefakte überführt.
 * Browser-Terminal-Sitzung, Grant-Bezug und Fehlerstrategie sind als fachliche Bausteine dokumentiert.
 * Die Recherche zu xterm.js und `@xterm/addon-attach` hat gezeigt, dass diese kein verbindliches Backend-Protokoll vorgeben; das Protokoll ist daher unsere eigene Vertragsentscheidung.
-* OpenAPI-Umfang, Header-basierte Grant-Uebergabe als alleiniger Autorisierungspfad, Text- und Binaerframe-Nutzung, minimales Nachrichtenset, Reconnect-Semantik und das Fehlen von Terminal-Metadaten sind jetzt festgelegt.
-* Verbleibend offen sind nur noch Payload-Details, Close-Codes, Fehlerformat und der finale Header-Name, die sinnvoll erst mit Implementierungserkenntnissen geschaerft werden.
+* OpenAPI-Umfang, `authorize` als erste Client-Nachricht nach erfolgreichem Upgrade, `authorized` als Erfolgsbestaetigung, Text- und Binaerframe-Nutzung, minimales Nachrichtenset, Reconnect-Semantik und das Fehlen von Terminal-Metadaten sind jetzt festgelegt.
+* Verbleibend offen sind nur noch Payload-Details, Close-Codes und Fehlerformat, die sinnvoll erst mit Implementierungserkenntnissen geschaerft werden.
 
 ## Statusbegruendung
 

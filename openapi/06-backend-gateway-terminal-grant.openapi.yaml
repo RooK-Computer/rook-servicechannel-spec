@@ -46,7 +46,7 @@ x-draftScope:
     - backend-issues-terminal-grant
     - gateway-validates-grant-before-console-connection
     - token-is-opaque
-    - token-is-passed-to-gateway-via-header
+    - token-is-passed-to-gateway-via-authorize-message
     - token-is-generally-not-reusable
     - gateway-fetches-session-metadata-using-token
   unresolvedTopics:
