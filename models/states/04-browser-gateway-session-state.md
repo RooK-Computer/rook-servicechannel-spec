@@ -26,7 +26,7 @@ Aus dem Konzept ableitbar:
 
 Noch offen:
 
-* ob `authorized` allein den erfolgreichen Aufbau abschliesst oder ob spaeter noch weitere Initialsignale noetig sind
+* wie der spaetere Uebergang von erfolgreichem Handshake zu echter SSH-Bridge in Plan 03 genau signalisiert oder intern gekoppelt wird
 
 ### Terminal-Sitzung ist aktiv
 
@@ -41,6 +41,7 @@ Noch offen:
 Aktuell festgelegt:
 
 * bei erfolgreichem Aufbau werden keine zusaetzlichen Terminal-Metadaten zurueckgegeben
+* der erfolgreiche Header-basierte WebSocket-Handshake ist zugleich der Abschluss des Autorisierungspfads
 
 ### Terminal-Sitzung endet
 

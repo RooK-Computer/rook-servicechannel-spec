@@ -61,12 +61,11 @@ Noch offen:
 
 * OpenAPI bildet hier sowohl Handshake als auch Nachrichtenprotokoll mit ab.
 * Die Terminal-Berechtigung wird im Header uebergeben.
+* Der erfolgreiche Header-basierte Handshake ist die alleinige Autorisierung; es gibt keine separaten Laufzeitnachrichten `authorize` oder `authorized`.
 * Es werden Textframes und Binaerframes verwendet.
 * Steuernachrichten laufen als Textframes.
 * Terminaldaten duerfen auch als Binaerframes uebertragen werden.
 * Minimale Nachrichtenarten sind:
-  * `authorize`
-  * `authorized`
   * `input`
   * `output`
   * `resize`

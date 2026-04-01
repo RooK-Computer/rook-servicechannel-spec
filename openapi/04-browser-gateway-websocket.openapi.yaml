@@ -6,7 +6,7 @@ info:
     Erster Arbeitsstand fuer die Browser-zu-Gateway-Schnittstelle.
 
     Dieser Entwurf haelt nur die aus dem Konzept eindeutig ableitbaren fachlichen
-    Elemente fest. Die Grundentscheidungen zu Grant-Uebergabe,
+    Elemente fest. Die Grundentscheidungen zu Header-basierter Grant-Uebergabe,
     Nachrichtenarten, Frame-Typen und Reconnect-Semantik sind eingearbeitet.
     Offen bleiben derzeit nur Payload-Details, Close-Codes, das Fehlerformat
     und der finale Header-Name.
@@ -57,9 +57,8 @@ x-draftScope:
     terminalDataMayUseBinaryFrames: true
     reconnectSemantics: always-new-session
     terminalMetadataReturned: none
+    authorizationFlow: handshake-header-only
     minimumMessageTypes:
-      - authorize
-      - authorized
       - input
       - output
       - resize
@@ -95,22 +94,6 @@ components:
       properties:
         type:
           type: string
-
-    AuthorizeMessage:
-      allOf:
-        - $ref: '#/components/schemas/ControlMessageBase'
-        - type: object
-          properties:
-            type:
-              const: authorize
-
-    AuthorizedMessage:
-      allOf:
-        - $ref: '#/components/schemas/ControlMessageBase'
-        - type: object
-          properties:
-            type:
-              const: authorized
 
     InputMessage:
       allOf:

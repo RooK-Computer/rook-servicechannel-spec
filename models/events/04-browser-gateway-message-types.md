@@ -21,7 +21,8 @@ Noch offen:
 Aktuell festgelegt:
 
 * die Berechtigung wird im Header uebergeben
-* die Nachrichtenart `authorize` ist Teil des minimalen Protokolls
+* die Header-basierte Handshake-Validierung ist der einzige Autorisierungspfad
+* es gibt keine zusaetzlichen Laufzeitnachrichten `authorize` oder `authorized`
 
 ### Terminal-Eingabe
 
@@ -83,7 +84,7 @@ Aktuell festgelegt:
 
 ## Weitere festgelegte Nachrichtenarten
 
-* `authorized` bestaetigt den erfolgreichen Autorisierungspfad
+* es gibt keine gesonderte Protokoll-ACK-Nachricht fuer erfolgreiche Autorisierung; ein erfolgreicher WebSocket-Handshake ist die positive Bestaetigung
 
 ## Verbindliche Arbeitsregel
 
