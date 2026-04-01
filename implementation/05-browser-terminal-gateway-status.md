@@ -145,6 +145,16 @@ Das Browser-Terminal-Gateway validiert Terminal-Berechtigungen, baut serverseiti
 2. Rueckmeldungen aus Review und erstem echten Browser-Integrationslauf nachziehen.
 3. Erst danach weitere Folgearbeiten wie Debian-Installations-/Runtime-Tests, Paket-Signing oder Host-Key-Haertung priorisieren.
 
+## Aktuelle Integrationsbefunde
+
+* Der erste echte Browser-Integrationslauf hat einen neuen Fokus auf Idle-, Timeout- und Keepalive-Verhalten gelegt.
+* Zu klaeren ist insbesondere, warum das Browser-Terminal bei laengerer Inaktivitaet in einen Timeout laeuft und ob der Gateway die Verbindung aus eigener Laufzeitlogik oder nur indirekt ueber den Integrationspfad verliert.
+* Die zentrale Einordnung und die komponentenuebergreifenden Folgearbeiten dazu werden in `11-integrationsbefunde-und-folgearbeiten.md` gepflegt.
+* Fuer dieses Statusdokument heisst das insbesondere:
+  * beobachteten Abbruch reproduzierbar eingrenzen,
+  * echte Abbruchursache entlang Browser, Proxy, Gateway, SSH und Backend benennen,
+  * daraus eine belastbare Idle-/Keepalive-Semantik ableiten.
+
 ## Hinweise für spätere Aktualisierung
 
 * Diese Datei ist das komponentenuebergreifende Bindeglied im `spec`-Submodule und muss parallel zu den repo-lokalen Plaenen gepflegt werden.

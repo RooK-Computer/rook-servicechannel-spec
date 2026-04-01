@@ -43,6 +43,7 @@ Aktuell festgelegt:
 Aus dem Konzept ableitbar:
 
 * der Agent sendet periodische Lebenszeichen
+* laufende Heartbeats halten die Session auch ohne aktiven Servicemitarbeiter offen
 
 Noch offen:
 
@@ -53,6 +54,8 @@ Aktuell festgelegt:
 * Heartbeat-Frequenz: 10 Sekunden
 * Grace Period: 3 Heartbeats
 * Timeout: 30 Sekunden
+* eine Session in `open` bleibt offen, solange gueltige Heartbeats innerhalb der Grace Period eintreffen
+* das Ende einer Browser- oder Mitarbeiteraktivitaet schliesst die Session nicht automatisch
 
 ### Session endet
 
@@ -65,13 +68,15 @@ Aus dem Konzept ableitbar:
 
 Noch offen:
 
-* keine weiteren offenen Uebergangsfragen auf Basis der aktuellen Klaerung
+* ob die Endgruende spaeter auch explizit als Feld oder Fehlercode sichtbar gemacht werden sollen
 
 Aktuell festgelegt:
 
+* eine Session ist `open`, wenn die Konsole verbunden ist und kein Servicemitarbeiter aktiv aufgeschaltet sein muss
 * eine Session ist `active`, wenn ein Servicemitarbeiter verbunden ist
 * bei ausbleibendem Heartbeat nach der Grace Period wird die Session `closed`
 * geschlossene Sessions werden nach einer Stunde geloescht
+* ein Wechsel von `active` nach `open` ist der normale Rueckfall, wenn die Browser-/Mitarbeiteraktivitaet endet, die Agent-Heartbeats aber weiterlaufen
 * erlaubte Uebergaenge sind:
 	* `open` -> `closed`
 	* `open` -> `active`

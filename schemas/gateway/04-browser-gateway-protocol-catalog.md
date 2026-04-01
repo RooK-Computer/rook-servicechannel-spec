@@ -33,6 +33,7 @@ Mindestens fachlich ableitbar:
 * eine interaktive Terminal-Sitzung im Browser
 * sie ist an eine gueltige Terminal-Berechtigung gebunden
 * sie endet, wenn die Support-Sitzung endet oder die Verbindung getrennt wird
+* fehlende Eingaben allein sind noch keine getrennte Verbindung
 
 Noch offen:
 
@@ -75,6 +76,9 @@ Noch offen:
   * `close`
 * Reconnects sind immer neue Sitzungen.
 * Bei erfolgreichem Verbindungsaufbau werden keine zusaetzlichen Terminal-Metadaten zurueckgegeben.
+* Fehlende Tastatur- oder Resize-Aktivitaet beendet eine autorisierte Browser-Terminal-Sitzung nicht automatisch.
+* Browser, Gateway und dazwischenliegende Infrastruktur duerfen Keepalive-Mechanismen verwenden, damit ruhende Browser-Terminals nicht nur wegen Transport-Idle abbrechen.
+* Verliert der Browser den WebSocket-Pfad tatsaechlich, endet die Browser-Terminal-Sitzung; die uebergeordnete Support-Sitzung bleibt davon fachlich getrennt.
 
 ## Verbindliche Arbeitsregel
 

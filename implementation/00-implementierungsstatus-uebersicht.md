@@ -31,16 +31,26 @@ Es dient als gemeinsamer Einstiegspunkt für alle Teams, damit der aktuelle Entw
 
 ## Aktueller Gesamtstand
 
-* Für alle aktuell identifizierten Hauptkomponenten liegt ein initiales Statusdokument vor.
-* Die OpenVPN-Infrastruktur ist für den aktuell geplanten Scope auf einem praktisch verifizierten Stand und kann in `03-openvpn-infrastruktur-status.md` als `Abgeschlossen` betrachtet werden.
-* RooK UI, RooK Agent, RooK Backend und Browser-Terminal-Gateway stehen weiterhin auf `Nicht begonnen`.
-* Die Spezifikationsarbeit ist vorläufig abgeschlossen; die nächste Phase ist die schrittweise Umsetzung der verbleibenden Komponenten auf Basis der bereits stehenden OpenVPN-Grundlage.
+* Fuer alle aktuell identifizierten Hauptkomponenten liegt ein gepflegtes Statusdokument vor.
+* Die OpenVPN-Infrastruktur ist fuer den aktuell geplanten Scope auf einem praktisch verifizierten Stand und wird in `03-openvpn-infrastruktur-status.md` als `Abgeschlossen` gefuehrt.
+* Die RooK UI auf der Konsole ist weiterhin `Nicht begonnen`.
+* Der RooK Agent befindet sich nicht mehr in der Bootstrap-Planung, sondern auf einem interaktiven CLI-MVP-Stand mit Backend-Integration; `02-rook-agent-status.md` fuehrt ihn aktuell als `Interaktiver CLI-MVP umgesetzt, Review ausstehend`.
+* Das RooK Web-/API-Backend steht auf `In Arbeit`; zentrale Domain-, API- und erste Team-UI-Bausteine sind umgesetzt und lokal validiert.
+* Das Browser-Terminal-Gateway steht nicht mehr am Anfang, sondern auf einem umgesetzten Plan-06-Stand und wartet laut `05-browser-terminal-gateway-status.md` auf Review.
+* Nach den ersten interaktiven Integrationstests sind nun mehrere komponentenuebergreifende Nacharbeiten sichtbar geworden. Dazu gehoeren insbesondere Web-/Frontend-Nachschliffe, Browser-Terminal-Lifecycle-Themen sowie Fragen zum Agent-/Session-Lifecycle.
+* Die Spezifikationsarbeit ist damit nicht abgeschlossen, sondern geht in eine Phase ueber, in der Integrationsbefunde, Vertragsnachschaerfungen und Folgearbeiten fuer die Implementierungsrepos systematisch nachgezogen werden muessen.
 
 ## Komponentenübergreifender Plan
 
 * Die empfohlene Umsetzungsreihenfolge ist in `10-komponentenuebergreifender-entwicklungsplan.md` beschrieben.
 * Dieser Plan soll als gemeinsame Leitlinie dienen und bei belastbaren neuen Erkenntnissen aktualisiert werden.
 * OpenVPN-bezogene Konfigurations- und Paketierungsartefakte werden innerhalb der OpenVPN-Komponente betrachtet.
+
+## Integrationsbefunde
+
+* Die Befunde aus den ersten interaktiven Integrationstests werden zentral in `11-integrationsbefunde-und-folgearbeiten.md` gebuendelt.
+* Die dortige Aufgabe ist nicht nur Sammlung, sondern die Trennung zwischen Implementierungsarbeit, Spezifikationsnachschaerfung und moeglichem Rechercheauftrag.
+* Die betroffenen Komponentenstatusdokumente sollen ihre jeweils teamnahen Folgearbeiten parallel dazu nachziehen.
 
 ## Pflegehinweis
 

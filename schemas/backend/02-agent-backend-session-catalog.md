@@ -58,6 +58,8 @@ Es dient als Arbeitsgrundlage fuer die spaetere OpenAPI-Spezifikation. Nicht fes
 * Doppelte Startanfragen: Es gewinnt immer die letzte Startanfrage.
 * Heartbeats innerhalb der Grace Period werden normal gewertet.
 * Heartbeats nach Ablauf der Grace Period werden ignoriert.
+* Laufende Heartbeats halten die Support-Session offen, auch wenn aktuell kein Servicemitarbeiter verbunden ist.
+* Das Ende einer Browser- oder Mitarbeiteraktivitaet beendet die Support-Session nicht automatisch.
 * Vertrauen gilt, solange Heartbeats fuer eine Session eingehen und `pin` sowie erkannte IP-Adresse zur Session passen.
 * Aendert sich die erkannte IP-Adresse bei einem Heartbeat, wird die in der Session hinterlegte IP-Adresse aktualisiert.
 * Die Schnittstelle arbeitet vorlaeufig mit einem vereinfachten Vertrauensmodell.
@@ -80,10 +82,11 @@ Noch offen:
 
 Festgelegt:
 
-* eine Session ist `open`, wenn sich eine Konsole anmeldet
+* eine Session ist `open`, wenn sich eine Konsole anmeldet und die Session ohne aktiven Servicemitarbeiter weiterlaufen kann
 * eine Session ist `active`, wenn ein Servicemitarbeiter verbunden ist
 * eine Session geht bei ausbleibendem Heartbeat nach der Grace Period auf `closed`
 * geschlossene Sessions werden nach einer Stunde geloescht, damit die PIN wiederverwendet werden kann
+* faellt eine Session von `active` auf `open` zurueck, bleibt sie durch Agent-Heartbeats weiter gueltig
 * minimale Session-Felder sind `status`, `pin` und `ipAddress`
 
 ## Offene Architekturfragen

@@ -152,7 +152,7 @@ Es übernimmt:
 
 * **Drupal**
 * **PHP**
-* **React** für browserseitige Oberflächen
+* **React** mit **TypeScript** fuer browserseitige Oberflaechen
 
 ### Rolle von Drupal
 
@@ -295,6 +295,18 @@ Der Agent meldet dem zentralen Backend den Zustand der laufenden Support-Sitzung
 * Session-Lebenszeichen senden
 * Session schließen
 
+### Lifecycle-Regel fuer laufende Support-Sitzungen
+
+Fuer den fachlichen Session-Lifecycle gilt:
+
+* Die Support-Session bleibt offen, solange der Agent gueltige Heartbeats innerhalb der vorgesehenen Grace Period liefert.
+* Eine offene Support-Session braucht nicht dauerhaft einen aktiv verbundenen Service-Mitarbeiter.
+* Das Ende einer Browser- oder Mitarbeiteraktivitaet beendet daher nicht automatisch die uebergeordnete Support-Session.
+* Die Support-Session wird erst beendet, wenn:
+  * sie manuell geschlossen wird,
+  * der Agent-Reboot den Support-Zustand beendet,
+  * oder die Heartbeats des Agenten ueber die Grace Period hinaus ausbleiben.
+
 ---
 
 ## Zentrale Schnittstelle: Web-Frontend ↔ RooK Backend
@@ -330,6 +342,15 @@ Das Browser-Terminal kommuniziert interaktiv mit dem Gateway.
 ### Aufgabe
 
 * Weiterleitung des Terminal-Datenstroms zwischen Browser und Gateway
+
+### Lifecycle-Regel fuer Browser-Terminals
+
+Fuer die Browser-Terminal-Sitzung gilt:
+
+* Fehlende Tastatur- oder Resize-Aktivitaet allein beendet die Browser-Terminal-Sitzung nicht.
+* Browser, Gateway und die dazwischenliegende Infrastruktur muessen den WebSocket-Pfad so behandeln, dass ruhende, aber weiterhin offene Terminal-Sitzungen nicht allein durch Inaktivitaet des Nutzers abgebrochen werden.
+* Keepalive- oder Ping-Mechanismen duerfen verwendet werden, um transportbedingte Idle-Timeouts in Browser-, Proxy- oder Gateway-Pfaden zu vermeiden.
+* Wenn die Browser-Verbindung tatsaechlich verloren geht, endet die Browser-Terminal-Sitzung; die uebergeordnete Support-Sitzung kann dabei dennoch offen bleiben, solange der Agent weiter Heartbeats liefert.
 
 ---
 
@@ -392,6 +413,8 @@ Das Terminal-Gateway validiert die Berechtigung und baut über OpenVPN eine SSH-
 
 Der RooK-Mitarbeiter arbeitet im Browser-Terminal auf der Konsole.
 
+Wenn das Browser-Terminal spaeter wieder geschlossen wird, kann die uebergeordnete Support-Sitzung dennoch offen bleiben, solange der Agent die Sitzung weiter per Heartbeat am Backend haelt.
+
 ### 8. Support beenden
 
 Nach manuellem Ende, Timeout oder Reboot werden:
@@ -442,7 +465,8 @@ Der Browser erhält keinen direkten Zugriff auf die Konsole.
 ### Sitzungslimits
 
 * PIN ist kurzlebig
-* Session kann ablaufen
+* Session kann bei ausbleibenden Agent-Heartbeats ablaufen
+* fehlende Browser-Aktivitaet allein beendet die uebergeordnete Support-Session nicht
 * Reboot beendet den Support-Zustand
 * Cleanup entfernt temporäre Zugangsdaten und Netzkonfiguration
 

@@ -143,6 +143,9 @@ x-draftScope:
     timeoutSeconds: 30
     duplicateStartHandling: latest-start-wins
     lateHeartbeatHandling: ignore-after-grace-period
+    heartbeatKeepsSessionOpen: true
+    serviceParticipationRequiredForOpenSession: false
+    browserDisconnectEndsSupportSession: false
     trustValidation: heartbeat-pin-and-ip-match
     ipChangeHandling: update-session-ip-on-heartbeat
     auditMinimumFields:
@@ -176,6 +179,13 @@ components:
 
     SupportSessionState:
       type: string
+      description: |
+        `open` bedeutet, dass die Support-Session auf Backend-Seite weiterlaeuft,
+        obwohl aktuell kein Servicemitarbeiter aktiv verbunden sein muss.
+        `active` bedeutet, dass ein Servicemitarbeiter aktiv auf die Konsole
+        gekoppelt ist. `closed` bedeutet, dass die Session fachlich beendet ist,
+        insbesondere nach manuellem Ende oder ausbleibenden Heartbeats ueber die
+        Grace Period hinaus.
       enum:
         - open
         - active

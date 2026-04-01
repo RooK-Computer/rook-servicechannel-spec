@@ -22,6 +22,7 @@ Aktuell festgelegt:
 
 * die erste fachliche Client-Nachricht muss `authorize` sein
 * vor erfolgreicher Autorisierung wird keine SSH-Verbindung aufgebaut
+* fehlende Nutzereingaben duerfen eine bereits geoeffnete Browser-Terminal-Sitzung nicht automatisch beenden
 
 ### Terminal-Sitzung wird aufgebaut
 
@@ -51,6 +52,7 @@ Aktuell festgelegt:
 
 * bei erfolgreichem Aufbau werden keine zusaetzlichen Terminal-Metadaten zurueckgegeben
 * `authorized` markiert den Abschluss des Autorisierungspfads
+* eine autorisierte Browser-Terminal-Sitzung darf auch ohne laufende Eingaben oder Resize-Ereignisse aktiv bleiben
 
 ### Terminal-Sitzung endet
 
@@ -65,6 +67,9 @@ Noch offen:
 Aktuell festgelegt:
 
 * Reconnects gelten immer als neue Sitzungen
+* fehlende Tastatureingaben sind kein eigenstaendiger Beendigungsgrund
+* geht die Browser-Verbindung tatsaechlich verloren, endet die Browser-Terminal-Sitzung
+* das Ende der Browser-Terminal-Sitzung beendet nicht automatisch die uebergeordnete Support-Sitzung
 
 ## Verbindliche Arbeitsregel
 

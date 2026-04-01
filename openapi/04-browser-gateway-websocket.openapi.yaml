@@ -53,6 +53,9 @@ x-draftScope:
     controlMessagesFrameType: text
     terminalDataMayUseBinaryFrames: true
     reconnectSemantics: always-new-session
+    userInputIdleClosesTerminal: false
+    transportKeepaliveRequired: true
+    browserDisconnectEndsOnlyBrowserTerminalSession: true
     terminalMetadataReturned: none
     authorizationFlow: post-upgrade-authorize-message
     minimumMessageTypes:
@@ -69,7 +72,9 @@ components:
       type: object
       description: |
         Fachliche Sicht auf eine Browser-Terminal-Sitzung. Konkrete Felder bleiben
-        bis zur Klaerung des Protokolls offen.
+        bis zur Klaerung des Protokolls offen. Eine autorisierte Sitzung darf auch
+        ohne laufende Nutzereingaben offen bleiben; echte Verbindungsverluste sind
+        fachlich von blosser Bedieninaktivitaet zu trennen.
       additionalProperties: false
       properties: {}
 

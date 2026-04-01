@@ -106,7 +106,7 @@ x-draftScope:
     visibleSessionFields:
       - status
     terminalGrantFormat: opaque-token
-    terminalGrantValidity: while-session-runs-or-until-terminal-disconnect
+    terminalGrantValidity: while-session-runs-with-short-reconnect-grace-after-browser-disconnect
     terminalGrantReusable: false
     terminalGrantReconnectReuseWithinGraceWindow: true
     requiredRole: Service

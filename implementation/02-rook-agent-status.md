@@ -42,6 +42,15 @@ Der RooK Agent ist der zentrale lokale Systemdienst für den Support-Modus. Er s
 3. Danach entscheiden, ob als naechster Schritt zunaechst der automatische Heartbeat-/Runtime-Kern von Plan 03 oder weitere gezielte CLI-Nachschliffe noetig sind.
 4. Erst danach den Ausbau in Richtung Dienstmodus, lokaler IPC sowie WLAN-/VPN-Integration fortsetzen.
 
+## Aktuelle Integrationsbefunde
+
+* Der erste interaktive Integrationslauf hat einen neuen Schwerpunkt auf den Session-Lifecycle gelegt.
+* Im Mittelpunkt steht die Frage, ob eine vom Agent gestartete Support-Session serverseitig offen bleibt, solange weiterhin Agent-Pings eintreffen.
+* Die zentrale Einordnung und die komponentenuebergreifenden Folgearbeiten dazu werden in `11-integrationsbefunde-und-folgearbeiten.md` gepflegt.
+* Fuer dieses Statusdokument heisst das insbesondere:
+  * Heartbeat- und Beobachtbarkeitspfad gegen den realen Integrationsfall absichern.
+  * Nach dem Review explizit pruefen, ob Plan 03 den laenger laufenden Agent-Kern und die gewuenschte Session-Persistenz ausreichend abdeckt.
+
 ## Hinweise für spätere Aktualisierung
 
 * Nach jedem abgeschlossenen Plan-Abschnitt ist vor dem naechsten Abschnitt ein Review-Stopp vorgesehen; dieser Status sollte hier jeweils sichtbar nachgefuehrt werden.

@@ -92,6 +92,21 @@ Das RooK Backend ist die zentrale Control Plane. Es verwaltet Support-Sitzungen,
 3. Die Browser-Gateway-Protokolldetails fuer `resize` explizit nachschaerfen; der aktuelle Integrationsstand zeigt, dass die Feldnamen `columns` und `rows` belastbar festgehalten werden muessen.
 4. Weitere Integrations- oder Delivery-Anforderungen nur bei belastbarem Bedarf ergänzen, statt vorschnell neue Toolketten einzuführen.
 
+## Aktuelle Integrationsbefunde
+
+* Die ersten interaktiven Integrationstests zeigen neue Folgearbeiten sowohl in der Team-UI als auch im Session-Lifecycle.
+* Fuer das Backend betreffen die derzeit sichtbaren Punkte insbesondere:
+  * Umstellung der Team-Oberflaeche von einem zweispaltigen auf einen vertikalen Zwei-Block-Aufbau,
+  * Debug-Informationen nur noch hinter einem klickbaren Info-Symbol statt als dauerhafter Block,
+  * vollbreite 4:3-Anordnung des Browser-Terminals mit Hoehenbegrenzung gegen die verfuegbare Bildschirmhoehe unter Beruecksichtigung der Drupal-Oberflaeche,
+  * verbindliche Migration der Team-UI von Plain JavaScript zu TypeScript,
+  * Menueeinbindung fuer Konfigurations- und Werkzeugseiten,
+  * Nachschaerfung der Session-Regeln gegenueber Agent-Heartbeat und Browser-/Gateway-Idle.
+* Fuer die Menueeinbindung ist aktuell gewuenscht:
+  * Team-UI direkt in die Hauptnavigation, moeglichst ganz oben,
+  * Konfigurationszugang unter Drupal `Configuration/System`.
+* Die zentrale Einordnung, inklusive moeglichem Spezifikations- oder Recherchebedarf, wird in `11-integrationsbefunde-und-folgearbeiten.md` gepflegt.
+
 ## Hinweise für spätere Aktualisierung
 
 * Dieses Dokument soll waehrend der Umsetzung fortlaufend mit dem Stand von Bootstrap, Datenmodell, REST-Endpunkten, Rechtemodell, Gateway-Integration und Testabdeckung aktualisiert werden.
