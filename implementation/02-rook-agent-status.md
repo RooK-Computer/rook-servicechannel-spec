@@ -1,6 +1,6 @@
 # Implementierungsstatus – RooK Agent auf der Konsole
 
-Status: Nicht begonnen
+Status: Planung konkretisiert
 
 ## Zweck der Komponente
 
@@ -8,16 +8,19 @@ Der RooK Agent ist der zentrale lokale Systemdienst für den Support-Modus. Er s
 
 ## Aktueller Stand
 
-* Die Implementierung wurde noch nicht begonnen.
-* Die Komponente muss noch implementiert werden.
+* Die Implementierung wurde noch nicht begonnen, aber die Umsetzungsplanung fuer dieses Repository wurde konkretisiert.
+* Im Root-Repository wurden detaillierte Implementierungsplaene im Ordner `plans/` angelegt.
+* Fuer dieses Repository ist als erster MVP zunaechst ein interaktives CLI-Werkzeug vorgesehen, das den Session-Lifecycle gegen das Backend abbildet.
+* WLAN-Konfiguration, OpenVPN-Automatisierung und VPN-Statusabfrage bleiben fuer spaetere Ausbaustufen eingeplant.
+* Die gemeinsame Architektur muss in einem spaeteren Schritt noch explizit um diesen CLI-First-MVP ergaenzt werden.
 
 ## Hauptaufgaben in der Umsetzung
 
-* Systemd-Dienst in Go aufsetzen
-* Lokalen Zustandsautomaten für WLAN, VPN, Support-Modus und PIN modellieren
-* Lokale IPC zur UI umsetzen
-* REST-Kommunikation mit dem Backend für Session-Start, Status, Heartbeat und Session-Ende umsetzen
-* OpenVPN sowie lokale Cleanup- und Lifecycle-Operationen integrieren
+* Go-Projektgrundlage und wiederverwendbaren Agent-Kern aufsetzen
+* REST-Kommunikation mit dem Backend fuer Session-Start, Status, Heartbeat, PIN und Session-Ende umsetzen
+* Ersten interaktiven CLI-MVP fuer Backend-Integration und Testumgebungen bereitstellen
+* Danach den laenger laufenden Agent-Kern mit sauberem Zustandsmodell und spaeterem systemd-Modus ausbauen
+* Lokale IPC zur UI, WLAN-Steuerung, OpenVPN-Steuerung sowie Cleanup- und Lifecycle-Operationen in nachfolgenden Phasen integrieren
 
 ## Abhängigkeiten
 
@@ -27,14 +30,16 @@ Der RooK Agent ist der zentrale lokale Systemdienst für den Support-Modus. Er s
 
 ## Nächste sinnvolle Schritte
 
-1. Agent-Grunddienst und internes Zustandsmodell anlegen.
-2. Backend-Anbindung für Support-Session-Lifecycle implementieren.
-3. WLAN- und VPN-Steuerung integrieren.
-4. Lokale IPC für die spätere UI-Anbindung ergänzen.
+1. Backend-Vertrag fuer den fruehen CLI-MVP und die benoetigten Session-Payloads praezisieren.
+2. Go-Projektstruktur und interaktives CLI-Grundgeruest anlegen.
+3. Session-Start, Status, Heartbeat, PIN-Anzeige und Session-Ende gegen das Backend implementieren.
+4. Gemeinsame Architektur- und Implementierungsdokumente auf den CLI-First-MVP vorbereiten bzw. spaeter entsprechend nachziehen.
+5. Danach den Ausbau in Richtung Dienstmodus, lokaler IPC sowie WLAN-/VPN-Integration fortsetzen.
 
 ## Hinweise für spätere Aktualisierung
 
-* Sobald die Implementierung beginnt, sollen hier insbesondere der Stand von Backend-Integration, VPN-Steuerung und lokalem Cleanup gepflegt werden.
+* Sobald die Implementierung beginnt, sollen hier insbesondere der Stand des CLI-MVPs, der Backend-Integration und der Uebergang vom CLI-Werkzeug zum laenger laufenden Agent-Kern gepflegt werden.
+* Der Ordner `plans/` im Root-Repository dient als detaillierte, fortschreibbare Arbeitsplanung fuer dieses Repo und sollte bei Fortschritt konsistent mit diesem Statusdokument gehalten werden.
 * Aus dem OpenVPN-Repository liegen bereits konkrete Integrationshinweise vor, die bei Start der Agent-Implementierung direkt genutzt werden sollten:
   * clientseitiger systemd-Dienst: `rook-openvpn-client.service`
   * fester TUN-Name: `rookvpn`
