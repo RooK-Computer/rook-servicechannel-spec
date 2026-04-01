@@ -1,6 +1,6 @@
 # Implementierungsstatus – Browser-Terminal-Gateway
 
-Status: Plan 04 umgesetzt, wartet auf Review
+Status: Plan 05 umgesetzt, wartet auf Review
 
 ## Zweck der Komponente
 
@@ -11,7 +11,8 @@ Das Browser-Terminal-Gateway validiert Terminal-Berechtigungen, baut serverseiti
 * Plan 01 (`Runtime-Grundgeruest und Backend-Validierung`) wurde umgesetzt und bildet die Runtime-Basis.
 * Plan 02 (`Browser-WebSocket und Sitzungssteuerung`) wurde umgesetzt und bildet die Browser-/Session-Basis.
 * Plan 03 (`SSH-Bridge und Terminaldatenpfad`) wurde umgesetzt.
-* Plan 04 (`Hardening, Betrieb und Lieferfaehigkeit`) wurde im Gateway-Repository umgesetzt und wartet auf Review.
+* Plan 04 (`Hardening, Betrieb und Lieferfaehigkeit`) wurde umgesetzt und reviewt.
+* Plan 05 (`nfpm-Debian-Paketierung und Installationspfad`) wurde im Gateway-Repository umgesetzt und wartet auf Review.
 * Das Gateway-Repository enthaelt jetzt ein gehaertetes Go-Dienstgeruest:
   * `go.mod`
   * `cmd/gateway/main.go`
@@ -88,6 +89,19 @@ Das Browser-Terminal-Gateway validiert Terminal-Berechtigungen, baut serverseiti
   * `deploy/systemd/rook-servicechannel-gateway.service`
   * `deploy/systemd/gateway.env.example`
   * `Makefile`-Pfade `test-e2e` und `verify`
+* Plan 05 ergaenzt jetzt einen Debian-Paketierungspfad:
+  * `nfpm.yaml`
+  * Maintainer-Skripte unter `packaging/nfpm/`
+  * `Makefile`-Pfade `package` und `package-inspect`
+  * `.deb`-Paketbau mit `nfpm`
+* Der Paketierungsansatz bleibt betriebsseitig konservativ:
+  * Binary, `systemd`-Unit und Beispiel-Environment werden paketiert
+  * Laufzeitkonfiguration bleibt extern
+  * der `systemd`-Dienst wird bei Paketinstallation weder automatisch aktiviert noch gestartet
+* Der Paketbuild ist fuer das aktuelle Team-Setup auf lokale Vorvalidierung ohne Debian-Toolchain ausgelegt:
+  * Paketbau ueber `go run ... nfpm`
+  * Inhaltspruefung per `ar`/`tar`
+  * echte Installations- und Laufzeittests auf Debian bleiben Folgearbeit
 * Im Gateway-Repository wurden fortsetzbare Detailplaene unter `plans/` angelegt.
 * Die Planung ist bewusst in reviewbare Teilabschnitte geschnitten:
   * `plans/01-runtime-grundgeruest-und-backend-validierung.md`
@@ -118,8 +132,8 @@ Das Browser-Terminal-Gateway validiert Terminal-Berechtigungen, baut serverseiti
 
 ## Nächste sinnvolle Schritte
 
-1. Plan 04 reviewen und Rueckmeldungen in Code, Plan und Statusartefakten nachziehen.
-2. Danach anhalten und keinen weiteren Plan ohne explizite Freigabe beginnen.
+1. Plan 05 reviewen und Rueckmeldungen in Paketlayout, README und Statusartefakten nachziehen.
+2. Danach wieder anhalten und keinen weiteren Plan ohne explizite Freigabe beginnen.
 
 ## Hinweise für spätere Aktualisierung
 
