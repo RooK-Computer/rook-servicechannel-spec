@@ -1,6 +1,6 @@
 # Implementierungsstatus – RooK Agent auf der Konsole
 
-Status: Bootstrap umgesetzt, Review ausstehend
+Status: Bootstrap revalidiert, Review ausstehend
 
 ## Zweck der Komponente
 
@@ -9,8 +9,9 @@ Der RooK Agent ist der zentrale lokale Systemdienst für den Support-Modus. Er s
 ## Aktueller Stand
 
 * Die Umsetzungsplanung fuer dieses Repository wurde konkretisiert und in den Root-Dokumenten verankert.
-* Plan 01 wurde als Bootstrap-Phase umgesetzt und wartet nun auf Review, bevor Plan 02 beginnt.
+* Plan 01 wurde als Bootstrap-Phase umgesetzt, nach einem Review-Befund korrigiert und erneut validiert; vor Plan 02 steht weiterhin der Review-Stopp.
 * Es gibt jetzt ein erstes Go-Projektgeruest mit ausfuehrbarem Einstiegspunkt, Konfigurationsmodell, Logging-Basis, Build-Makefile und ersten Tests.
+* Der anfangs gefundene Fehler im Bootstrap-Runloop wurde behoben; der Prozess bleibt nun bis zum Interrupt aktiv und beendet sich danach sauber.
 * Der Backend-API-Endpoint ist von Beginn an per Flag und Umgebungsvariable konfigurierbar angelegt.
 * Fuer dieses Repository bleibt als erster MVP weiterhin ein interaktives CLI-Werkzeug fuer den Session-Lifecycle gegen das Backend vorgesehen.
 * WLAN-Konfiguration, OpenVPN-Automatisierung und VPN-Statusabfrage bleiben fuer spaetere Ausbaustufen eingeplant.
