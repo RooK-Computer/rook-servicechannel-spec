@@ -1,6 +1,6 @@
 # Implementierungsstatus – Browser-Terminal-Gateway
 
-Status: Plan 02 umgesetzt, wartet auf Review
+Status: Plan 03 umgesetzt, wartet auf Review
 
 ## Zweck der Komponente
 
@@ -9,7 +9,8 @@ Das Browser-Terminal-Gateway validiert Terminal-Berechtigungen, baut serverseiti
 ## Aktueller Stand
 
 * Plan 01 (`Runtime-Grundgeruest und Backend-Validierung`) wurde umgesetzt und bildet die Runtime-Basis.
-* Plan 02 (`Browser-WebSocket und Sitzungssteuerung`) wurde im Gateway-Repository umgesetzt und wartet auf Review.
+* Plan 02 (`Browser-WebSocket und Sitzungssteuerung`) wurde umgesetzt und bildet die Browser-/Session-Basis.
+* Plan 03 (`SSH-Bridge und Terminaldatenpfad`) wurde im Gateway-Repository umgesetzt und wartet auf Review.
 * Das Gateway-Repository enthaelt jetzt ein erstes Go-Dienstgeruest:
   * `go.mod`
   * `cmd/gateway/main.go`
@@ -42,19 +43,34 @@ Das Browser-Terminal-Gateway validiert Terminal-Berechtigungen, baut serverseiti
   * der Header-basierte Handshake ist die alleinige Autorisierung
   * `authorize` und `authorized` sind nicht mehr Teil des aktiven Laufzeitprotokolls
   * Kontrollnachrichten bleiben Text-Frames; Terminaleingaben duerfen weiterhin als Binary-Frames kommen
+* Die SSH-Bridge und der Terminaldatenpfad aus Plan 03 sind jetzt produktiv verdrahtet:
+  * serverseitiger SSH-Aufbau zur Ziel-IP aus dem validierten Grant
+  * PTY-Anforderung mit `TERM=xterm-256color`
+  * Browser-`input` wird an SSH-STDIN geschrieben
+  * SSH-Output wird als Browser-`output` weitergegeben
+  * Browser-`resize` propagiert bis in das PTY
+  * Browser-, Session- und SSH-Cleanup sind gekoppelt
+* Der Gateway-MVP bleibt lokal testbar, obwohl die finale Backend-Integration noch nicht fertig ist:
+  * Mock-/Stub-Validatoren fuer die Grant-Seite
+  * lokaler Integrationspfad gegen Test-SSH-Server und WebSocket-Client
+* Bekannter MVP-Kompromiss:
+  * Host-Key-Verifikation wird aktuell bewusst umgangen, weil die Konsolen-Host-Keys noch nicht verifizierbar bereitstehen
+  * dieses Hardening ist in Plan 04 nachzuziehen
 * Die Backend-Validierung fuer Terminal-Grants wurde als eigener Client fuer `POST /api/gateway/1/validateToken` umgesetzt.
 * Die Fehlerpfade des Grant-Clients sind mit Mock-Backends abgesichert:
   * Erfolg mit `ipAddress`
   * fachlich ungueltiger Grant
   * Backend-Fehler
   * Transport-/Timeout-Fehler
-* Die Browser-WebSocket- und Session-Logik ist mit Tests gegen Mock-Validatoren und WebSocket-Clients abgesichert:
+* Die Browser-WebSocket-, Session- und SSH-Logik ist mit Tests gegen Mock-Validatoren, WebSocket-Clients und einen lokalen Test-SSH-Server abgesichert:
   * fehlender Grant
   * ungueltiger Grant
   * Backend-Fehler
   * erfolgreicher Upgrade-Pfad
   * Ablehnung veralteter `authorize`-Nachrichten
   * Queue-Ueberlauf und Session-Cleanup
+  * Resize-Propagation
+  * Browser-zu-SSH-MVP-Datenpfad
 * `go test ./...` und `go build ./...` wurden fuer den neuen Stand erfolgreich ausgefuehrt.
 * Im Gateway-Repository wurden fortsetzbare Detailplaene unter `plans/` angelegt.
 * Die Planung ist bewusst in reviewbare Teilabschnitte geschnitten:
@@ -86,9 +102,8 @@ Das Browser-Terminal-Gateway validiert Terminal-Berechtigungen, baut serverseiti
 
 ## Nächste sinnvolle Schritte
 
-1. Plan 02 reviewen und Rueckmeldungen in Code, Plan und Statusartefakten nachziehen.
-2. Erst nach expliziter Freigabe Plan 03 umsetzen: SSH-Bridge und Terminal-Datenpfad an die bestehenden Session-Hooks anbinden.
-3. Danach Plan 04 fuer Hardening, Betrieb, Audit und Lieferfaehigkeit umsetzen.
+1. Plan 03 reviewen und Rueckmeldungen in Code, Plan und Statusartefakten nachziehen.
+2. Erst nach expliziter Freigabe Plan 04 umsetzen: Hardening, Betrieb, Audit und Lieferfaehigkeit.
 
 ## Hinweise für spätere Aktualisierung
 
