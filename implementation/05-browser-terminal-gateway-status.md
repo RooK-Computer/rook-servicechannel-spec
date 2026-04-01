@@ -34,6 +34,8 @@ Das Browser-Terminal-Gateway validiert Terminal-Berechtigungen, baut serverseiti
   * `GET /gateway/terminal` fuehrt das WebSocket-Upgrade ohne Grant-Header aus
   * die erste fachliche Client-Nachricht muss `authorize` mit dem Terminal-Grant sein
   * ungueltige Autorisierung wird nach dem Upgrade als `error` plus `close` signalisiert
+  * fuer den laufenden Integrationstest ist die WebSocket-Origin-Pruefung per Hotfix derzeit bewusst offen
+  * eine belastbare Origin-/Proxy-Strategie fuer produktionsnahe Deployments und Portweiterleitungen ist als Folgeplanung noch zu konkretisieren
 * Das Sitzungsmodell wurde fuer Browser-Verbindungen zentral eingezogen:
   * technische Session-ID
   * Browser-State
