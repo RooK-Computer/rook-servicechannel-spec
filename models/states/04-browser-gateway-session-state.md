@@ -1,6 +1,6 @@
 # Browser ↔ Gateway – Terminal-Sitzungszustand
 
-Status: Wartet auf Implementierungserkenntnisse
+Status: Implementierungsstand nach Plan 06
 
 ## Zweck
 
@@ -8,15 +8,20 @@ Dieses Dokument haelt die aus dem Konzept ableitbaren Zustandsaspekte der Browse
 
 ## Direkt ableitbare Zustandsaspekte
 
-### Berechtigung liegt vor oder nicht vor
+### Vorautorisierte WebSocket-Verbindung
 
 Aus dem Konzept ableitbar:
 
-* das Gateway validiert eine vom Backend ausgestellte Terminal-Berechtigung
+* nach erfolgreichem Upgrade besteht zunaechst nur eine rohe WebSocket-Verbindung ohne aktive Terminal-Sitzung
 
 Noch offen:
 
-* wie dieser Zustand technisch in Nachrichten oder Close-Codes sichtbar wird
+* ob fuer diesen Zustand spaeter ein eigener kuerzerer Timeout konfigurierbar gemacht wird
+
+Aktuell festgelegt:
+
+* die erste fachliche Client-Nachricht muss `authorize` sein
+* vor erfolgreicher Autorisierung wird keine SSH-Verbindung aufgebaut
 
 ### Terminal-Sitzung wird aufgebaut
 
@@ -26,7 +31,11 @@ Aus dem Konzept ableitbar:
 
 Noch offen:
 
-* wie der spaetere Uebergang von erfolgreichem Handshake zu echter SSH-Bridge in Plan 03 genau signalisiert oder intern gekoppelt wird
+* keine weiteren offenen Fragen zur aktuellen Minimal-Signalisierung
+
+Aktuell festgelegt:
+
+* erfolgreiche Autorisierung wird mit `authorized` bestaetigt
 
 ### Terminal-Sitzung ist aktiv
 
@@ -41,7 +50,7 @@ Noch offen:
 Aktuell festgelegt:
 
 * bei erfolgreichem Aufbau werden keine zusaetzlichen Terminal-Metadaten zurueckgegeben
-* der erfolgreiche Header-basierte WebSocket-Handshake ist zugleich der Abschluss des Autorisierungspfads
+* `authorized` markiert den Abschluss des Autorisierungspfads
 
 ### Terminal-Sitzung endet
 

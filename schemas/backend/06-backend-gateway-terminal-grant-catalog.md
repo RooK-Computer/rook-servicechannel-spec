@@ -1,6 +1,6 @@
 # Backend ↔ Gateway – Terminal-Grant-Katalog
 
-Status: Wartet auf Implementierungserkenntnisse
+Status: Implementierungsstand nach Plan 06
 
 ## Zweck
 
@@ -17,7 +17,7 @@ Es dient als Arbeitsgrundlage fuer die spaetere Spezifikation des Grant-Lebenszy
 ## Bereits konsistent aus Nachbarplaenen ableitbar
 
 * Das Token ist ein opaque Token.
-* Das Token wird vom Web-Frontend ueber den Header an das Gateway uebergeben.
+* Das Token wird vom Web-Frontend per WebSocket-Nachricht `authorize` an das Gateway uebergeben.
 * Das Token ist grundsaetzlich nicht wiederverwendbar.
 * Ausnahme: Innerhalb des 30-Sekunden-Reconnect-Fensters darf derselbe Grant fuer eine neue Browser-Sitzung erneut verwendet werden.
 * Das Token ist fuer den Mitarbeiter so lange gueltig, wie die Session laeuft oder bis die Terminalverbindung getrennt wird.

@@ -1,6 +1,6 @@
 # Implementierungsstatus – Browser-Terminal-Gateway
 
-Status: Plan 05 reviewed/abgenommen
+Status: Plan 06 umgesetzt, wartet auf Review
 
 ## Zweck der Komponente
 
@@ -13,6 +13,10 @@ Das Browser-Terminal-Gateway validiert Terminal-Berechtigungen, baut serverseiti
 * Plan 03 (`SSH-Bridge und Terminaldatenpfad`) wurde umgesetzt.
 * Plan 04 (`Hardening, Betrieb und Lieferfaehigkeit`) wurde umgesetzt und reviewt.
 * Plan 05 (`nfpm-Debian-Paketierung und Installationspfad`) wurde umgesetzt und reviewt.
+* Der in der ersten Integrationsvorbereitung erkannte Browser-Blocker wurde in Plan 06 technisch adressiert:
+  * Browser-WebSocket-APIs brauchen keine benutzerdefinierten Auth-Header mehr.
+  * Der Grant wird jetzt als erste WebSocket-Nachricht `authorize` uebertragen.
+  * Erfolgreiche Autorisierung und erfolgreicher Sitzungsaufbau werden mit `authorized` bestaetigt.
 * Das Gateway-Repository enthaelt jetzt ein gehaertetes Go-Dienstgeruest:
   * `go.mod`
   * `cmd/gateway/main.go`
@@ -26,10 +30,10 @@ Das Browser-Terminal-Gateway validiert Terminal-Berechtigungen, baut serverseiti
   * Konfiguration per Umgebungsvariablen und optionaler lokaler `KEY=VALUE`-Datei
   * strukturierte Logs ab Start
   * `/healthz` und `/readyz` fuer Liveness/Grundbereitschaft
-* Der Browser-WebSocket-Handshake aus Plan 02 ist jetzt produktiv verdrahtet:
-  * `GET /gateway/terminal` fuehrt bei gueltigem Grant ein echtes WebSocket-Upgrade aus
-  * der Grant wird vor dem Upgrade ueber den Header gelesen und gegen das Backend validiert
-  * fehlerhafte Handshakes bleiben HTTP-JSON-Antworten mit `code` und `message`
+* Der Browser-WebSocket-Handshake aus Plan 02 ist jetzt browser-kompatibel nachgezogen:
+  * `GET /gateway/terminal` fuehrt das WebSocket-Upgrade ohne Grant-Header aus
+  * die erste fachliche Client-Nachricht muss `authorize` mit dem Terminal-Grant sein
+  * ungueltige Autorisierung wird nach dem Upgrade als `error` plus `close` signalisiert
 * Das Sitzungsmodell wurde fuer Browser-Verbindungen zentral eingezogen:
   * technische Session-ID
   * Browser-State
@@ -43,9 +47,9 @@ Das Browser-Terminal-Gateway validiert Terminal-Berechtigungen, baut serverseiti
   * konfigurierbares Session-Idle-Timeout
   * konfigurierbare maximale Parallelitaet
   * explizites Cleanup aus dem Sitzungsregister
-* Die Browser-Gateway-Protokollentscheidung wurde geschaerft und im `spec`-Submodul nachgezogen:
-  * der Header-basierte Handshake ist die alleinige Autorisierung
-  * `authorize` und `authorized` sind nicht mehr Teil des aktiven Laufzeitprotokolls
+* Die Browser-Gateway-Protokollentscheidung ist in Plan 06 neu festgezogen:
+  * `authorize` ist wieder Teil des aktiven Laufzeitprotokolls
+  * `authorized` bleibt als explizite Erfolgsbestaetigung im aktiven Laufzeitprotokoll
   * Kontrollnachrichten bleiben Text-Frames; Terminaleingaben duerfen weiterhin als Binary-Frames kommen
 * Die SSH-Bridge und der Terminaldatenpfad aus Plan 03 sind jetzt produktiv verdrahtet:
   * serverseitiger SSH-Aufbau zur Ziel-IP aus dem validierten Grant
@@ -72,11 +76,11 @@ Das Browser-Terminal-Gateway validiert Terminal-Berechtigungen, baut serverseiti
   * Backend-Fehler
   * Transport-/Timeout-Fehler
 * Die Browser-WebSocket-, Session- und SSH-Logik ist mit Tests gegen Mock-Validatoren, WebSocket-Clients und einen lokalen Test-SSH-Server abgesichert:
-  * fehlender Grant
-  * ungueltiger Grant
-  * Backend-Fehler
-  * erfolgreicher Upgrade-Pfad
-  * Ablehnung veralteter `authorize`-Nachrichten
+  * erfolgreicher Upgrade-Pfad ohne benutzerdefinierten Header
+  * ungueltiger Grant nach `authorize`
+  * Backend-Fehler nach `authorize`
+  * Ablehnung fachlicher Nachrichten vor erfolgreicher Autorisierung
+  * explizite `authorized`-Bestaetigung vor dem Terminal-Datenpfad
   * Queue-Ueberlauf und Session-Cleanup
   * Session-Limit
   * Idle-Timeout
@@ -84,6 +88,7 @@ Das Browser-Terminal-Gateway validiert Terminal-Berechtigungen, baut serverseiti
   * Browser-zu-SSH-MVP-Datenpfad
   * lokaler E2E-Erfolgspfad mit echtem Grant-HTTP-Client und echtem SSH-Client
   * Negativpfade fuer Backend-Ausfall und SSH-Ausfall
+* Die Testabdeckung ist jetzt auf echte Browser-Kompatibilitaet ohne benutzerdefinierte WebSocket-Header ausgerichtet.
 * `go test ./...` und `go build ./...` wurden fuer den neuen Stand erfolgreich ausgefuehrt.
 * Ein erster Betriebs-/Lieferpfad liegt jetzt im Repo:
   * `deploy/systemd/rook-servicechannel-gateway.service`
@@ -108,6 +113,8 @@ Das Browser-Terminal-Gateway validiert Terminal-Berechtigungen, baut serverseiti
   * `plans/02-browser-websocket-und-sitzungssteuerung.md`
   * `plans/03-ssh-bridge-und-terminaldatenpfad.md`
   * `plans/04-hardening-betrieb-und-lieferfaehigkeit.md`
+  * `plans/05-nfpm-debian-paketierung-und-installationspfad.md`
+  * `plans/06-websocket-autorisierung-per-nachricht-statt-header.md`
 * `plans/README.md` dient als Einstieg, Reihenfolge und Review-Gate fuer die Umsetzung.
 * `AGENTS.md` beschreibt fuer frische Agenten, wie nach Unterbrechungen weitergearbeitet wird.
 * Lokale SSH-Secrets fuer den spaeteren Gateway-zu-Konsole-Zugang wurden vorbereitet:
@@ -132,8 +139,9 @@ Das Browser-Terminal-Gateway validiert Terminal-Berechtigungen, baut serverseiti
 
 ## Nächste sinnvolle Schritte
 
-1. Gateway-Track vorerst als abgeschlossen betrachten.
-2. Offene Folgearbeiten wie Debian-Installations-/Runtime-Tests, Paket-Signing oder Host-Key-Haertung separat priorisieren.
+1. Review von Plan 06 durchfuehren.
+2. Rueckmeldungen aus Review und erstem echten Browser-Integrationslauf nachziehen.
+3. Erst danach weitere Folgearbeiten wie Debian-Installations-/Runtime-Tests, Paket-Signing oder Host-Key-Haertung priorisieren.
 
 ## Hinweise für spätere Aktualisierung
 

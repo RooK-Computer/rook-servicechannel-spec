@@ -5,11 +5,13 @@ info:
   description: |
     Erster Arbeitsstand fuer die Browser-zu-Gateway-Schnittstelle.
 
-    Dieser Entwurf haelt nur die aus dem Konzept eindeutig ableitbaren fachlichen
-    Elemente fest. Die Grundentscheidungen zu Header-basierter Grant-Uebergabe,
-    Nachrichtenarten, Frame-Typen und Reconnect-Semantik sind eingearbeitet.
-    Offen bleiben derzeit nur Payload-Details, Close-Codes, das Fehlerformat
-    und der finale Header-Name.
+    Dieser Entwurf haelt den aktuell umgesetzten Browser-Pfad fuer die
+    Browser-zu-Gateway-Schnittstelle fest. Die Terminal-Berechtigung wird nach
+    erfolgreichem WebSocket-Upgrade als erste Protokollnachricht uebertragen;
+    das Gateway bestaetigt erfolgreiche Autorisierung mit `authorized`.
+
+    Offen bleiben derzeit vor allem detaillierte Payload-Felder, Close-Codes
+    und die langfristige Fehlerklassifikation.
 servers: []
 paths:
   /gateway/terminal:
@@ -18,14 +20,9 @@ paths:
         - browser-terminal
       summary: Browser terminal websocket handshake
       description: |
-        Der initiale Handshake fuer die Browser-zu-Gateway-Kommunikation. Die
-        Terminal-Berechtigung wird per Header uebergeben.
-      parameters:
-        - name: X-Rook-Terminal-Grant
-          in: header
-          required: true
-          schema:
-            type: string
+        Der initiale Handshake fuer die Browser-zu-Gateway-Kommunikation. Der
+        Browser braucht keine benutzerdefinierten Auth-Header; die
+        Terminal-Berechtigung folgt als erste WebSocket-Nachricht.
       responses:
         '101':
           description: WebSocket-Upgrade erfolgreich
@@ -48,17 +45,19 @@ x-draftScope:
     - concrete-payload-models
     - close-codes
     - error-format-details
-    - header-name-finalization
+    - detailed-authorize-payload
   decisionsFromClarification:
     openApiScope: handshake-and-message-protocol
-    grantDelivery: header
+    grantDelivery: websocket-authorize-message
     frameTypes: text-and-binary
     controlMessagesFrameType: text
     terminalDataMayUseBinaryFrames: true
     reconnectSemantics: always-new-session
     terminalMetadataReturned: none
-    authorizationFlow: handshake-header-only
+    authorizationFlow: post-upgrade-authorize-message
     minimumMessageTypes:
+      - authorize
+      - authorized
       - input
       - output
       - resize
@@ -94,6 +93,28 @@ components:
       properties:
         type:
           type: string
+
+    AuthorizeMessage:
+      allOf:
+        - $ref: '#/components/schemas/ControlMessageBase'
+        - type: object
+          additionalProperties: false
+          required:
+            - token
+          properties:
+            type:
+              const: authorize
+            token:
+              type: string
+              minLength: 1
+
+    AuthorizedMessage:
+      allOf:
+        - $ref: '#/components/schemas/ControlMessageBase'
+        - type: object
+          properties:
+            type:
+              const: authorized
 
     InputMessage:
       allOf:

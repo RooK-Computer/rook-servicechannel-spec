@@ -1,6 +1,6 @@
 # Browser ↔ Gateway – Nachrichtenarten
 
-Status: Wartet auf Implementierungserkenntnisse
+Status: Implementierungsstand nach Plan 06
 
 ## Zweck
 
@@ -14,15 +14,11 @@ Fachlich notwendig, weil:
 
 * das Gateway die Terminal-Berechtigung validieren muss
 
-Noch offen:
-
-* genaue Header-Bezeichnung fuer die Uebergabe der Berechtigung
-
 Aktuell festgelegt:
 
-* die Berechtigung wird im Header uebergeben
-* die Header-basierte Handshake-Validierung ist der einzige Autorisierungspfad
-* es gibt keine zusaetzlichen Laufzeitnachrichten `authorize` oder `authorized`
+* die Berechtigung wird als erste Client-Nachricht `authorize` uebergeben
+* `authorize` ist die zwingend erste fachliche Nachricht nach erfolgreichem WebSocket-Upgrade
+* das Gateway bestaetigt erfolgreiche Autorisierung mit `authorized`
 
 ### Terminal-Eingabe
 
@@ -84,7 +80,7 @@ Aktuell festgelegt:
 
 ## Weitere festgelegte Nachrichtenarten
 
-* es gibt keine gesonderte Protokoll-ACK-Nachricht fuer erfolgreiche Autorisierung; ein erfolgreicher WebSocket-Handshake ist die positive Bestaetigung
+* `authorized` ist die positive Bestaetigung fuer erfolgreiche Grant-Validierung und erfolgreichen Sitzungsaufbau
 
 ## Verbindliche Arbeitsregel
 

@@ -1,6 +1,6 @@
 # Browser ↔ Gateway – WebSocket-Protokollkatalog
 
-Status: Wartet auf Implementierungserkenntnisse
+Status: Implementierungsstand nach Plan 06
 
 ## Zweck
 
@@ -55,17 +55,19 @@ Noch offen:
 * Welche konkreten Payload-Modelle tragen die Nachrichtenarten?
 * Welche Close-Codes und Fehlertexte werden standardisiert?
 * Wie sieht das finale Fehlerformat aus?
-* Wie soll der Header fuer die Terminal-Berechtigung final heissen?
+* Welche Close-Codes und Fehlertexte fuer die Vorautorisierungsphase langfristig stabilisiert werden?
 
 ## Bereits festgelegte Protokollentscheidungen
 
 * OpenAPI bildet hier sowohl Handshake als auch Nachrichtenprotokoll mit ab.
-* Die Terminal-Berechtigung wird im Header uebergeben.
-* Der erfolgreiche Header-basierte Handshake ist die alleinige Autorisierung; es gibt keine separaten Laufzeitnachrichten `authorize` oder `authorized`.
+* Die Terminal-Berechtigung wird per `authorize`-Nachricht nach erfolgreichem Upgrade uebergeben.
+* Das Gateway bestaetigt erfolgreiche Autorisierung explizit mit `authorized`.
 * Es werden Textframes und Binaerframes verwendet.
 * Steuernachrichten laufen als Textframes.
 * Terminaldaten duerfen auch als Binaerframes uebertragen werden.
 * Minimale Nachrichtenarten sind:
+  * `authorize`
+  * `authorized`
   * `input`
   * `output`
   * `resize`
