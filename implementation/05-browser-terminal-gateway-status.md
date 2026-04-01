@@ -1,6 +1,6 @@
 # Implementierungsstatus – Browser-Terminal-Gateway
 
-Status: Plan 05 umgesetzt, wartet auf Review
+Status: Plan 05 reviewed/abgenommen
 
 ## Zweck der Komponente
 
@@ -12,7 +12,7 @@ Das Browser-Terminal-Gateway validiert Terminal-Berechtigungen, baut serverseiti
 * Plan 02 (`Browser-WebSocket und Sitzungssteuerung`) wurde umgesetzt und bildet die Browser-/Session-Basis.
 * Plan 03 (`SSH-Bridge und Terminaldatenpfad`) wurde umgesetzt.
 * Plan 04 (`Hardening, Betrieb und Lieferfaehigkeit`) wurde umgesetzt und reviewt.
-* Plan 05 (`nfpm-Debian-Paketierung und Installationspfad`) wurde im Gateway-Repository umgesetzt und wartet auf Review.
+* Plan 05 (`nfpm-Debian-Paketierung und Installationspfad`) wurde umgesetzt und reviewt.
 * Das Gateway-Repository enthaelt jetzt ein gehaertetes Go-Dienstgeruest:
   * `go.mod`
   * `cmd/gateway/main.go`
@@ -132,8 +132,8 @@ Das Browser-Terminal-Gateway validiert Terminal-Berechtigungen, baut serverseiti
 
 ## Nächste sinnvolle Schritte
 
-1. Plan 05 reviewen und Rueckmeldungen in Paketlayout, README und Statusartefakten nachziehen.
-2. Danach wieder anhalten und keinen weiteren Plan ohne explizite Freigabe beginnen.
+1. Gateway-Track vorerst als abgeschlossen betrachten.
+2. Offene Folgearbeiten wie Debian-Installations-/Runtime-Tests, Paket-Signing oder Host-Key-Haertung separat priorisieren.
 
 ## Hinweise für spätere Aktualisierung
 
