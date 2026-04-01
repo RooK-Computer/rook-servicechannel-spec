@@ -1,6 +1,6 @@
 # Implementierungsstatus – Browser-Terminal-Gateway
 
-Status: Planung konkretisiert, Implementierung nicht begonnen
+Status: Plan 01 umgesetzt, wartet auf Review
 
 ## Zweck der Komponente
 
@@ -8,7 +8,28 @@ Das Browser-Terminal-Gateway validiert Terminal-Berechtigungen, baut serverseiti
 
 ## Aktueller Stand
 
-* Die eigentliche Implementierung wurde noch nicht begonnen.
+* Plan 01 (`Runtime-Grundgeruest und Backend-Validierung`) wurde im Gateway-Repository umgesetzt und wartet auf Review.
+* Das Gateway-Repository enthaelt jetzt ein erstes Go-Dienstgeruest:
+  * `go.mod`
+  * `cmd/gateway/main.go`
+  * `internal/config/`
+  * `internal/httpserver/`
+  * `internal/grants/`
+  * `internal/shutdown/`
+  * vorbereitende Interface-Pakete unter `internal/session/`, `internal/websocket/`, `internal/sshbridge/` und `internal/audit/`
+* Eine erste englischsprachige `README.md` im Repo-Root beschreibt Zweck, Status und lokale Startschritte fuer GitHub-Leser.
+* Konfiguration und Runtime-Basis wurden fuer Plan 01 konkretisiert:
+  * Konfiguration per Umgebungsvariablen und optionaler lokaler `KEY=VALUE`-Datei
+  * strukturierte Logs ab Start
+  * `/healthz` und `/readyz` fuer Liveness/Grundbereitschaft
+  * Platzhalter fuer `GET /gateway/terminal`, der bereits WebSocket-Upgrade-Header und Grant-Header prueft
+* Die Backend-Validierung fuer Terminal-Grants wurde als eigener Client fuer `POST /api/gateway/1/validateToken` umgesetzt.
+* Die Fehlerpfade des Grant-Clients sind mit Mock-Backends abgesichert:
+  * Erfolg mit `ipAddress`
+  * fachlich ungueltiger Grant
+  * Backend-Fehler
+  * Transport-/Timeout-Fehler
+* `go test ./...`, `go build ./...` und lokale Smoke-Checks fuer gueltige bzw. unvollstaendige Basiskonfiguration wurden erfolgreich ausgefuehrt.
 * Im Gateway-Repository wurden fortsetzbare Detailplaene unter `plans/` angelegt.
 * Die Planung ist bewusst in reviewbare Teilabschnitte geschnitten:
   * `plans/01-runtime-grundgeruest-und-backend-validierung.md`
@@ -39,8 +60,8 @@ Das Browser-Terminal-Gateway validiert Terminal-Berechtigungen, baut serverseiti
 
 ## Nächste sinnvolle Schritte
 
-1. Plan 01 aus `plans/` umsetzen: Runtime-Grundgeruest, Konfiguration, Health-Endpoints und Backend-Grant-Validierung aufbauen.
-2. Nach Review von Plan 01 Plan 02 umsetzen: Browser-WebSocket-Handshake, Sitzungsmodell und Nachrichtenrahmen produktiv machen.
+1. Plan 01 reviewen und Rueckmeldungen in Code, Plan und Statusartefakten nachziehen.
+2. Erst nach expliziter Freigabe Plan 02 umsetzen: Browser-WebSocket-Handshake, Sitzungsmodell und Nachrichtenrahmen produktiv machen.
 3. Danach Plan 03 fuer SSH-Bridge und Terminal-Datenpfad umsetzen.
 4. Abschliessend Plan 04 fuer Hardening, Betrieb, Audit und Lieferfaehigkeit umsetzen.
 
