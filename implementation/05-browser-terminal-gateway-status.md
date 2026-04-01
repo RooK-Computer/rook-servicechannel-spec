@@ -1,6 +1,6 @@
 # Implementierungsstatus – Browser-Terminal-Gateway
 
-Status: Plan 03 umgesetzt, wartet auf Review
+Status: Plan 04 umgesetzt, wartet auf Review
 
 ## Zweck der Komponente
 
@@ -10,8 +10,9 @@ Das Browser-Terminal-Gateway validiert Terminal-Berechtigungen, baut serverseiti
 
 * Plan 01 (`Runtime-Grundgeruest und Backend-Validierung`) wurde umgesetzt und bildet die Runtime-Basis.
 * Plan 02 (`Browser-WebSocket und Sitzungssteuerung`) wurde umgesetzt und bildet die Browser-/Session-Basis.
-* Plan 03 (`SSH-Bridge und Terminaldatenpfad`) wurde im Gateway-Repository umgesetzt und wartet auf Review.
-* Das Gateway-Repository enthaelt jetzt ein erstes Go-Dienstgeruest:
+* Plan 03 (`SSH-Bridge und Terminaldatenpfad`) wurde umgesetzt.
+* Plan 04 (`Hardening, Betrieb und Lieferfaehigkeit`) wurde im Gateway-Repository umgesetzt und wartet auf Review.
+* Das Gateway-Repository enthaelt jetzt ein gehaertetes Go-Dienstgeruest:
   * `go.mod`
   * `cmd/gateway/main.go`
   * `internal/config/`
@@ -34,11 +35,13 @@ Das Browser-Terminal-Gateway validiert Terminal-Berechtigungen, baut serverseiti
   * Validierungsergebnis inklusive Ziel-IP
   * Start-, Aktivitaets- und Endzeitpunkte
   * Abschlussgrund
-* Die WebSocket-Laufzeit wurde vorbereitet:
+* Die WebSocket-Laufzeit ist jetzt mit Betriebsgrenzen gehaertet:
   * getrennte Lese-/Schreibpfade
-  * begrenzte ausgehende Queue pro Sitzung
+  * konfigurierbare maximale WebSocket-Nachrichtengroesse
+  * konfigurierbare Queue-Tiefe pro Sitzung
+  * konfigurierbares Session-Idle-Timeout
+  * konfigurierbare maximale Parallelitaet
   * explizites Cleanup aus dem Sitzungsregister
-  * Hook-Punkt fuer spaeteren SSH-Abbau
 * Die Browser-Gateway-Protokollentscheidung wurde geschaerft und im `spec`-Submodul nachgezogen:
   * der Header-basierte Handshake ist die alleinige Autorisierung
   * `authorize` und `authorized` sind nicht mehr Teil des aktiven Laufzeitprotokolls
@@ -50,9 +53,14 @@ Das Browser-Terminal-Gateway validiert Terminal-Berechtigungen, baut serverseiti
   * SSH-Output wird als Browser-`output` weitergegeben
   * Browser-`resize` propagiert bis in das PTY
   * Browser-, Session- und SSH-Cleanup sind gekoppelt
-* Der Gateway-MVP bleibt lokal testbar, obwohl die finale Backend-Integration noch nicht fertig ist:
-  * Mock-/Stub-Validatoren fuer die Grant-Seite
-  * lokaler Integrationspfad gegen Test-SSH-Server und WebSocket-Client
+* Plan 04 haertet Fehler- und Betriebsverhalten:
+  * konsistente Session-Endgruende und WebSocket-Close-Pfade
+  * explizite Fehler fuer Session-Limit, Idle-Timeout, SSH-Lese-/Schreibfehler und Backend-Nichterreichbarkeit
+  * strukturierte Session-Start-/End-Logs mit Session-ID als Korrelationsanker
+  * Audit-Ereignisse ueber einen Logger-Sink mit vorbereiteten Feldern wie `pin` und `mitarbeiteraccount`, sofern das Backend sie liefert
+* Der Gateway bleibt lokal reproduzierbar testbar, obwohl die finale Backend-Integration noch nicht fertig ist:
+  * Mock-Backend fuer die Grant-Seite
+  * lokaler Integrationspfad gegen Test-SSH-Server und WebSocket-Client unter `tests/e2e/`
 * Bekannter MVP-Kompromiss:
   * Host-Key-Verifikation wird aktuell bewusst umgangen, weil die Konsolen-Host-Keys noch nicht verifizierbar bereitstehen
   * dieses Hardening ist in Plan 04 nachzuziehen
@@ -69,9 +77,17 @@ Das Browser-Terminal-Gateway validiert Terminal-Berechtigungen, baut serverseiti
   * erfolgreicher Upgrade-Pfad
   * Ablehnung veralteter `authorize`-Nachrichten
   * Queue-Ueberlauf und Session-Cleanup
+  * Session-Limit
+  * Idle-Timeout
   * Resize-Propagation
   * Browser-zu-SSH-MVP-Datenpfad
+  * lokaler E2E-Erfolgspfad mit echtem Grant-HTTP-Client und echtem SSH-Client
+  * Negativpfade fuer Backend-Ausfall und SSH-Ausfall
 * `go test ./...` und `go build ./...` wurden fuer den neuen Stand erfolgreich ausgefuehrt.
+* Ein erster Betriebs-/Lieferpfad liegt jetzt im Repo:
+  * `deploy/systemd/rook-servicechannel-gateway.service`
+  * `deploy/systemd/gateway.env.example`
+  * `Makefile`-Pfade `test-e2e` und `verify`
 * Im Gateway-Repository wurden fortsetzbare Detailplaene unter `plans/` angelegt.
 * Die Planung ist bewusst in reviewbare Teilabschnitte geschnitten:
   * `plans/01-runtime-grundgeruest-und-backend-validierung.md`
@@ -102,8 +118,8 @@ Das Browser-Terminal-Gateway validiert Terminal-Berechtigungen, baut serverseiti
 
 ## Nächste sinnvolle Schritte
 
-1. Plan 03 reviewen und Rueckmeldungen in Code, Plan und Statusartefakten nachziehen.
-2. Erst nach expliziter Freigabe Plan 04 umsetzen: Hardening, Betrieb, Audit und Lieferfaehigkeit.
+1. Plan 04 reviewen und Rueckmeldungen in Code, Plan und Statusartefakten nachziehen.
+2. Danach anhalten und keinen weiteren Plan ohne explizite Freigabe beginnen.
 
 ## Hinweise für spätere Aktualisierung
 
