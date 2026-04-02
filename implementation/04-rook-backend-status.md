@@ -87,24 +87,26 @@ Das RooK Backend ist die zentrale Control Plane. Es verwaltet Support-Sitzungen,
 
 ## Nächste sinnvolle Schritte
 
-1. Fehlercode- und Revocation-Semantik nach den bisherigen API-Implementierungen nachschärfen.
-2. Die echte Ende-zu-Ende-Integration der neuen Team-UI gegen eine laufende Gateway-Komponente nachvalidieren.
-3. Die Browser-Gateway-Protokolldetails fuer `resize` explizit nachschaerfen; der aktuelle Integrationsstand zeigt, dass die Feldnamen `columns` und `rows` belastbar festgehalten werden muessen.
+1. Die echte Ende-zu-Ende-Integration der aktualisierten Team-UI gegen eine laufende Gateway-Komponente nachvalidieren.
+2. Fehlercode- und Revocation-Semantik an den bestehenden API-Schnitten gezielt nachschärfen, statt neue Flaechen aufzumachen.
+3. Die Browser-Gateway-Protokolldetails fuer `resize` weiter explizit stabilisieren; der Integrationsstand stuetzt derzeit `columns` und `rows`.
 4. Weitere Integrations- oder Delivery-Anforderungen nur bei belastbarem Bedarf ergänzen, statt vorschnell neue Toolketten einzuführen.
 
 ## Aktuelle Integrationsbefunde
 
 * Die ersten interaktiven Integrationstests zeigen neue Folgearbeiten sowohl in der Team-UI als auch im Session-Lifecycle.
-* Fuer das Backend betreffen die derzeit sichtbaren Punkte insbesondere:
-  * Umstellung der Team-Oberflaeche von einem zweispaltigen auf einen vertikalen Zwei-Block-Aufbau,
-  * Debug-Informationen nur noch hinter einem klickbaren Info-Symbol statt als dauerhafter Block,
+* Erste backendseitige Folgearbeiten daraus wurden bereits umgesetzt:
+  * zentrale Heartbeat-/Timeout-Pruefung im Core statt duplizierter Ablaufpruefung in mehreren API-Schichten,
+  * expliziter Rueckfall `active -> open`, ohne die uebergeordnete Support-Session zu schliessen,
+  * Team-UI in React mit TypeScript als Quellbasis bei weiter committedem Laufzeit-Bundle,
+  * Umstellung der Team-Oberflaeche auf einen vertikalen Zwei-Block-Aufbau,
+  * Debug-Informationen hinter einem klickbaren Info-Symbol,
   * vollbreite 4:3-Anordnung des Browser-Terminals mit Hoehenbegrenzung gegen die verfuegbare Bildschirmhoehe unter Beruecksichtigung der Drupal-Oberflaeche,
-  * verbindliche Migration der Team-UI von Plain JavaScript zu TypeScript,
-  * Menueeinbindung fuer Konfigurations- und Werkzeugseiten,
-  * Nachschaerfung der Session-Regeln gegenueber Agent-Heartbeat und Browser-/Gateway-Idle.
-* Fuer die Menueeinbindung ist aktuell gewuenscht:
-  * Team-UI direkt in die Hauptnavigation, moeglichst ganz oben,
-  * Konfigurationszugang unter Drupal `Configuration/System`.
+  * Menueeinbindung der Team-UI in die Hauptnavigation und des Konfigurationszugangs unter Drupal `Configuration/System`.
+* Fuer die offene Folgepflege bleiben aktuell vor allem:
+  * Ende-zu-Ende-Nachvalidierung der Team-UI gegen ein laufendes Gateway,
+  * weitere Schaerfung von Fehler- und Revocation-Semantik,
+  * laufende Abgleiche mit neuen Integrationsbefunden im `11`er-Dokument.
 * Die zentrale Einordnung, inklusive moeglichem Spezifikations- oder Recherchebedarf, wird in `11-integrationsbefunde-und-folgearbeiten.md` gepflegt.
 
 ## Hinweise für spätere Aktualisierung
