@@ -1,6 +1,6 @@
 # Implementierungsstatus – Browser-Terminal-Gateway
 
-Status: Plan 06 umgesetzt, wartet auf Review
+Status: Plan 07 umgesetzt, wartet auf Review
 
 ## Zweck der Komponente
 
@@ -13,10 +13,15 @@ Das Browser-Terminal-Gateway validiert Terminal-Berechtigungen, baut serverseiti
 * Plan 03 (`SSH-Bridge und Terminaldatenpfad`) wurde umgesetzt.
 * Plan 04 (`Hardening, Betrieb und Lieferfaehigkeit`) wurde umgesetzt und reviewt.
 * Plan 05 (`nfpm-Debian-Paketierung und Installationspfad`) wurde umgesetzt und reviewt.
+* Plan 06 (`WebSocket-Autorisierung per Nachricht statt Header`) wurde umgesetzt und im Zuge des ersten echten Browser-Integrationslaufs indirekt reviewed.
 * Der in der ersten Integrationsvorbereitung erkannte Browser-Blocker wurde in Plan 06 technisch adressiert:
   * Browser-WebSocket-APIs brauchen keine benutzerdefinierten Auth-Header mehr.
   * Der Grant wird jetzt als erste WebSocket-Nachricht `authorize` uebertragen.
   * Erfolgreiche Autorisierung und erfolgreicher Sitzungsaufbau werden mit `authorized` bestaetigt.
+* Der erste echte Browser-Integrationslauf hat direkt den naechsten Folgeplan ausgelost; Plan 07 ist jetzt umgesetzt und wartet auf Review:
+  * fuer das Gateway wurden die Befunde 4 und 5 aus `11-integrationsbefunde-und-folgearbeiten.md` nachgezogen.
+  * Schwerpunkt war die Trennung von Bedieninaktivitaet, Transport-Idle und echten Disconnect-/Endgruenden.
+  * Befund 6 zur uebergeordneten Support-Session bleibt fuer das Gateway eine externe Abhaengigkeit, aber kein primaerer Umsetzungsschnitt in diesem Repo.
 * Das Gateway-Repository enthaelt jetzt ein gehaertetes Go-Dienstgeruest:
   * `go.mod`
   * `cmd/gateway/main.go`
@@ -46,9 +51,15 @@ Das Browser-Terminal-Gateway validiert Terminal-Berechtigungen, baut serverseiti
   * getrennte Lese-/Schreibpfade
   * konfigurierbare maximale WebSocket-Nachrichtengroesse
   * konfigurierbare Queue-Tiefe pro Sitzung
-  * konfigurierbares Session-Idle-Timeout
+  * konfigurierbarer Autorisierungs-Timeout vor `authorize`
+  * konfigurierbare WebSocket-Keepalive-Intervalle und -Timeouts
   * konfigurierbare maximale Parallelitaet
   * explizites Cleanup aus dem Sitzungsregister
+* Gleichzeitig ist aus dem Integrationslauf jetzt eine gezielte Folgearbeit abgeleitet:
+  * aktive Browser-Terminal-Sitzungen werden nicht mehr allein wegen fehlender Eingaben beendet
+  * die Vorautorisierungsphase verwendet jetzt einen getrennten `authorize_timeout`
+  * eine explizite WebSocket-Keepalive-Strategie ist jetzt im Gateway eingezogen
+  * `GATEWAY_SESSION_AUTHORIZE_TIMEOUT` ist der klare Konfigurationswert fuer die Vorautorisierungsphase; `GATEWAY_SESSION_IDLE_TIMEOUT` bleibt als Legacy-Fallback erhalten
 * Die Browser-Gateway-Protokollentscheidung ist in Plan 06 neu festgezogen:
   * `authorize` ist wieder Teil des aktiven Laufzeitprotokolls
   * `authorized` bleibt als explizite Erfolgsbestaetigung im aktiven Laufzeitprotokoll
@@ -62,7 +73,7 @@ Das Browser-Terminal-Gateway validiert Terminal-Berechtigungen, baut serverseiti
   * Browser-, Session- und SSH-Cleanup sind gekoppelt
 * Plan 04 haertet Fehler- und Betriebsverhalten:
   * konsistente Session-Endgruende und WebSocket-Close-Pfade
-  * explizite Fehler fuer Session-Limit, Idle-Timeout, SSH-Lese-/Schreibfehler und Backend-Nichterreichbarkeit
+  * explizite Fehler fuer Session-Limit, `authorize_timeout`, `keepalive_timeout`, SSH-Lese-/Schreibfehler und Backend-Nichterreichbarkeit
   * strukturierte Session-Start-/End-Logs mit Session-ID als Korrelationsanker
   * Audit-Ereignisse ueber einen Logger-Sink mit vorbereiteten Feldern wie `pin` und `mitarbeiteraccount`, sofern das Backend sie liefert
 * Der Gateway bleibt lokal reproduzierbar testbar, obwohl die finale Backend-Integration noch nicht fertig ist:
@@ -85,7 +96,8 @@ Das Browser-Terminal-Gateway validiert Terminal-Berechtigungen, baut serverseiti
   * explizite `authorized`-Bestaetigung vor dem Terminal-Datenpfad
   * Queue-Ueberlauf und Session-Cleanup
   * Session-Limit
-  * Idle-Timeout
+  * getrennter `authorize_timeout`
+  * ruhende, aber weiter offene Browser-Sitzung mit Keepalive
   * Resize-Propagation
   * Browser-zu-SSH-MVP-Datenpfad
   * lokaler E2E-Erfolgspfad mit echtem Grant-HTTP-Client und echtem SSH-Client
@@ -117,6 +129,7 @@ Das Browser-Terminal-Gateway validiert Terminal-Berechtigungen, baut serverseiti
   * `plans/04-hardening-betrieb-und-lieferfaehigkeit.md`
   * `plans/05-nfpm-debian-paketierung-und-installationspfad.md`
   * `plans/06-websocket-autorisierung-per-nachricht-statt-header.md`
+  * `plans/07-idle-keepalive-und-session-endgruende.md`
 * `plans/README.md` dient als Einstieg, Reihenfolge und Review-Gate fuer die Umsetzung.
 * `AGENTS.md` beschreibt fuer frische Agenten, wie nach Unterbrechungen weitergearbeitet wird.
 * Lokale SSH-Secrets fuer den spaeteren Gateway-zu-Konsole-Zugang wurden vorbereitet:
@@ -141,19 +154,20 @@ Das Browser-Terminal-Gateway validiert Terminal-Berechtigungen, baut serverseiti
 
 ## Nächste sinnvolle Schritte
 
-1. Review von Plan 06 durchfuehren.
-2. Rueckmeldungen aus Review und erstem echten Browser-Integrationslauf nachziehen.
-3. Erst danach weitere Folgearbeiten wie Debian-Installations-/Runtime-Tests, Paket-Signing oder Host-Key-Haertung priorisieren.
+1. Review von Plan 07 durchfuehren.
+2. Rueckmeldungen aus Review und weiteren Integrationslaeufen in Runtime, Tests und `spec`-Artefakten nachziehen.
+3. Erst anschliessend weitere Folgearbeiten wie Debian-Installations-/Runtime-Tests, Paket-Signing oder Host-Key-Haertung priorisieren.
 
 ## Aktuelle Integrationsbefunde
 
 * Der erste echte Browser-Integrationslauf hat einen neuen Fokus auf Idle-, Timeout- und Keepalive-Verhalten gelegt.
-* Zu klaeren ist insbesondere, warum das Browser-Terminal bei laengerer Inaktivitaet in einen Timeout laeuft und ob der Gateway die Verbindung aus eigener Laufzeitlogik oder nur indirekt ueber den Integrationspfad verliert.
+* Die bisherige Idle-Abbruchbeobachtung wurde im Gateway in eine getrennte Autorisierungs- und Keepalive-Semantik ueberfuehrt.
 * Die zentrale Einordnung und die komponentenuebergreifenden Folgearbeiten dazu werden in `11-integrationsbefunde-und-folgearbeiten.md` gepflegt.
 * Fuer dieses Statusdokument heisst das insbesondere:
-  * beobachteten Abbruch reproduzierbar eingrenzen,
-  * echte Abbruchursache entlang Browser, Proxy, Gateway, SSH und Backend benennen,
-  * daraus eine belastbare Idle-/Keepalive-Semantik ableiten.
+  * beobachten, ob die neue Keepalive-Strategie den Integrationspfad stabil haelt,
+  * echte Abbruchursache entlang Browser, Proxy, Gateway, SSH und Backend bei weiteren Befunden weiter eingrenzen,
+  * offene Fragen zu finalen Close-Codes oder weiteren Laufzeitgrenzen aus Review ableiten.
+* Der repo-lokale Umsetzungsschnitt dafuer ist jetzt in `plans/07-idle-keepalive-und-session-endgruende.md` festgehalten.
 
 ## Hinweise für spätere Aktualisierung
 
