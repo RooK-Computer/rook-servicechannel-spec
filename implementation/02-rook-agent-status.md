@@ -1,6 +1,6 @@
 # Implementierungsstatus – RooK Agent auf der Konsole
 
-Status: Interaktiver CLI-MVP umgesetzt, Review ausstehend
+Status: Paketierung und Betriebsgrundlage umgesetzt, Review ausstehend
 
 ## Zweck der Komponente
 
@@ -13,21 +13,41 @@ Der RooK Agent ist der zentrale lokale Systemdienst für den Support-Modus. Er s
 * Es gibt jetzt ein erstes Go-Projektgeruest mit ausfuehrbarem Einstiegspunkt, Konfigurationsmodell, Logging-Basis, Build-Makefile und ersten Tests.
 * Der anfangs gefundene Fehler im Bootstrap-Runloop wurde behoben; der Prozess bleibt nun bis zum Interrupt aktiv und beendet sich danach sauber.
 * Der Backend-API-Endpoint ist von Beginn an per Flag und Umgebungsvariable konfigurierbar angelegt.
-* Fuer dieses Repository ist der erste interaktive CLI-MVP fuer den Session-Lifecycle gegen das Backend umgesetzt.
-* Der Agent besitzt jetzt einen internen Backend-Vertrag, einen HTTP-Client, einen interaktiven Prompt-Modus sowie direkte CLI-Befehle fuer `start`, `status`, `pin`, `ping`, `stop` und lokale Session-Persistenz.
-* Die CLI nutzt den vorhandenen Agent-Backend-OpenAPI-Vertrag und behandelt den PIN fuer den MVP ueber Start-/Status-Responses statt ueber einen separaten Backend-Endpunkt.
-* Im interaktiven Modus startet `start` nun auch einen automatischen Heartbeat, der die Session bis `stop`, `exit` oder zu einem fatalen Backend-Fehler offen haelt.
-* Plan 02 ist damit umgesetzt und wartet nun auf Review, bevor weitere Ausbaustufen beginnen.
-* WLAN-Konfiguration, OpenVPN-Automatisierung und VPN-Statusabfrage bleiben fuer spaetere Ausbaustufen eingeplant.
-* Die gemeinsame Architektur muss in einem spaeteren Schritt noch explizit um diesen CLI-First-MVP ergaenzt werden.
+* Fuer dieses Repository wurde der interaktive CLI-MVP fuer den Session-Lifecycle gegen das Backend erfolgreich umgesetzt, integriert getestet, formal reviewed und freigegeben.
+* Der Agent besitzt einen internen Backend-Vertrag, einen HTTP-Client, einen interaktiven Prompt-Modus sowie direkte CLI-Befehle fuer `service`, `start`, `status`, `pin`, `ping` und `stop`.
+* Die CLI nutzt den vorhandenen Agent-Backend-OpenAPI-Vertrag und behandelt den PIN fuer den aktuellen Stand weiter ueber Start-/Status-Responses statt ueber einen separaten Backend-Endpunkt.
+* Der automatische Heartbeat liegt nicht mehr nur im Prompt-Code, sondern in einem wiederverwendbaren Runtime-Kern unter `internal/runtime`.
+* Der Agent kann eine lokal persistierte Session nun auch in einem lang laufenden Service-Modus wieder aufnehmen, Heartbeats im Hintergrund weiterfuehren und die Session bei einem geordneten Shutdown sauber beenden.
+* Plan 03 wurde reviewed und freigegeben; auf dieser Grundlage wurde Plan 04 fuer die lokale IPC- und UI-Vertragsschicht umgesetzt und anschliessend freigegeben.
+* Der Agent startet im Service-Modus jetzt zusaetzlich einen lokalen Unix-Domain-Socket-Server fuer eine spaetere Konsole-UI.
+* Der erste lokale IPC-Vertrag ist in JSON umgesetzt und deckt aktuell `GetStatus`, `StartSupport`, `StopSupport` und `GetPin` ab.
+* Asynchrone UI-taugliche Events werden lokal ueber denselben Socket geliefert; aktuell vor allem `SupportStateChanged`, `PinAssigned` und `ErrorRaised`.
+* Die IPC-Schicht greift nicht an der CLI vorbei in eigene Zustandslogik ein, sondern nutzt denselben Runtime-Kern fuer Snapshot, Session-Start, Session-Ende und Heartbeat-Eigentum.
+* Reconnect-faehige Statusabfrage fuer UI-Neustarts ist ueber den lokalen Persistenzpfad und den Runtime-Snapshot abgesichert.
+* Plan 05 wurde auf dieser Grundlage nun umgesetzt: Der Agent besitzt einen lokalen WLAN- und OpenVPN-Adapter, Cleanup-Logik fuer temporaere Support-Netzwerkreste sowie reboot-sensible Recovery fuer lokal persistierten Support-Zustand.
+* Der WLAN-Teil nutzt `nmcli` und behandelt die Support-Verbindung als temporaeres Profil `rook-support-wifi`.
+* Der OpenVPN-Teil steuert den Dienst `rook-openvpn-client.service` und beobachtet den effektiven VPN-Zustand ueber Dienststatus, Interface `rookvpn` und die Statusdatei `/var/log/rook-openvpn/client-status.log`.
+* Die lokale IPC wurde um `ScanWifi`, `ConnectWifi` und `DisconnectWifi` sowie um `WifiScanCompleted`, `WifiConnectionStateChanged` und `VpnStateChanged` erweitert.
+* `GetStatus` und `SupportStateChanged` unterscheiden beim WLAN jetzt explizit zwischen dem RooK-Support-WLAN-Zustand und der Frage, ob auf dem Host ueberhaupt irgendein WLAN aktiv ist.
+* Die CLI besitzt jetzt zusaetzlich direkte Netzwerkbefehle fuer WLAN-Scan, WLAN-Status, WLAN-Verbindung, WLAN-Trennung, VPN-Status, VPN-Start, VPN-Stopp und Cleanup.
+* Plan 05 wurde reviewed und freigegeben; darauf aufbauend wurde nun auch Plan 06 fuer Paketierung, Betrieb und Release-Vorbereitung umgesetzt.
+* Der Agent kann jetzt ueber `nfpm` als Debian-Paket gebaut werden und liefert Binary, `systemd`-Unit sowie eine Environment-Datei fuer den paketierten Betrieb aus.
+* Der paketierte Service nutzt weiterhin denselben `service`-Pfad des vorhandenen Agent-Binaries und fuehrt keinen separaten Laufzeitpfad neben CLI und Runtime-Kern ein.
+* Die paketierten Standardpfade sind jetzt fuer State und Socket auf `/var/lib/rook-agent/session.json` und `/run/rook-agent/agent.sock` festgezogen.
+* Der Backend-Endpoint bleibt auch im Paketbetrieb explizit ueber `/etc/default/rook-agent` konfigurierbar.
+* README und Plan-Dokumente enthalten jetzt erste Operator-Hinweise fuer Installation, `systemctl`, `journalctl` und die paketierte Konfiguration.
+* Plan 06 ist damit umgesetzt und wartet nun auf Review, bevor weitere Folgearbeiten gestartet werden.
+* Die gemeinsame Architektur muss in einem spaeteren Schritt noch explizit um den Uebergang vom CLI-First-MVP zum wiederverwendbaren Runtime-Kern ergaenzt werden.
 
 ## Hauptaufgaben in der Umsetzung
 
 * Go-Projektgrundlage und wiederverwendbaren Agent-Kern aufsetzen
 * REST-Kommunikation mit dem Backend fuer Session-Start, Status, Heartbeat, PIN und Session-Ende umsetzen
 * Ersten interaktiven CLI-MVP fuer Backend-Integration und Testumgebungen bereitstellen
-* Danach den laenger laufenden Agent-Kern mit sauberem Zustandsmodell und spaeterem systemd-Modus ausbauen
-* Lokale IPC zur UI, WLAN-Steuerung, OpenVPN-Steuerung sowie Cleanup- und Lifecycle-Operationen in nachfolgenden Phasen integrieren
+* Den laenger laufenden Agent-Kern mit sauberem Zustandsmodell und Service-Modus als Rueckgrat des Agents betreiben
+* Lokale IPC zur UI auf denselben Runtime-Kern aufsetzen
+* WLAN-Steuerung, OpenVPN-Steuerung sowie Cleanup- und Lifecycle-Operationen auf diesen Kern integrieren
+* Danach Paketierung, Betriebsintegration und Release-Vorbereitung angehen
 
 ## Abhängigkeiten
 
@@ -37,19 +57,19 @@ Der RooK Agent ist der zentrale lokale Systemdienst für den Support-Modus. Er s
 
 ## Nächste sinnvolle Schritte
 
-1. Review des interaktiven CLI-MVPs abschliessen.
-2. Gemeinsame Architektur- und Implementierungsdokumente fuer den CLI-First-MVP weiter nachziehen.
-3. Danach entscheiden, ob als naechster Schritt zunaechst der automatische Heartbeat-/Runtime-Kern von Plan 03 oder weitere gezielte CLI-Nachschliffe noetig sind.
-4. Erst danach den Ausbau in Richtung Dienstmodus, lokaler IPC sowie WLAN-/VPN-Integration fortsetzen.
+1. Review von Plan 06 abschliessen.
+2. Danach die naechsten Folgearbeiten aus Paket-Haertung, Betriebsfeinschliff oder weiterer Architekturangleichung priorisieren.
+3. Gemeinsame Architektur- und Implementierungsdokumente fuer den Uebergang vom CLI-First-MVP zum langfristigen Agent-Laufzeitmodell weiter nachziehen.
+4. Die Netzwerkintegration und den paketierten Betrieb in einer Zielumgebung gegen echte `nmcli`-, OpenVPN- und `systemd`-Signale haerten.
 
 ## Aktuelle Integrationsbefunde
 
-* Der erste interaktive Integrationslauf hat einen neuen Schwerpunkt auf den Session-Lifecycle gelegt.
-* Im Mittelpunkt steht die Frage, ob eine vom Agent gestartete Support-Session serverseitig offen bleibt, solange weiterhin Agent-Pings eintreffen.
+* Der erfolgreiche interaktive Integrationslauf hat den Session-Lifecycle gegen das Backend fuer den CLI-MVP praktisch bestaetigt.
+* Der daraus abgeleitete Schwerpunkt lag auf der Frage, wie Heartbeat-Eigentum, Beobachtbarkeit und Wiederanlauf in den eigentlichen Laufzeitkern ueberfuehrt werden.
 * Die zentrale Einordnung und die komponentenuebergreifenden Folgearbeiten dazu werden in `11-integrationsbefunde-und-folgearbeiten.md` gepflegt.
 * Fuer dieses Statusdokument heisst das insbesondere:
-  * Heartbeat- und Beobachtbarkeitspfad gegen den realen Integrationsfall absichern.
-  * Nach dem Review explizit pruefen, ob Plan 03 den laenger laufenden Agent-Kern und die gewuenschte Session-Persistenz ausreichend abdeckt.
+  * Heartbeat-, Netzwerk-, IPC- und Paketierungspfad sind nun bis zur installierbaren Debian-Auslieferung zusammengefuehrt.
+  * Der naechste Review soll pruefen, ob diese erste Paketierungs- und Betriebsgrundlage als akzeptabler Delivery-Slice gilt.
 
 ## Hinweise für spätere Aktualisierung
 

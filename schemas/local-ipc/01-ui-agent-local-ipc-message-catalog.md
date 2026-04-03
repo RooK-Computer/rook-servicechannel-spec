@@ -41,8 +41,14 @@ Bekannt aus dem Konzept:
 Noch offen:
 
 * genaue Request-Struktur
-* genaue Response-Struktur
-* Umfang der zurückgegebenen Teilzustände
+* Umfang weiterer optionaler Teilzustände
+
+Aktuell festgelegt:
+
+* `GetStatus` liefert mindestens `supportActive`, `supportState`, `wifiState`, `vpnState`
+* `wifiState` beschreibt weiter den RooK-seitig geführten Support-WLAN-Zustand
+* zusätzlich liefert der Status `anyWifiActive`, `supportWifiActive` und optional `activeWifiConnection`
+* damit kann die UI zwischen allgemeiner WLAN-Konnektivität des Hosts und dem RooK-Support-WLAN unterscheiden
 
 ### ScanWifi
 

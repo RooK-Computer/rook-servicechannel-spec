@@ -69,6 +69,8 @@ Noch nicht festgelegt:
 Aktuell festgelegt:
 
 * das Zustandsmodell umfasst `idle`, `online`, `online+vpnup`, `servicemode`
+* wenn `SupportStateChanged` den Status-Payload des Agenten transportiert, bleibt `wifiState` die Support-WLAN-Sicht
+* zusätzliche WLAN-Sicht für die UI wird über getrennte Felder wie `anyWifiActive`, `supportWifiActive` und optional `activeWifiConnection` modelliert
 
 ### PinAssigned
 
