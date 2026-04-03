@@ -34,7 +34,7 @@ Es dient als gemeinsamer Einstiegspunkt für alle Teams, damit der aktuelle Entw
 * Fuer alle aktuell identifizierten Hauptkomponenten liegt ein gepflegtes Statusdokument vor.
 * Die OpenVPN-Infrastruktur ist fuer den aktuell geplanten Scope auf einem praktisch verifizierten Stand und wird in `03-openvpn-infrastruktur-status.md` als `Abgeschlossen` gefuehrt.
 * Die RooK UI auf der Konsole ist weiterhin `Nicht begonnen`.
-* Der RooK Agent befindet sich nicht mehr in der Bootstrap-Planung, sondern auf einem interaktiven CLI-MVP-Stand mit Backend-Integration; `02-rook-agent-status.md` fuehrt ihn aktuell als `Interaktiver CLI-MVP umgesetzt, Review ausstehend`.
+* Der RooK Agent steht nicht mehr auf einem reinen CLI-MVP-Zwischenstand, sondern auf einem reviewed freigegebenen Lieferstand mit Runtime-Kern, lokalem IPC, WLAN-/VPN-Integration, Debian-Paketierung und servicegebundenem Interaktivmodus; `02-rook-agent-status.md` fuehrt ihn entsprechend als freigegebene Paketierungs- und Betriebsgrundlage.
 * Das RooK Web-/API-Backend steht auf `In Arbeit`; zentrale Domain-, API- und erste Team-UI-Bausteine sind umgesetzt und lokal validiert.
 * Das Browser-Terminal-Gateway steht nicht mehr am Anfang, sondern auf einem umgesetzten Plan-06-Stand und wartet laut `05-browser-terminal-gateway-status.md` auf Review.
 * Nach den ersten interaktiven Integrationstests sind nun mehrere komponentenuebergreifende Nacharbeiten sichtbar geworden. Dazu gehoeren insbesondere Web-/Frontend-Nachschliffe, Browser-Terminal-Lifecycle-Themen sowie Fragen zum Agent-/Session-Lifecycle.
