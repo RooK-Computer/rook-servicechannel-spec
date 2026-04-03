@@ -127,6 +127,40 @@ Noch offen:
 * ob `GetPin` den aktuellen PIN liest oder einen Abruf beim Backend auslöst
 * ob es über die Zeichenkette `pin` hinaus weitere Metadaten geben soll
 
+## Implementierungserweiterte Kommandos
+
+Die folgenden Kommandos sind aktuell in der Implementierung vorhanden, obwohl sie im Architekturkonzept nicht als explizite UI-Kommandoliste festgezogen wurden. Sie werden derzeit insbesondere fuer den interaktiven Service-Client des Agenten genutzt.
+
+### Ping
+
+Aktueller Zweck:
+
+* fordert den laufenden Service auf, sofort einen manuellen Heartbeat zu senden
+
+### VpnStatus
+
+Aktueller Zweck:
+
+* liefert den aktuell vom Service beobachteten OpenVPN-Zustand inklusive Diagnosefeldern
+
+### VpnStart
+
+Aktueller Zweck:
+
+* fordert den laufenden Service auf, den OpenVPN-Client zu starten
+
+### VpnStop
+
+Aktueller Zweck:
+
+* fordert den laufenden Service auf, den OpenVPN-Client zu stoppen
+
+### Cleanup
+
+Aktueller Zweck:
+
+* fordert den laufenden Service auf, RooK-eigene temporaere WLAN-/VPN-Artefakte zu bereinigen
+
 ## Explizit genannte Events
 
 ### WifiScanCompleted

@@ -20,8 +20,8 @@ Der RooK Agent ist der zentrale lokale Systemdienst für den Support-Modus. Er s
 * Der Agent kann eine lokal persistierte Session nun auch in einem lang laufenden Service-Modus wieder aufnehmen, Heartbeats im Hintergrund weiterfuehren und die Session bei einem geordneten Shutdown sauber beenden.
 * Plan 03 wurde reviewed und freigegeben; auf dieser Grundlage wurde Plan 04 fuer die lokale IPC- und UI-Vertragsschicht umgesetzt und anschliessend freigegeben.
 * Der Agent startet im Service-Modus jetzt zusaetzlich einen lokalen Unix-Domain-Socket-Server fuer eine spaetere Konsole-UI.
-* Der erste lokale IPC-Vertrag ist in JSON umgesetzt und deckt aktuell `GetStatus`, `StartSupport`, `StopSupport` und `GetPin` ab.
-* Asynchrone UI-taugliche Events werden lokal ueber denselben Socket geliefert; aktuell vor allem `SupportStateChanged`, `PinAssigned` und `ErrorRaised`.
+* Der erste lokale IPC-Vertrag ist in JSON umgesetzt und wurde inzwischen schrittweise um Service-, WLAN- und VPN-bezogene Aktionen erweitert.
+* Asynchrone UI-taugliche Events werden lokal ueber denselben Socket geliefert; darunter insbesondere `SupportStateChanged`, `PinAssigned`, `WifiScanCompleted`, `WifiConnectionStateChanged`, `VpnStateChanged` und `ErrorRaised`.
 * Die IPC-Schicht greift nicht an der CLI vorbei in eigene Zustandslogik ein, sondern nutzt denselben Runtime-Kern fuer Snapshot, Session-Start, Session-Ende und Heartbeat-Eigentum.
 * Reconnect-faehige Statusabfrage fuer UI-Neustarts ist ueber den lokalen Persistenzpfad und den Runtime-Snapshot abgesichert.
 * Plan 05 wurde auf dieser Grundlage nun umgesetzt: Der Agent besitzt einen lokalen WLAN- und OpenVPN-Adapter, Cleanup-Logik fuer temporaere Support-Netzwerkreste sowie reboot-sensible Recovery fuer lokal persistierten Support-Zustand.
@@ -36,6 +36,10 @@ Der RooK Agent ist der zentrale lokale Systemdienst für den Support-Modus. Er s
 * Die paketierten Standardpfade sind jetzt fuer State und Socket auf `/var/lib/rook-agent/session.json` und `/run/rook-agent/agent.sock` festgezogen.
 * Der Backend-Endpoint bleibt auch im Paketbetrieb explizit ueber `/etc/default/rook-agent` konfigurierbar.
 * README und Plan-Dokumente enthalten jetzt erste Operator-Hinweise fuer Installation, `systemctl`, `journalctl` und die paketierte Konfiguration.
+* Der interaktive Modus wurde danach aus einem lokalen Direktpfad in einen echten IPC-Client fuer den laufenden Service umgebaut.
+* `rook-agent --interactive` spricht damit jetzt ueber den lokalen Unix-Socket mit dem Service und eignet sich dadurch direkt fuer den Test des echten Servicepfads.
+* Wenn kein laufender Service bzw. kein erreichbarer Socket vorhanden ist, bricht der Interaktivmodus jetzt bewusst mit einer klaren Fehlermeldung ab statt still lokal weiterzulaufen.
+* Der lokale IPC-Vertrag wurde dafuer um weitere Service-Aktionen wie `Ping`, `VpnStatus`, `VpnStart`, `VpnStop` und `Cleanup` erweitert.
 * Plan 06 ist damit umgesetzt und wartet nun auf Review, bevor weitere Folgearbeiten gestartet werden.
 * Die gemeinsame Architektur muss in einem spaeteren Schritt noch explizit um den Uebergang vom CLI-First-MVP zum wiederverwendbaren Runtime-Kern ergaenzt werden.
 
@@ -68,7 +72,7 @@ Der RooK Agent ist der zentrale lokale Systemdienst für den Support-Modus. Er s
 * Der daraus abgeleitete Schwerpunkt lag auf der Frage, wie Heartbeat-Eigentum, Beobachtbarkeit und Wiederanlauf in den eigentlichen Laufzeitkern ueberfuehrt werden.
 * Die zentrale Einordnung und die komponentenuebergreifenden Folgearbeiten dazu werden in `11-integrationsbefunde-und-folgearbeiten.md` gepflegt.
 * Fuer dieses Statusdokument heisst das insbesondere:
-  * Heartbeat-, Netzwerk-, IPC- und Paketierungspfad sind nun bis zur installierbaren Debian-Auslieferung zusammengefuehrt.
+  * Heartbeat-, Netzwerk-, IPC-, interaktive Servicebedienung und Paketierungspfad sind nun bis zur installierbaren Debian-Auslieferung zusammengefuehrt.
   * Der naechste Review soll pruefen, ob diese erste Paketierungs- und Betriebsgrundlage als akzeptabler Delivery-Slice gilt.
 
 ## Hinweise für spätere Aktualisierung
