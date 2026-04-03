@@ -1,6 +1,6 @@
 # Implementierungsstatus – RooK Agent auf der Konsole
 
-Status: Paketierung und Betriebsgrundlage umgesetzt, Review ausstehend
+Status: Paketierung und Betriebsgrundlage freigegeben
 
 ## Zweck der Komponente
 
@@ -40,7 +40,7 @@ Der RooK Agent ist der zentrale lokale Systemdienst für den Support-Modus. Er s
 * `rook-agent --interactive` spricht damit jetzt ueber den lokalen Unix-Socket mit dem Service und eignet sich dadurch direkt fuer den Test des echten Servicepfads.
 * Wenn kein laufender Service bzw. kein erreichbarer Socket vorhanden ist, bricht der Interaktivmodus jetzt bewusst mit einer klaren Fehlermeldung ab statt still lokal weiterzulaufen.
 * Der lokale IPC-Vertrag wurde dafuer um weitere Service-Aktionen wie `Ping`, `VpnStatus`, `VpnStart`, `VpnStop` und `Cleanup` erweitert.
-* Plan 06 ist damit umgesetzt und wartet nun auf Review, bevor weitere Folgearbeiten gestartet werden.
+* Plan 06 wurde reviewed und freigegeben; die Debian-Paketierung, die Betriebsgrundlage und der servicegebundene Interaktivmodus gelten damit als aktueller freigegebener Lieferstand dieses Repositories.
 * Die gemeinsame Architektur muss in einem spaeteren Schritt noch explizit um den Uebergang vom CLI-First-MVP zum wiederverwendbaren Runtime-Kern ergaenzt werden.
 
 ## Hauptaufgaben in der Umsetzung
@@ -61,10 +61,10 @@ Der RooK Agent ist der zentrale lokale Systemdienst für den Support-Modus. Er s
 
 ## Nächste sinnvolle Schritte
 
-1. Review von Plan 06 abschliessen.
-2. Danach die naechsten Folgearbeiten aus Paket-Haertung, Betriebsfeinschliff oder weiterer Architekturangleichung priorisieren.
-3. Gemeinsame Architektur- und Implementierungsdokumente fuer den Uebergang vom CLI-First-MVP zum langfristigen Agent-Laufzeitmodell weiter nachziehen.
-4. Die Netzwerkintegration und den paketierten Betrieb in einer Zielumgebung gegen echte `nmcli`-, OpenVPN- und `systemd`-Signale haerten.
+1. Die naechsten Folgearbeiten aus Paket-Haertung, Betriebsfeinschliff oder weiterer Architekturangleichung priorisieren.
+2. Gemeinsame Architektur- und Implementierungsdokumente fuer den Uebergang vom CLI-First-MVP zum langfristigen Agent-Laufzeitmodell weiter nachziehen.
+3. Die Netzwerkintegration und den paketierten Betrieb in einer Zielumgebung gegen echte `nmcli`-, OpenVPN- und `systemd`-Signale haerten.
+4. Bei Bedarf einen naechsten repo-lokalen Folgeplan fuer haertere Service-/Operations-Anforderungen starten.
 
 ## Aktuelle Integrationsbefunde
 
@@ -73,7 +73,7 @@ Der RooK Agent ist der zentrale lokale Systemdienst für den Support-Modus. Er s
 * Die zentrale Einordnung und die komponentenuebergreifenden Folgearbeiten dazu werden in `11-integrationsbefunde-und-folgearbeiten.md` gepflegt.
 * Fuer dieses Statusdokument heisst das insbesondere:
   * Heartbeat-, Netzwerk-, IPC-, interaktive Servicebedienung und Paketierungspfad sind nun bis zur installierbaren Debian-Auslieferung zusammengefuehrt.
-  * Der naechste Review soll pruefen, ob diese erste Paketierungs- und Betriebsgrundlage als akzeptabler Delivery-Slice gilt.
+  * Der aktuelle Review hat diese erste Paketierungs- und Betriebsgrundlage als akzeptablen Delivery-Slice bestaetigt.
 
 ## Hinweise für spätere Aktualisierung
 
