@@ -38,6 +38,7 @@ Das RooK Backend ist die zentrale Control Plane. Es verwaltet Support-Sitzungen,
   * REST-Endpunkte `POST /api/console/1/beginsession`, `status`, `ping`, `endsession`
   * Lifecycle-Service fuer PIN-Ausgabe, Heartbeat-Verarbeitung, Session-Ende und "latest start wins"
   * optionales Hardening-Modul `rook_servicechannel_console_ip_guard` fuer produktive Quell-IP-Restriktionen
+  * UI-konfigurierbare Allowlist unter `/admin/config/services/rook-servicechannel/console-ip-guard` inklusive Eintrag in Hauptnavigation und `Configuration/System`
   * OpenAPI-basierte Contract-Validierung gegen `spec/openapi/02-agent-backend-rest.openapi.yaml`
 * Die erste Web-API-Schicht wurde auf das Domain-Modell und die Agent-API aufgesetzt:
   * Custom-Modul `rook_servicechannel_client_api`

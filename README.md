@@ -23,6 +23,8 @@ The artifacts are intended to support future implementation work without forcing
 
 - `docs/architecture/`
   - Architecture and concept documents that define the overall system and support flow
+- `docs/infrastructure/`
+  - Infrastructure and hosting decision documents for the server-side environment
 - `plans/`
   - Numbered specification plans that allow follow-up work to continue even after a context reset
 - `openapi/`
