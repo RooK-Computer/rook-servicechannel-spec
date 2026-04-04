@@ -53,8 +53,27 @@ Die RooK UI ist die lokale Benutzeroberfläche auf der Konsole. Sie zeigt Zustä
   * der Start aus Repo-Root und aus `build/` findet die Ressourcen jetzt robust ueber die Projekterkennung
   * die grafische UI verwendet jetzt projektlokale `JetBrains Mono`-Fonts aus `resources/fonts`
   * WLAN- und VPN-Warte-Screens sind wieder reine Wartebildschirme ohne Aktionsbuttons und mit animiertem Spinner im gemeinsamen SDL-/RmlUi-Renderpfad
-  * die Screen-Inhalte bleiben fuer Laufzeitdaten weiterhin mock-/previewbasiert, bis Plan 05 die echte Agent-Anbindung liefert
-* Der naechste technische Schritt ist jetzt `plans/05-agent-anbindung-und-laufzeitlogik.md`.
+  * der Passwort-Screen ist nachgezogen und enthaelt jetzt ein echtes On-Screen-Keyboard mit QWERTZ-/Shift-/Alt-/Caps-Logik; **B** loescht bei vorhandener Eingabe das letzte Zeichen und springt nur bei leerem Feld zurueck
+* Plan 05 ist umgesetzt:
+  * ein UI-seitiger Agent-Port und ein Unix-Domain-Socket-Adapter verbinden den Produktpfad mit dem lokalen RooK Agent
+  * der Agent-Socket wird im paketierten Betrieb gemaess Spezifikation ueber `/etc/default/rook-agent` und `ROOK_AGENT_SOCKET_PATH` aufgeloest; Entwicklungsstarts fallen auf den User-Config-Pfad fuer `rook-agent/agent.sock` zurueck
+  * der Startpfad wertet jetzt Welcome-Persistenz und echten Agent-Status aus, statt fuer den Produktpfad auf Mockzustand zu vertrauen
+  * Status-, WLAN-, Wait- und Fehler-Screens beziehen ihre produktiven Laufzeitparameter aus Agent-Status, Requests und Settings
+  * die Option "Beim naechsten Start nicht mehr anzeigen" wird lokal unter `.config/rook-ui/settings.json` gelesen und geschrieben
+  * fehlender Agent-/IPC-Zugriff fuehrt zu einem kontrollierten Abbruch des Produktpfads
+* Plan 06 ist umgesetzt:
+  * die Default-Previews der produktiven Hauptscreens sind mit reviewbaren Beispielparametern hinterlegt
+  * der Terminal-Fallback verwendet im Normalbetrieb jetzt denselben interaktiven Laufzeitpfad wie der grafische Host
+  * fehlender Agent-/IPC-Zugriff fuehrt damit auch im Diagnosepfad wieder zu einem kontrollierten Abbruch statt zu einem isolierten Stubscreen
+  * ein aktiver Agent-Zustand fuehrt ueber den Produktstart reproduzierbar direkt in den Status-Screen mit PIN
+  * tote Footer-Hinweise aus den produktiven Hauptscreens sind entfernt
+* Plan 07 ist umgesetzt:
+  * die UI kann jetzt als Debian-Paket mit `nfpm` gebaut werden
+  * `rook-console-ui` liefert Binary, Launcher und alle benoetigten Laufzeitressourcen
+  * `rook-console-integration` liefert die systemweite EmulationStation-/RetroPie-Integration als separates Paket
+  * ein idempotentes Maintainer-Skript legt ein fehlendes System `RooK` in der systemweiten EmulationStation-Konfiguration an
+  * vorhandene RooK-/Service-Eintraege werden dabei nur ergaenzt, nicht ueberschrieben
+  * fuer die Systemgrafik wird ein RooK-Theme-Snippet mit dem paketierten Logo angelegt, ohne vorhandene Theme-Dateien zu ueberschreiben
 
 ## Hauptaufgaben in der Umsetzung
 
@@ -71,9 +90,8 @@ Die RooK UI ist die lokale Benutzeroberfläche auf der Konsole. Sie zeigt Zustä
 
 ## Nächste sinnvolle Schritte
 
-1. Als naechstes Agent-Anbindung und Laufzeitlogik gemaess `plans/05-agent-anbindung-und-laufzeitlogik.md` aufbauen.
-2. Danach End-to-End-Integration und Abnahme gemaess `plans/06-integration-polish-und-abnahme.md` durchziehen.
-3. Anschliessend offene Produkt- und UX-Feinheiten wie die weitere Keyboard-Vervollstaendigung im Integrationskontext nachziehen.
+1. Den jetzt erreichten Stand menschlich abnehmen und im Zielsystem mit echtem RooK-Agenten sowie echter EmulationStation-Konfiguration gegenpruefen.
+2. Eventuelle Integrationsbefunde aus der Zielumgebung als neue Folgearbeit erfassen statt abgeschlossene Plaene wieder aufzublaehen.
 
 ## Hinweise für spätere Aktualisierung
 
