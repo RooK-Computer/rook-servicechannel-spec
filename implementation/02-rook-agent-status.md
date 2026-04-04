@@ -36,6 +36,7 @@ Der RooK Agent ist der zentrale lokale Systemdienst für den Support-Modus. Er s
 * Die paketierten Standardpfade sind jetzt fuer State und Socket auf `/var/lib/rook-agent/session.json` und `/run/rook-agent/agent.sock` festgezogen.
 * Der Backend-Endpoint bleibt auch im Paketbetrieb explizit ueber `/etc/default/rook-agent` konfigurierbar.
 * README und Plan-Dokumente enthalten jetzt erste Operator-Hinweise fuer Installation, `systemctl`, `journalctl` und die paketierte Konfiguration.
+* Die gemeinsame Spezifikation dokumentiert fuer das UI-Team jetzt explizit, dass der Socket-Pfad im paketierten Betrieb ueber `/etc/default/rook-agent` und dort ueber `ROOK_AGENT_SOCKET_PATH` aufgeloest wird; ausserdem sind Dateiformat und alle dort gepflegten Parameter beschrieben.
 * Der interaktive Modus wurde danach aus einem lokalen Direktpfad in einen echten IPC-Client fuer den laufenden Service umgebaut.
 * `rook-agent --interactive` spricht damit jetzt ueber den lokalen Unix-Socket mit dem Service und eignet sich dadurch direkt fuer den Test des echten Servicepfads.
 * Wenn kein laufender Service bzw. kein erreichbarer Socket vorhanden ist, bricht der Interaktivmodus jetzt bewusst mit einer klaren Fehlermeldung ab statt still lokal weiterzulaufen.
