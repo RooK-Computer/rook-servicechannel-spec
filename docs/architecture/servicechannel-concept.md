@@ -232,16 +232,154 @@ Die UI kommuniziert lokal mit dem Agent.
 ### Transport
 
 * **Unix Domain Socket**
+* **AF_UNIX / SOCK_STREAM**
 
 ### Datenformat
 
 * **JSON**
+* **UTF-8**
 
 ### Kommunikationsmuster
 
 * dauerhafte lokale Socket-Verbindung
 * **Request/Response** für Benutzeraktionen
 * **asynchrone Events** für Zustandsänderungen
+
+### Exakte Socket-Semantik
+
+Der aktuelle Agent nutzt **genau einen konfigurierten Socket-Pfad** fuer die lokale IPC.
+
+Im paketierten Standardbetrieb ist das:
+
+* `/run/rook-agent/agent.sock`
+
+Die UI muss zu **genau diesem einen Dateisystempfad** eine Verbindung aufbauen.
+
+Der Agent lauscht dort mit einem **Unix-Stream-Socket**. Technisch entspricht das unter Linux:
+
+* `socket(AF_UNIX, SOCK_STREAM, 0)`
+* `connect(...)` auf UI-Seite
+* `bind(...)`, `listen(...)`, `accept(...)` auf Agent-Seite
+
+Es wird **kein** `SOCK_SEQPACKET` und **kein** `SOCK_DGRAM` verwendet.
+
+Es gibt fuer diese Schnittstelle auch **keinen zweiten konfigurierbaren Socket-Pfad** fuer Events oder Responses. Requests, Responses und asynchrone Events laufen alle ueber **dieselbe bidirektionale Stream-Verbindung**.
+
+Wichtig fuer das UI-Team:
+
+1. Die UI oeffnet eine Verbindung zu `ROOK_AGENT_SOCKET_PATH`.
+2. Der Agent akzeptiert diese Verbindung.
+3. Ab dann lesen und schreiben beide Seiten auf **derselben** verbundenen Stream-Verbindung.
+4. Jede weitere UI-Instanz oeffnet ihre **eigene** separate Verbindung zum selben Listener-Pfad.
+
+### Nachrichtenabgrenzung im Stream
+
+Die Kommunikation ist **streambasiert**, nicht paketbasiert.
+
+Deshalb gilt fuer die Nachrichtenabgrenzung:
+
+* jede IPC-Nachricht ist **genau ein JSON-Objekt**
+* jedes JSON-Objekt wird mit einem **einzelnen Newline (`\\n`)** abgeschlossen
+* der Agent schreibt Nachrichten mit einem JSON-Encoder, der nach jedem Objekt ein Newline ausgibt
+* die UI soll denselben Rahmen annehmen: **ein JSON-Objekt pro Zeile**
+
+Damit ist das Ende einer Nachricht **nicht** durch EOF markiert.
+
+Stattdessen gilt:
+
+* **Newline trennt zwei Nachrichten**
+* **EOF bedeutet nur, dass die Verbindung beendet wurde**
+
+Ein Client darf also **nicht** auf EOF warten, um eine einzelne Response zu erhalten.
+
+Die empfohlene Implementierung auf UI-Seite ist entweder:
+
+1. ein zeilenbasierter Reader mit anschliessendem JSON-Parse pro Zeile, oder
+2. ein Streaming-JSON-Decoder, der mehrere aufeinanderfolgende JSON-Objekte mit Whitespace/Newline dazwischen verarbeitet.
+
+### Verbindungslebenszyklus
+
+Die Verbindung darf und soll fuer interaktive Nutzung **offen bleiben**.
+
+Ueber dieselbe Verbindung kann die UI:
+
+* mehrere Requests nacheinander senden,
+* zu jedem Request die korrespondierende Response empfangen,
+* und zusaetzlich jederzeit asynchrone Events erhalten.
+
+Wenn die UI nur einen einzelnen Request ausfuehren will, darf sie nach der Response schliessen. Fuer eine echte UI-Integration ist aber eine **dauerhafte Verbindung** der beabsichtigte Betriebsmodus.
+
+### Envelope-Form und Routing
+
+Fuer Nachrichten **vom Agent zur UI** gibt es aktuell zwei Envelope-Arten:
+
+* `type: "response"`
+* `type: "event"`
+
+#### Request
+
+Jeder Request der UI an den Agent hat dieses Grundformat:
+
+```json
+{"id":"1","action":"GetStatus"}
+```
+
+oder mit Payload:
+
+```json
+{"id":"2","action":"ConnectWifi","payload":{"ssid":"Cafe","password":"secret"}}
+```
+
+Regeln:
+
+* `id` ist Pflicht und muss pro offener Verbindung aus Sicht des Clients eindeutig sein
+* `action` ist Pflicht
+* `payload` ist optional und nur bei Aktionen mit Eingabedaten zu senden
+* Requests tragen aktuell **kein** eigenes Feld `type`
+
+#### Response
+
+Auf jeden gueltigen Request antwortet der Agent mit genau **einer** Response mit derselben `id`:
+
+```json
+{"type":"response","id":"1","action":"GetStatus","success":true,"payload":{"supportActive":false,"supportState":"servicemode","wifiState":"disconnected","vpnState":"disconnected","anyWifiActive":true,"supportWifiActive":false,"activeWifiConnection":"HomeNetwork"}}
+```
+
+Fehlerantwort:
+
+```json
+{"type":"response","id":"2","action":"ConnectWifi","success":false,"error":{"code":"connect_wifi_failed","message":"..."}}
+```
+
+Regeln:
+
+* Responses werden ueber `type == "response"` erkannt
+* die Zuordnung zu einem Request erfolgt ueber `id`
+* `success=false` signalisiert einen fachlichen oder technischen Fehler fuer genau diesen Request
+
+#### Event
+
+Asynchrone Events enthalten **keine Request-ID** und koennen jederzeit auf einer offenen Verbindung eintreffen:
+
+```json
+{"type":"event","event":"SupportStateChanged","payload":{"supportActive":true,"supportState":"online","wifiState":"connected","vpnState":"disconnected","anyWifiActive":true,"supportWifiActive":true,"activeWifiConnection":"rook-support-wifi","session":{"status":"open","pin":"1234","ipAddress":"10.8.0.2"}}}
+```
+
+Regeln:
+
+* Events werden ueber `type == "event"` erkannt
+* die fachliche Event-Art steht im Feld `event`
+* Events sind Broadcasts des Agent-Zustands an alle aktuell verbundenen Clients
+
+### Reihenfolge auf derselben Verbindung
+
+Fuer einen Request, der zusaetzliche Events ausloest, schreibt der Agent auf der anfragenden Verbindung aktuell zuerst die **Response** und danach eventuelle **Events**.
+
+Darauf sollte sich die UI aber nur eingeschraenkt verlassen. Robust ist folgende Regel:
+
+1. Nachrichten immer zuerst ueber `type` unterscheiden.
+2. Responses immer ueber `id` dem ausstehenden Request zuordnen.
+3. Events unabhaengig davon parallel verarbeiten.
 
 ### Socket-Ermittlung durch die UI
 
@@ -302,25 +440,83 @@ ROOK_AGENT_SOCKET_PATH=/run/rook-agent/agent.sock
 
 Die Datei wird durch den systemd-Dienst vor dem Start des Agents eingelesen. Änderungen an `ROOK_AGENT_SOCKET_PATH` wirken daher sowohl auf den Agent als auch auf jeden UI-Client, der den Socket gemäß dieser Spezifikation über `/etc/default/rook-agent` auflöst.
 
-### Beispielhafte Befehle
+### Aktuell implementierte Request-Aktionen
 
-* `GetStatus`
-* `ScanWifi`
-* `ConnectWifi`
-* `DisconnectWifi`
-* `StartSupport`
-* `StopSupport`
-* `GetPin`
+| Action | Request-Payload | Erfolgs-Response |
+| --- | --- | --- |
+| `GetStatus` | kein Payload | `StatusPayload` |
+| `Ping` | kein Payload | leeres Objekt |
+| `ScanWifi` | kein Payload | `WiFiScanPayload` |
+| `ConnectWifi` | `{"ssid":"...","password":"..."}` | `ConnectionStatePayload` |
+| `DisconnectWifi` | kein Payload | `ConnectionStatePayload` |
+| `VpnStatus` | kein Payload | `VPNStatusPayload` |
+| `VpnStart` | kein Payload | `VPNStatusPayload` |
+| `VpnStop` | kein Payload | `ConnectionStatePayload` |
+| `Cleanup` | kein Payload | leeres Objekt |
+| `StartSupport` | kein Payload | `StatusPayload` |
+| `StopSupport` | kein Payload | `StatusPayload` |
+| `GetPin` | kein Payload | `{"pin":"1234"}` |
 
-### Beispielhafte Events
+### Aktuell implementierte Event-Arten
 
 * `WifiScanCompleted`
 * `WifiConnectionStateChanged`
 * `VpnStateChanged`
 * `SupportStateChanged`
 * `PinAssigned`
-* `PinExpired`
 * `ErrorRaised`
+
+### Payload-Formen, die fuer die UI relevant sind
+
+#### `StatusPayload`
+
+```json
+{
+  "supportActive": true,
+  "supportState": "online",
+  "wifiState": "connected",
+  "vpnState": "disconnected",
+  "anyWifiActive": true,
+  "supportWifiActive": true,
+  "activeWifiConnection": "rook-support-wifi",
+  "networks": [{"ssid":"Cafe"}],
+  "session": {
+    "status": "open",
+    "pin": "1234",
+    "ipAddress": "10.8.0.2"
+  }
+}
+```
+
+Dabei gilt:
+
+* `wifiState` beschreibt den **RooK-eigenen Support-WLAN-Zustand**
+* `anyWifiActive` beschreibt, ob auf dem Host **irgendeine** WLAN-Verbindung aktiv ist
+* `supportWifiActive` beschreibt nur, ob das RooK-Profil `rook-support-wifi` aktiv ist
+
+#### `WiFiScanPayload`
+
+```json
+{"networks":[{"ssid":"Cafe"},{"ssid":"Office"}]}
+```
+
+#### `ConnectionStatePayload`
+
+```json
+{"state":"connected"}
+```
+
+#### `VPNStatusPayload`
+
+```json
+{
+  "state":"connected",
+  "serviceActive":true,
+  "interfacePresent":true,
+  "ipAddress":"10.8.0.2",
+  "statusFilePresent":true
+}
+```
 
 ### Verantwortungsgrenze
 
