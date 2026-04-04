@@ -57,11 +57,12 @@ Bekannt aus dem Konzept:
 * Der Agent übernimmt den WLAN-Scan.
 * Die UI zeigt verfügbare WLANs an.
 
-Noch offen:
+Aktuell festgelegt:
 
-* Request-Parameter
-* keine weiteren Felder für Scan-Ergebnisse oder Responses festgelegt
-* Verhältnis von Request/Response zu nachgelagertem Event
+* `ScanWifi` wird ohne Request-Payload gesendet.
+* Die Erfolgs-Response liefert `WiFiScanPayload`.
+* `WiFiScanPayload` hat die Form `{"networks":[{"ssid":"Cafe"},{"ssid":"Office"}]}`.
+* Der Agent sendet nach erfolgreichem Scan zusätzlich ein `WifiScanCompleted`-Event mit demselben Payload-Typ.
 
 ### ConnectWifi
 
@@ -169,9 +170,14 @@ Bekannt aus dem Konzept:
 
 * wird nach Zustandsänderung bzw. Abschluss des WLAN-Scans benötigt
 
+Aktuell festgelegt:
+
+* Das Event transportiert `WiFiScanPayload`.
+* Das Ergebnis wird als Objekt `{"networks":[...]}` übertragen, nicht als nackte Array- oder String-Liste.
+* Pro Netz ist aktuell nur `ssid` verbindlich.
+
 Noch offen:
 
-* Payload des Ergebnisses ist bislang auf eine Liste von SSIDs eingegrenzt
 * Verhalten bei Teilerfolg oder Fehler
 
 ### WifiConnectionStateChanged

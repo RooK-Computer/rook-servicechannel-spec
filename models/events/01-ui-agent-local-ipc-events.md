@@ -1,6 +1,6 @@
 # UI ↔ Agent – Eventkatalog
 
-Status: Wartet auf Implementierungserkenntnisse
+Status: Auf Implementierungsstand nachgezogen
 
 ## Zweck
 
@@ -14,16 +14,16 @@ Aus dem Konzept ableitbare Semantik:
 
 * signalisiert das Vorliegen eines Scan-Ergebnisses nach einem WLAN-Scan
 
-Noch nicht festgelegt:
-
-* Ergebnisformat
-* Fehlerdarstellung
-* ob leere Ergebnisse zulässig und wie sie dargestellt werden
-
 Aktuell festgelegt:
 
-* ein Scan-Ergebnis überträgt mindestens eine Liste von SSIDs an die UI
+* das Event-Payload ist `WiFiScanPayload`
+* `WiFiScanPayload` hat die Form `{"networks":[{"ssid":"Cafe"},{"ssid":"Office"}]}`
 * pro Netz ist dafür aktuell nur `ssid` verbindlich
+
+Noch nicht festgelegt:
+
+* Fehlerdarstellung
+* ob leere Ergebnisse zulässig und wie sie dargestellt werden
 
 ### WifiConnectionStateChanged
 

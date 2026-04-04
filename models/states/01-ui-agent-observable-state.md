@@ -1,6 +1,6 @@
 # UI ↔ Agent – Beobachtbare Zustandsbereiche
 
-Status: Wartet auf Implementierungserkenntnisse
+Status: Auf Implementierungsstand nachgezogen
 
 ## Zweck
 
@@ -15,9 +15,11 @@ Aus dem Konzept ableitbar:
 * verfügbare WLAN-Netze werden angezeigt
 * der Agent führt den Scan aus
 
-Noch offen:
+Aktuell festgelegt:
 
-* eigener Scan-Zustand oder nur Ergebnis-Event
+* `ScanWifi` liefert das Scan-Ergebnis synchron als `WiFiScanPayload`.
+* Nach erfolgreichem Scan wird zusätzlich `WifiScanCompleted` mit demselben Payload ausgesendet.
+* Ein separater beobachtbarer Zwischenzustand für "Scan läuft" ist derzeit nicht Teil des Vertrags.
 
 ### WLAN-Verbindungszustand
 
