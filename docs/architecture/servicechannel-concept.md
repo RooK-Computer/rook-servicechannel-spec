@@ -856,10 +856,11 @@ Fuer den aktuellen RooK-UI-Zielpfad ist dieses Integrationspaket jetzt konkretis
 * die systemweite EmulationStation-Integration des Zielimages
 * ein paketiertes Startskript `Service.sh`
 * idempotente Installationslogik, die ein fehlendes System `RooK` in der systemweiten EmulationStation-Konfiguration anlegt
-* ein konservatives RooK-Theme-Snippet fuer die Systemgrafik, das standardmaessig das paketierte Logo der UI verwendet
+* ein konservatives RooK-Theme-Snippet fuer die Systemgrafik, das standardmaessig im Theme `carbon-2021` das paketierte UI-SVG verwendet
 * eine konservative Update-Strategie:
   * vorhandene RooK-/Service-Eintraege werden nicht automatisch normalisiert oder ueberschrieben
-  * vorhandene RooK-Theme-Dateien werden ebenfalls nicht automatisch ueberschrieben
+  * von uns zuvor ausgelieferte RooK-Theme-Dateien duerfen bei Paket-Upgrades auf den aktuellen verwalteten Stand gezogen werden
+  * fremde oder manuell angepasste RooK-Theme-Dateien werden nicht automatisch ueberschrieben
   * fehlende Eintraege werden ergaenzt
 
 ### nfpm-Rolle

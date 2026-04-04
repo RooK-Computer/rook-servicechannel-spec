@@ -69,11 +69,11 @@ Die RooK UI ist die lokale Benutzeroberfläche auf der Konsole. Sie zeigt Zustä
   * tote Footer-Hinweise aus den produktiven Hauptscreens sind entfernt
 * Plan 07 ist umgesetzt:
   * die UI kann jetzt als Debian-Paket mit `nfpm` gebaut werden
-  * `rook-console-ui` liefert Binary, Launcher und alle benoetigten Laufzeitressourcen
+  * `rook-console-ui` liefert Binary, Launcher, `librmlui.so` und alle benoetigten Laufzeitressourcen
   * `rook-console-integration` liefert die systemweite EmulationStation-/RetroPie-Integration als separates Paket
   * ein idempotentes Maintainer-Skript legt ein fehlendes System `RooK` in der systemweiten EmulationStation-Konfiguration an
   * vorhandene RooK-/Service-Eintraege werden dabei nur ergaenzt, nicht ueberschrieben
-  * fuer die Systemgrafik wird ein RooK-Theme-Snippet mit dem paketierten Logo angelegt, ohne vorhandene Theme-Dateien zu ueberschreiben
+  * fuer die Systemgrafik wird ein RooK-Theme-Snippet unter `carbon-2021` mit dem paketierten SVG-Logo angelegt; von uns zuvor ausgelieferte Theme-Dateien koennen bei Upgrades korrigiert werden
 
 ## Hauptaufgaben in der Umsetzung
 
