@@ -30,6 +30,12 @@ Die RooK UI ist die lokale Benutzeroberfläche auf der Konsole. Sie zeigt Zustä
   * Theme-Tokens fuer Farben, Typografie und Fokusstil
   * Preview-Registry mit Default-Zustaenden pro Hauptscreen
   * Backend-Erkennung fuer optionale SDL2/RmlUi-Anbindung
+* Plan 02b ist umgesetzt:
+  * die App startet jetzt standardmaessig ueber einen echten SDL2-/RmlUi-Host statt ueber den Terminal-Renderer
+  * Preview und Normalbetrieb laufen ueber denselben Navigations-, Fokus- und Render-Loop
+  * RmlUi wird mit FreeType-Schriftengine gebaut und laedt vendored Schriftdateien fuer echte Textdarstellung
+  * die grafische Laufzeit verarbeitet Tastatur- und grundlegende Gamepad-Eingaben innerhalb desselben Hosts
+  * der Terminal-Renderer bleibt nur noch als Diagnosepfad erhalten, falls der grafische Host nicht starten kann
 * Plan 03 ist umgesetzt:
   * Intent-Navigation fuer `NavigateTo`, `CloseApp` und `NoOp` ist technisch vorhanden
   * ein app-weiter Ruecksprung-Stack traegt den Preview-Flow zwischen mehreren Screens
@@ -40,7 +46,15 @@ Die RooK UI ist die lokale Benutzeroberfläche auf der Konsole. Sie zeigt Zustä
   * die Hauptscreens wurden nicht als echte Module unter `screens/` umgesetzt
   * der Preview-Modus lief ueber einen separaten Stub-/Scenario-Pfad statt ueber denselben Screen-Code wie im Normalbetrieb
   * Microcopy und einzelne Ressourcen bleiben nutzbar, ersetzen die echte Screen-Implementierung aber nicht
-* Der naechste technische Schritt ist jetzt `plans/02b-sdl2-und-rmlui-grafikintegration.md`.
+* Plan 04b ist umgesetzt:
+  * die produktiven Hauptscreens liegen jetzt als echte Module unter `screens/`
+  * Welcome-, Status-, WLAN-, Keyboard-, Wait- und Fehler-Screens werden von derselben Screen-Registry fuer Preview und Normalbetrieb erzeugt
+  * `PreviewRegistry` liefert nur noch Startparameter/Szenario-Daten und keine fertigen Screen-Model-Stubs mehr
+  * der Start aus Repo-Root und aus `build/` findet die Ressourcen jetzt robust ueber die Projekterkennung
+  * die grafische UI verwendet jetzt projektlokale `JetBrains Mono`-Fonts aus `resources/fonts`
+  * WLAN- und VPN-Warte-Screens sind wieder reine Wartebildschirme ohne Aktionsbuttons und mit animiertem Spinner im gemeinsamen SDL-/RmlUi-Renderpfad
+  * die Screen-Inhalte bleiben fuer Laufzeitdaten weiterhin mock-/previewbasiert, bis Plan 05 die echte Agent-Anbindung liefert
+* Der naechste technische Schritt ist jetzt `plans/05-agent-anbindung-und-laufzeitlogik.md`.
 
 ## Hauptaufgaben in der Umsetzung
 
@@ -57,9 +71,9 @@ Die RooK UI ist die lokale Benutzeroberfläche auf der Konsole. Sie zeigt Zustä
 
 ## Nächste sinnvolle Schritte
 
-1. Als naechstes `plans/02b-sdl2-und-rmlui-grafikintegration.md` abarbeiten.
-2. Danach `plans/04b-echte-screens-und-preview-gleichlauf.md` umsetzen.
-3. Anschliessend Agent-Anbindung und Laufzeitlogik gemaess `plans/05-agent-anbindung-und-laufzeitlogik.md` aufbauen.
+1. Als naechstes Agent-Anbindung und Laufzeitlogik gemaess `plans/05-agent-anbindung-und-laufzeitlogik.md` aufbauen.
+2. Danach End-to-End-Integration und Abnahme gemaess `plans/06-integration-polish-und-abnahme.md` durchziehen.
+3. Anschliessend offene Produkt- und UX-Feinheiten wie die weitere Keyboard-Vervollstaendigung im Integrationskontext nachziehen.
 
 ## Hinweise für spätere Aktualisierung
 
