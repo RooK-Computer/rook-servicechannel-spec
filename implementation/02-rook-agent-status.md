@@ -46,6 +46,7 @@ Der RooK Agent ist der zentrale lokale Systemdienst für den Support-Modus. Er s
 * Die WLAN-Statuslogik akzeptiert bei `nmcli connection show --active` jetzt neben `wifi` auch den in Zielsystemen beobachteten Connection-Typ `802-11-wireless`, damit bestehende Host-WLAN-Verbindungen nicht faelschlich als getrennt erscheinen.
 * Die gemeinsame Spezifikation beschreibt die lokale IPC jetzt praezise auf Code-Stand: `AF_UNIX`/`SOCK_STREAM`, genau ein JSON-Objekt pro Zeile, Newline als Nachrichtenende, gemeinsamer bidirektionaler Stream fuer Requests, Responses und Events sowie die aktuelle Liste aller Actions und Payload-Formen.
 * Das OpenAPI-Artefakt `spec/openapi/01-ui-agent-local-ipc.openapi.yaml` ist auf denselben Stand nachgezogen und beschreibt jetzt den tatsaechlichen Ein-Socket-Streamvertrag statt eines frueheren Dual-Socket-Entwurfs.
+* Die ergaenzenden lokalen IPC-Spec-Dokumente wurden fuer `ScanWifi` ebenfalls auf den Implementierungsstand nachgezogen: Request ohne Payload, Erfolgs-Response als `WiFiScanPayload` mit `networks[].ssid` und zusaetzliches `WifiScanCompleted`-Event mit identischem Payload.
 * Die gemeinsame Architektur muss in einem spaeteren Schritt noch explizit um den Uebergang vom CLI-First-MVP zum wiederverwendbaren Runtime-Kern ergaenzt werden.
 
 ## Hauptaufgaben in der Umsetzung
