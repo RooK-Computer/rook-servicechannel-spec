@@ -1,125 +1,78 @@
 openapi: 3.1.0
 info:
-  title: RooK UI-Agent Local IPC Draft
-  version: 0.2.0-draft
+  title: RooK UI-Agent Local IPC Contract
+  version: 0.3.0-draft
   description: |
-    Erster Arbeitsstand fuer die lokale Schnittstelle zwischen RooK UI und RooK Agent.
+    Verbindlicher Nachrichtenvertrag fuer die lokale Schnittstelle zwischen RooK UI
+    und RooK Agent.
 
-    Diese Schnittstelle nutzt laut Architekturkonzept Unix Domain Socket und JSON,
-    nicht HTTP. OpenAPI wird hier auf ausdruecklichen Wunsch als verbindliches
-    Vertragsartefakt genutzt, bildet aktuell aber primaer Nachrichtenmodelle und
-    keine HTTP-Operationen ab.
-
-    Offene Punkte bleiben absichtlich sichtbar und muessen per Rueckfrage geklaert
-    werden, bevor aus diesem Entwurf eine belastbare Vertragsspezifikation wird.
+    Diese Schnittstelle ist kein HTTP-API. OpenAPI wird hier ausschliesslich als
+    Schema- und Vertragsartefakt fuer Nachrichten, Payloads und Transportmetadaten
+    genutzt.
 servers: []
 paths: {}
 x-transport:
   kind: unix-domain-socket
+  socketFamily: AF_UNIX
+  socketType: SOCK_STREAM
   dataFormat: json
-  connectionModel: dual-socket
-  socketDirectory: /run/rook-servicechannel
-  sockets:
-    requestResponse: /run/rook-servicechannel/rook-service-channel
-    events: /run/rook-servicechannel/rook-service-channel-events
-  requestOrdering: single-outstanding-request
+  encoding: utf-8
+  framing:
+    mode: json-lines
+    oneJsonObjectPerMessage: true
+    delimiter: "\n"
+    eofTerminatesConnection: true
+    eofTerminatesMessage: false
+  socketPath:
+    environmentFile: /etc/default/rook-agent
+    environmentVariable: ROOK_AGENT_SOCKET_PATH
+    packagedDefault: /run/rook-agent/agent.sock
+  connectionModel: single-bidirectional-stream
+  requestResponseEventMultiplexing: shared-stream
+  clientInstances: one-stream-per-client
+  requestCorrelationField: id
+  eventsHaveRequestId: false
+  responseBehavior:
+    oneResponsePerValidRequest: true
+    currentImplementationOrder: response-before-request-triggered-events
+    eventsMayInterleave: true
 components:
   schemas:
-    MessageBase:
+    Action:
+      type: string
+      enum:
+        - GetStatus
+        - Ping
+        - ScanWifi
+        - ConnectWifi
+        - DisconnectWifi
+        - VpnStatus
+        - VpnStart
+        - VpnStop
+        - Cleanup
+        - StartSupport
+        - StopSupport
+        - GetPin
+
+    EventName:
+      type: string
+      enum:
+        - WifiScanCompleted
+        - WifiConnectionStateChanged
+        - VpnStateChanged
+        - SupportStateChanged
+        - PinAssigned
+        - ErrorRaised
+
+    RequestID:
+      type: string
+      minLength: 1
+      description: Vom Client vergebene Request-ID zur Zuordnung der Response.
+
+    EmptyObject:
       type: object
       additionalProperties: false
-      required:
-        - version
-        - type
-        - direction
-      properties:
-        version:
-          type: string
-          minLength: 1
-          description: Versionsfeld, das in jeder Nachricht mitgeführt wird.
-        type:
-          type: string
-          description: Nachrichtentyp zur Unterscheidung der Fachnachrichten.
-        direction:
-          type: string
-          enum:
-            - request
-            - response
-            - event
-          description: Nachrichtengruppe gemaess Nutzerfestlegung.
-        payload:
-          description: Fachpayload der Nachricht. Je nach Typ unterschiedlich.
-          oneOf:
-            - type: object
-            - type: array
-            - type: string
-            - type: integer
-            - type: boolean
-            - type: 'null'
-
-    RequestMessage:
-      allOf:
-        - $ref: '#/components/schemas/MessageBase'
-        - type: object
-          properties:
-            direction:
-              const: request
-
-    ResponseMessage:
-      allOf:
-        - $ref: '#/components/schemas/MessageBase'
-        - type: object
-          properties:
-            direction:
-              const: response
-          description: |
-            Auf jeden Request folgt genau eine Response. Ein neuer Request darf erst
-            gesendet werden, nachdem die Response auf den vorherigen Request zugestellt wurde.
-            Der `type`-Wert der Response entspricht dem `type`-Wert des zugehoerigen Request.
-
-    EventMessage:
-      allOf:
-        - $ref: '#/components/schemas/MessageBase'
-        - type: object
-          properties:
-            direction:
-              const: event
-
-    WifiNetwork:
-      type: object
-      additionalProperties: false
-      required:
-        - ssid
-      properties:
-        ssid:
-          type: string
-          minLength: 1
-          description: Einziger bislang festgelegter Feldinhalt fuer einen scanbaren WLAN-Eintrag.
-
-    ConnectWifiPayload:
-      type: object
-      additionalProperties: false
-      required:
-        - ssid
-        - password
-      properties:
-        ssid:
-          type: string
-          minLength: 1
-        password:
-          type: string
-          minLength: 1
-
-    PinPayload:
-      type: object
-      additionalProperties: false
-      required:
-        - pin
-      properties:
-        pin:
-          type: string
-          minLength: 1
-          description: Vierstelliger Support-PIN als Zeichenkette.
+      properties: {}
 
     ErrorPayload:
       type: object
@@ -129,8 +82,8 @@ components:
         - message
       properties:
         code:
-          type: integer
-          minimum: 1
+          type: string
+          minLength: 1
         message:
           type: string
           minLength: 1
@@ -149,26 +102,168 @@ components:
         - online+vpnup
         - servicemode
 
-    GenericObjectPayload:
+    WifiNetwork:
       type: object
-      description: |
-        Platzhalter fuer Payloads, die fachlich bekannt, aber noch nicht ausreichend
-        geklaert sind. Darf erst nach Rueckfragen konkretisiert werden.
+      additionalProperties: false
+      required:
+        - ssid
+      properties:
+        ssid:
+          type: string
+          minLength: 1
+
+    ConnectWifiPayload:
+      type: object
+      additionalProperties: false
+      required:
+        - ssid
+        - password
+      properties:
+        ssid:
+          type: string
+          minLength: 1
+        password:
+          type: string
+          minLength: 1
+
+    ConnectionStatePayload:
+      type: object
+      additionalProperties: false
+      required:
+        - state
+      properties:
+        state:
+          $ref: '#/components/schemas/ConnectionBinaryState'
+
+    PinPayload:
+      type: object
+      additionalProperties: false
+      required:
+        - pin
+      properties:
+        pin:
+          type: string
+          minLength: 1
+
+    SessionPayload:
+      type: object
+      additionalProperties: false
+      required:
+        - status
+        - pin
+        - ipAddress
+      properties:
+        status:
+          type: string
+          minLength: 1
+        pin:
+          type: string
+          minLength: 1
+        ipAddress:
+          type: string
+          minLength: 1
+
+    WifiScanPayload:
+      type: object
+      additionalProperties: false
+      required:
+        - networks
+      properties:
+        networks:
+          type: array
+          items:
+            $ref: '#/components/schemas/WifiNetwork'
+
+    VPNStatusPayload:
+      type: object
+      additionalProperties: false
+      required:
+        - state
+        - serviceActive
+        - interfacePresent
+        - statusFilePresent
+      properties:
+        state:
+          $ref: '#/components/schemas/ConnectionBinaryState'
+        serviceActive:
+          type: boolean
+        interfacePresent:
+          type: boolean
+        ipAddress:
+          type: string
+          minLength: 1
+        statusFilePresent:
+          type: boolean
+
+    StatusPayload:
+      type: object
+      additionalProperties: false
+      required:
+        - supportActive
+        - supportState
+        - wifiState
+        - vpnState
+        - anyWifiActive
+        - supportWifiActive
+      properties:
+        supportActive:
+          type: boolean
+        supportState:
+          $ref: '#/components/schemas/SupportState'
+        wifiState:
+          $ref: '#/components/schemas/ConnectionBinaryState'
+        vpnState:
+          $ref: '#/components/schemas/ConnectionBinaryState'
+        anyWifiActive:
+          type: boolean
+        supportWifiActive:
+          type: boolean
+        activeWifiConnection:
+          type: string
+          minLength: 1
+        networks:
+          type: array
+          items:
+            $ref: '#/components/schemas/WifiNetwork'
+        session:
+          $ref: '#/components/schemas/SessionPayload'
+
+    RequestMessage:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - action
+      properties:
+        id:
+          $ref: '#/components/schemas/RequestID'
+        action:
+          $ref: '#/components/schemas/Action'
+        payload:
+          description: Optionaler Request-Payload. Nur bei einzelnen Actions belegt.
 
     GetStatusRequest:
       allOf:
         - $ref: '#/components/schemas/RequestMessage'
         - type: object
           properties:
-            type:
+            action:
               const: GetStatus
+
+    PingRequest:
+      allOf:
+        - $ref: '#/components/schemas/RequestMessage'
+        - type: object
+          properties:
+            action:
+              const: Ping
 
     ScanWifiRequest:
       allOf:
         - $ref: '#/components/schemas/RequestMessage'
         - type: object
           properties:
-            type:
+            action:
               const: ScanWifi
 
     ConnectWifiRequest:
@@ -178,7 +273,7 @@ components:
           required:
             - payload
           properties:
-            type:
+            action:
               const: ConnectWifi
             payload:
               $ref: '#/components/schemas/ConnectWifiPayload'
@@ -188,15 +283,47 @@ components:
         - $ref: '#/components/schemas/RequestMessage'
         - type: object
           properties:
-            type:
+            action:
               const: DisconnectWifi
+
+    VpnStatusRequest:
+      allOf:
+        - $ref: '#/components/schemas/RequestMessage'
+        - type: object
+          properties:
+            action:
+              const: VpnStatus
+
+    VpnStartRequest:
+      allOf:
+        - $ref: '#/components/schemas/RequestMessage'
+        - type: object
+          properties:
+            action:
+              const: VpnStart
+
+    VpnStopRequest:
+      allOf:
+        - $ref: '#/components/schemas/RequestMessage'
+        - type: object
+          properties:
+            action:
+              const: VpnStop
+
+    CleanupRequest:
+      allOf:
+        - $ref: '#/components/schemas/RequestMessage'
+        - type: object
+          properties:
+            action:
+              const: Cleanup
 
     StartSupportRequest:
       allOf:
         - $ref: '#/components/schemas/RequestMessage'
         - type: object
           properties:
-            type:
+            action:
               const: StartSupport
 
     StopSupportRequest:
@@ -204,7 +331,7 @@ components:
         - $ref: '#/components/schemas/RequestMessage'
         - type: object
           properties:
-            type:
+            action:
               const: StopSupport
 
     GetPinRequest:
@@ -212,8 +339,224 @@ components:
         - $ref: '#/components/schemas/RequestMessage'
         - type: object
           properties:
-            type:
+            action:
               const: GetPin
+
+    ResponseMessage:
+      type: object
+      additionalProperties: false
+      required:
+        - type
+        - id
+        - action
+        - success
+      properties:
+        type:
+          const: response
+        id:
+          $ref: '#/components/schemas/RequestID'
+        action:
+          $ref: '#/components/schemas/Action'
+        success:
+          type: boolean
+        payload:
+          description: Erfolgs-Payload passend zur Action.
+        error:
+          $ref: '#/components/schemas/ErrorPayload'
+
+    ErrorResponse:
+      allOf:
+        - $ref: '#/components/schemas/ResponseMessage'
+        - type: object
+          required:
+            - error
+          properties:
+            success:
+              const: false
+            error:
+              $ref: '#/components/schemas/ErrorPayload'
+
+    GetStatusSuccessResponse:
+      allOf:
+        - $ref: '#/components/schemas/ResponseMessage'
+        - type: object
+          required:
+            - payload
+          properties:
+            action:
+              const: GetStatus
+            success:
+              const: true
+            payload:
+              $ref: '#/components/schemas/StatusPayload'
+
+    PingSuccessResponse:
+      allOf:
+        - $ref: '#/components/schemas/ResponseMessage'
+        - type: object
+          required:
+            - payload
+          properties:
+            action:
+              const: Ping
+            success:
+              const: true
+            payload:
+              $ref: '#/components/schemas/EmptyObject'
+
+    ScanWifiSuccessResponse:
+      allOf:
+        - $ref: '#/components/schemas/ResponseMessage'
+        - type: object
+          required:
+            - payload
+          properties:
+            action:
+              const: ScanWifi
+            success:
+              const: true
+            payload:
+              $ref: '#/components/schemas/WifiScanPayload'
+
+    ConnectWifiSuccessResponse:
+      allOf:
+        - $ref: '#/components/schemas/ResponseMessage'
+        - type: object
+          required:
+            - payload
+          properties:
+            action:
+              const: ConnectWifi
+            success:
+              const: true
+            payload:
+              $ref: '#/components/schemas/ConnectionStatePayload'
+
+    DisconnectWifiSuccessResponse:
+      allOf:
+        - $ref: '#/components/schemas/ResponseMessage'
+        - type: object
+          required:
+            - payload
+          properties:
+            action:
+              const: DisconnectWifi
+            success:
+              const: true
+            payload:
+              $ref: '#/components/schemas/ConnectionStatePayload'
+
+    VpnStatusSuccessResponse:
+      allOf:
+        - $ref: '#/components/schemas/ResponseMessage'
+        - type: object
+          required:
+            - payload
+          properties:
+            action:
+              const: VpnStatus
+            success:
+              const: true
+            payload:
+              $ref: '#/components/schemas/VPNStatusPayload'
+
+    VpnStartSuccessResponse:
+      allOf:
+        - $ref: '#/components/schemas/ResponseMessage'
+        - type: object
+          required:
+            - payload
+          properties:
+            action:
+              const: VpnStart
+            success:
+              const: true
+            payload:
+              $ref: '#/components/schemas/VPNStatusPayload'
+
+    VpnStopSuccessResponse:
+      allOf:
+        - $ref: '#/components/schemas/ResponseMessage'
+        - type: object
+          required:
+            - payload
+          properties:
+            action:
+              const: VpnStop
+            success:
+              const: true
+            payload:
+              $ref: '#/components/schemas/ConnectionStatePayload'
+
+    CleanupSuccessResponse:
+      allOf:
+        - $ref: '#/components/schemas/ResponseMessage'
+        - type: object
+          required:
+            - payload
+          properties:
+            action:
+              const: Cleanup
+            success:
+              const: true
+            payload:
+              $ref: '#/components/schemas/EmptyObject'
+
+    StartSupportSuccessResponse:
+      allOf:
+        - $ref: '#/components/schemas/ResponseMessage'
+        - type: object
+          required:
+            - payload
+          properties:
+            action:
+              const: StartSupport
+            success:
+              const: true
+            payload:
+              $ref: '#/components/schemas/StatusPayload'
+
+    StopSupportSuccessResponse:
+      allOf:
+        - $ref: '#/components/schemas/ResponseMessage'
+        - type: object
+          required:
+            - payload
+          properties:
+            action:
+              const: StopSupport
+            success:
+              const: true
+            payload:
+              $ref: '#/components/schemas/StatusPayload'
+
+    GetPinSuccessResponse:
+      allOf:
+        - $ref: '#/components/schemas/ResponseMessage'
+        - type: object
+          required:
+            - payload
+          properties:
+            action:
+              const: GetPin
+            success:
+              const: true
+            payload:
+              $ref: '#/components/schemas/PinPayload'
+
+    EventMessage:
+      type: object
+      additionalProperties: false
+      required:
+        - type
+        - event
+      properties:
+        type:
+          const: event
+        event:
+          $ref: '#/components/schemas/EventName'
+        payload:
+          description: Event-Payload passend zur Event-Art.
 
     WifiScanCompletedEvent:
       allOf:
@@ -222,18 +565,10 @@ components:
           required:
             - payload
           properties:
-            type:
+            event:
               const: WifiScanCompleted
             payload:
-              type: object
-              additionalProperties: false
-              required:
-                - networks
-              properties:
-                networks:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/WifiNetwork'
+              $ref: '#/components/schemas/WifiScanPayload'
 
     WifiConnectionStateChangedEvent:
       allOf:
@@ -242,16 +577,10 @@ components:
           required:
             - payload
           properties:
-            type:
+            event:
               const: WifiConnectionStateChanged
             payload:
-              type: object
-              additionalProperties: false
-              required:
-                - state
-              properties:
-                state:
-                  $ref: '#/components/schemas/ConnectionBinaryState'
+              $ref: '#/components/schemas/ConnectionStatePayload'
 
     VpnStateChangedEvent:
       allOf:
@@ -260,16 +589,10 @@ components:
           required:
             - payload
           properties:
-            type:
+            event:
               const: VpnStateChanged
             payload:
-              type: object
-              additionalProperties: false
-              required:
-                - state
-              properties:
-                state:
-                  $ref: '#/components/schemas/ConnectionBinaryState'
+              $ref: '#/components/schemas/ConnectionStatePayload'
 
     SupportStateChangedEvent:
       allOf:
@@ -278,16 +601,10 @@ components:
           required:
             - payload
           properties:
-            type:
+            event:
               const: SupportStateChanged
             payload:
-              type: object
-              additionalProperties: false
-              required:
-                - state
-              properties:
-                state:
-                  $ref: '#/components/schemas/SupportState'
+              $ref: '#/components/schemas/StatusPayload'
 
     PinAssignedEvent:
       allOf:
@@ -296,22 +613,10 @@ components:
           required:
             - payload
           properties:
-            type:
+            event:
               const: PinAssigned
             payload:
               $ref: '#/components/schemas/PinPayload'
-
-    PinExpiredEvent:
-      allOf:
-        - $ref: '#/components/schemas/EventMessage'
-        - type: object
-          properties:
-            type:
-              const: PinExpired
-            payload:
-              type: object
-              additionalProperties: false
-              properties: {}
 
     ErrorRaisedEvent:
       allOf:
@@ -320,40 +625,40 @@ components:
           required:
             - payload
           properties:
-            type:
+            event:
               const: ErrorRaised
-            payload:
-              $ref: '#/components/schemas/ErrorPayload'
-
-    GenericAckResponse:
-      allOf:
-        - $ref: '#/components/schemas/ResponseMessage'
-        - type: object
-          properties:
-            payload:
-              type: object
-              additionalProperties: false
-              properties: {}
-
-    ErrorResponse:
-      allOf:
-        - $ref: '#/components/schemas/ResponseMessage'
-        - type: object
-          required:
-            - payload
-          properties:
             payload:
               $ref: '#/components/schemas/ErrorPayload'
 
     KnownRequestMessage:
       oneOf:
         - $ref: '#/components/schemas/GetStatusRequest'
+        - $ref: '#/components/schemas/PingRequest'
         - $ref: '#/components/schemas/ScanWifiRequest'
         - $ref: '#/components/schemas/ConnectWifiRequest'
         - $ref: '#/components/schemas/DisconnectWifiRequest'
+        - $ref: '#/components/schemas/VpnStatusRequest'
+        - $ref: '#/components/schemas/VpnStartRequest'
+        - $ref: '#/components/schemas/VpnStopRequest'
+        - $ref: '#/components/schemas/CleanupRequest'
         - $ref: '#/components/schemas/StartSupportRequest'
         - $ref: '#/components/schemas/StopSupportRequest'
         - $ref: '#/components/schemas/GetPinRequest'
+
+    KnownSuccessResponseMessage:
+      oneOf:
+        - $ref: '#/components/schemas/GetStatusSuccessResponse'
+        - $ref: '#/components/schemas/PingSuccessResponse'
+        - $ref: '#/components/schemas/ScanWifiSuccessResponse'
+        - $ref: '#/components/schemas/ConnectWifiSuccessResponse'
+        - $ref: '#/components/schemas/DisconnectWifiSuccessResponse'
+        - $ref: '#/components/schemas/VpnStatusSuccessResponse'
+        - $ref: '#/components/schemas/VpnStartSuccessResponse'
+        - $ref: '#/components/schemas/VpnStopSuccessResponse'
+        - $ref: '#/components/schemas/CleanupSuccessResponse'
+        - $ref: '#/components/schemas/StartSupportSuccessResponse'
+        - $ref: '#/components/schemas/StopSupportSuccessResponse'
+        - $ref: '#/components/schemas/GetPinSuccessResponse'
 
     KnownEventMessage:
       oneOf:
@@ -362,5 +667,10 @@ components:
         - $ref: '#/components/schemas/VpnStateChangedEvent'
         - $ref: '#/components/schemas/SupportStateChangedEvent'
         - $ref: '#/components/schemas/PinAssignedEvent'
-        - $ref: '#/components/schemas/PinExpiredEvent'
         - $ref: '#/components/schemas/ErrorRaisedEvent'
+
+    KnownAgentToUIMessage:
+      oneOf:
+        - $ref: '#/components/schemas/KnownSuccessResponseMessage'
+        - $ref: '#/components/schemas/ErrorResponse'
+        - $ref: '#/components/schemas/KnownEventMessage'
