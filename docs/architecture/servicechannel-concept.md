@@ -822,6 +822,10 @@ Auf der Konsole sollten mindestens zwei Pakete entstehen:
 * SDL2-UI-Binary
 * UI-Assets
 * Startskripte oder Launcher-Definitionen
+* fuer diese UI konkret:
+  * das Binary
+  * die Laufzeitressourcen unter `/usr/share/rook-console-ui/resources`
+  * der oeffentliche Launcher `/usr/bin/rook-ui`
 
 #### Paket 2 – RooK Agent
 
@@ -846,6 +850,17 @@ Auf der Konsole sollten mindestens zwei Pakete entstehen:
 * Menüeinträge
 * Wrapper-Skripte
 * gemeinsame Konfigurationsdateien
+
+Fuer den aktuellen RooK-UI-Zielpfad ist dieses Integrationspaket jetzt konkretisiert auf:
+
+* die systemweite EmulationStation-Integration des Zielimages
+* ein paketiertes Startskript `Service.sh`
+* idempotente Installationslogik, die ein fehlendes System `RooK` in der systemweiten EmulationStation-Konfiguration anlegt
+* ein konservatives RooK-Theme-Snippet fuer die Systemgrafik, das standardmaessig das paketierte Logo der UI verwendet
+* eine konservative Update-Strategie:
+  * vorhandene RooK-/Service-Eintraege werden nicht automatisch normalisiert oder ueberschrieben
+  * vorhandene RooK-Theme-Dateien werden ebenfalls nicht automatisch ueberschrieben
+  * fehlende Eintraege werden ergaenzt
 
 ### nfpm-Rolle
 
