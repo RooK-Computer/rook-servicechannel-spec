@@ -243,6 +243,65 @@ Die UI kommuniziert lokal mit dem Agent.
 * **Request/Response** für Benutzeraktionen
 * **asynchrone Events** für Zustandsänderungen
 
+### Socket-Ermittlung durch die UI
+
+Die UI darf den lokalen Socket nicht über Heuristiken oder Dateisystem-Scans suchen.
+
+Stattdessen gilt für den Agent im paketierten Betrieb:
+
+1. Der systemd-Dienst `rook-agent.service` liest seine Laufzeitkonfiguration aus `/etc/default/rook-agent`.
+2. Die UI liest aus derselben Datei den Wert von `ROOK_AGENT_SOCKET_PATH`.
+3. Genau dieser Wert ist der verbindliche Pfad des Unix Domain Sockets, auf dem der Agent auf lokale UI-Verbindungen wartet.
+
+Damit ist `/etc/default/rook-agent` im paketierten Zielsystem die gemeinsame Quelle der Wahrheit für die Socket-Ermittlung zwischen Agent und UI.
+
+Falls `ROOK_AGENT_SOCKET_PATH` dort nicht gesetzt ist, gilt im Debian-Paket standardmäßig:
+
+* `/run/rook-agent/agent.sock`
+
+Für ungepackte Entwicklungsstarts ohne systemd-Umgebung gilt weiterhin der pro Benutzer aufgelöste Defaultpfad unter dem User-Config-Verzeichnis:
+
+* `rook-agent/agent.sock` relativ zu `os.UserConfigDir()`
+* typischerweise also `~/.config/rook-agent/agent.sock` bzw. `$XDG_CONFIG_HOME/rook-agent/agent.sock`
+
+### Agent-Konfigurationsdatei im paketierten Betrieb
+
+**Pfad:** `/etc/default/rook-agent`
+
+**Format:** zeilenorientierte Environment-Datei im Stil von `EnvironmentFile` unter systemd.
+
+Regeln:
+
+* eine Zuweisung pro Zeile im Format `NAME=WERT`
+* Kommentarzeilen beginnen mit `#`
+* die Datei ist keine JSON-, YAML- oder TOML-Datei
+* Leerzeilen sind erlaubt
+
+Beispiel:
+
+```ini
+# RooK agent packaged runtime configuration.
+# Adjust the backend URL for the target environment before enabling the service.
+
+ROOK_AGENT_BACKEND_URL=http://localhost:8080
+ROOK_AGENT_LOG_LEVEL=info
+ROOK_AGENT_STATE_PATH=/var/lib/rook-agent/session.json
+ROOK_AGENT_SOCKET_PATH=/run/rook-agent/agent.sock
+# ROOK_AGENT_CONSOLE_ID=
+```
+
+### Bedeutung aller Parameter in `/etc/default/rook-agent`
+
+| Parameter | Bedeutung |
+| --- | --- |
+| `ROOK_AGENT_BACKEND_URL` | Basis-URL des RooK-Backends für Session-Start, Status, Heartbeat und Session-Ende. |
+| `ROOK_AGENT_LOG_LEVEL` | Log-Level des Agents, aktuell `debug`, `info`, `warn` oder `error`. |
+| `ROOK_AGENT_STATE_PATH` | Pfad zur lokal persistierten Session-State-Datei, aus der der Agent aktive Support-Sitzungen wiederaufnehmen kann. |
+| `ROOK_AGENT_SOCKET_PATH` | Pfad des lokalen Unix Domain Sockets für die Kommunikation zwischen UI und Agent. Dieser Wert ist für die UI maßgeblich zur Socket-Ermittlung. |
+| `ROOK_AGENT_CONSOLE_ID` | Stabile Kennung der Konsole für die Backend-Kommunikation. Der Parameter ist optional und kann auskommentiert oder leer bleiben. |
+
+Die Datei wird durch den systemd-Dienst vor dem Start des Agents eingelesen. Änderungen an `ROOK_AGENT_SOCKET_PATH` wirken daher sowohl auf den Agent als auch auf jeden UI-Client, der den Socket gemäß dieser Spezifikation über `/etc/default/rook-agent` auflöst.
+
 ### Beispielhafte Befehle
 
 * `GetStatus`
