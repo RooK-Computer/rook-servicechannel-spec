@@ -1,12 +1,12 @@
 # Komponentenübergreifender Entwicklungsplan
 
-Status: Erarbeitet
+Status: Abgeschlossen
 
 ## Zweck
 
-Dieses Dokument beschreibt die empfohlene Reihenfolge für die Umsetzung der Hauptkomponenten.
+Dieses Dokument beschreibt die verfolgte Reihenfolge fuer die Umsetzung der Hauptkomponenten.
 
-Ziel ist es, zuerst den fachlichen Kern des Systems zu stabilisieren und anschließend schrittweise die nachgelagerten Oberflächen- und Integrationsschichten darauf aufzubauen.
+Die beschriebene Reihenfolge fuehrt den spaeter erreichten Betriebsstand her und dient jetzt als nachvollziehbare Rueckschau auf die initiale Aufbauphase.
 
 ## Leitprinzip für die Reihenfolge
 
@@ -14,7 +14,7 @@ Ziel ist es, zuerst den fachlichen Kern des Systems zu stabilisieren und anschli
 * Danach die Komponenten ergänzen, die Terminal-Zugang und Shell-Transport ermöglichen.
 * Die lokale UI zuletzt anbinden, weil sie auf den stabilen Zustands- und Integrationskern aufsetzen sollte.
 
-## Empfohlene Reihenfolge
+## Umgesetzte Reihenfolge
 
 ### Phase 0 – Technische Grundlage bereitstellen
 
@@ -81,9 +81,9 @@ Begründung:
 * Ein stabiler Agent-Kern mit klarer Zustandsführung macht die UI-Entwicklung deutlich risikoärmer.
 * So kann die UI gegen reale Zustände arbeiten statt gegen bewegliche Provisorien.
 
-## Konkrete Startempfehlung
+## Tatsaechlich verfolgte Startreihenfolge
 
-Wenn nur mit einer kleinen Zahl paralleler Teams gestartet wird, ist folgende Startfolge am sinnvollsten:
+Fuer den initialen Aufbau mit wenigen parallelen Teams war folgende Startfolge sinnvoll und ist in dieser Reihenfolge dokumentiert worden:
 
 1. OpenVPN-Infrastruktur minimal funktionsfähig aufsetzen.
 2. OpenVPN-Konfigurationsablage und Debian-Paketierung fuer die VPN-Artefakte festlegen.
@@ -95,7 +95,7 @@ Wenn nur mit einer kleinen Zahl paralleler Teams gestartet wird, ist folgende St
 
 Wenn OpenVPN und Backend vom gleichen Team umgesetzt werden, ist das in Ordnung. Fuer Planung, Status und Risikoanalyse sollten beide Themen aber weiterhin getrennt dokumentiert werden.
 
-## Erwarteter Nutzen dieser Reihenfolge
+## Erreichter Nutzen dieser Reihenfolge
 
 * Früher testbarer End-to-End-Kern auf Session-Ebene
 * Geringeres Integrationsrisiko zwischen mehreren Teams
@@ -104,5 +104,5 @@ Wenn OpenVPN und Backend vom gleichen Team umgesetzt werden, ist das in Ordnung.
 
 ## Pflegehinweis
 
-* Wenn sich aus der Umsetzung neue technische Zwänge ergeben, muss dieses Dokument aktualisiert werden.
-* Abweichungen von der empfohlenen Reihenfolge sollten kurz begründet und hier oder in der Statusübersicht nachvollziehbar festgehalten werden.
+* Dieses Dokument bleibt als historische Einordnung des initialen Aufbaus bestehen.
+* Neue Ausbauphasen oder spaetere Priorisierungswechsel sollen in den Komponentenstatusdateien und der Statusuebersicht dokumentiert werden statt diese abgeschlossene Aufbaufolge neu zu oeffnen.

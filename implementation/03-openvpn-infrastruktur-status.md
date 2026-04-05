@@ -1,6 +1,6 @@
 # Implementierungsstatus – OpenVPN-Infrastruktur
 
-Status: Abgeschlossen
+Status: In Betrieb
 
 ## Zweck der Komponente
 
@@ -14,8 +14,8 @@ Die OpenVPN-Infrastruktur stellt den ausgehenden Transportkanal zwischen Konsole
 
 ## Aktueller Stand
 
-* Die Umsetzung wurde im dedizierten OpenVPN-Implementierungs-Repository gestartet.
-* Aus dem Architekturkonzept und den angrenzenden Status- und Schnittstellendokumenten wurden konkrete Umsetzungspläne für Server, Client, Secrets, Debian-Paketierung und Integration abgeleitet.
+* Die Umsetzung im dedizierten OpenVPN-Implementierungs-Repository ist fuer den aktuellen Scope abgeschlossen und im Betrieb.
+* Aus dem Architekturkonzept und den angrenzenden Status- und Schnittstellendokumenten wurden konkrete Umsetzungsplaene fuer Server, Client, Secrets, Debian-Paketierung und Integration abgeleitet und abgearbeitet.
 * Die Zielrichtung für das erste Teilprojekt ist jetzt konkretisiert: zwei getrennte OpenVPN-Konfigurationen mit Debian-Paketierung, eine für den Server und eine für den Client.
 * Der Server-Endpoint ist für die erste Umsetzung auf `service.rook.computer` festgelegt.
 * Die Ablage von Geheimnissen wird als explizite Repo-Struktur mit getrennten `secrets/`-Bereichen für Server und Client vorbereitet, damit diese Inhalte nicht eingecheckt werden.
@@ -76,14 +76,14 @@ Fuer den aktuell gestarteten Arbeitsstand ist zusaetzlich sinnvoll:
 
 ## Nächste sinnvolle Schritte
 
-1. Netzwerkpfade zwischen Konsole, Backend und Gateway über die bestehende VPN-Strecke in den nachgelagerten Komponenten nutzen und verifizieren.
-2. Routing-, Firewall- und Erreichbarkeitsdetails für die Zielumgebung in der Integrationsphase haerten.
-3. Die vorhandene OpenVPN-Basis als frühe Voraussetzung für Agent- und Gateway-Integration weiterverwenden.
+1. Betriebsbezogene Netzwerkanpassungen, Routing-Aenderungen oder Secret-Rotation als neue Folgearbeit dokumentieren.
+2. Zielumgebungsdetails nur noch bei neuen Standorten, Sicherheitsvorgaben oder Netzveraenderungen nachziehen.
+3. Die vorhandene OpenVPN-Basis weiterhin als stabile Infrastrukturvoraussetzung fuer Agent-, Backend- und Gateway-Betrieb behandeln.
 
 ## Hinweise für spätere Aktualisierung
 
-* Als naechstes sollen hier Server-Setup, Client-Setup, Paketierungsstand, bekannte Netzwerkprobleme und Testumgebungen konkret nachgezogen werden.
-* Sobald die ersten Artefakte im OpenVPN-Repository vorliegen, sollte dieses Dokument den Stand getrennt fuer Server, Client, Secrets-Handling und Paketierung ausweisen.
-* Bei der naechsten Aktualisierung sollten die tatsaechlich verwendeten Secrets-Dateinamen, das gewaehlte VPN-Subnetz und die Erkenntnisse aus dem ersten Paket- und Installationslauf dokumentiert werden.
+* Dieses Dokument soll kuenftig nur noch betriebliche Aenderungen, neue Haertungen oder neue Umgebungsvarianten nachziehen.
+* Der erreichte Stand fuer Server, Client, Secrets-Handling und Paketierung ist fuer den aktuellen Scope abgeschlossen.
+* Weitere Detailanpassungen gehoeren nur bei belastbaren neuen Betriebsbefunden in dieses Dokument.
 * Die bewusste Einschraenkung durch gemeinsame Client-Secrets sollte in spaeteren Betriebsdokumenten fuer Audit und Sperrprozesse sichtbar bleiben.
 * Bei weiteren Erkenntnissen aus Agent-, Backend- oder Gateway-Integration sollten hier nur noch betriebliche Detailanpassungen, bekannte Randprobleme oder notwendige Netzhaertungen nachgezogen werden.

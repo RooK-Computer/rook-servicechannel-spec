@@ -1,8 +1,8 @@
 # Spezifikationsplan 05 – Terminal-Gateway ↔ Konsole (SSH über VPN)
 
-Status: Wartet auf Implementierungserkenntnisse
+Status: Abgeschlossen
 
-Statushinweis: `Wartet auf Implementierungserkenntnisse` bedeutet, dass die konzeptionelle Arbeit an diesem Plan bewusst pausiert, bis neue belastbare Erkenntnisse aus der späteren Implementierung vorliegen.
+Statushinweis: `Abgeschlossen` bedeutet, dass die aus diesem Plan abgeleiteten SSH-/Konsolen-Vertragsartefakte fuer den aktuellen Scope umgesetzt und nachgezogen sind.
 
 ## Ziel der Spezifikation
 
@@ -51,10 +51,10 @@ Diese Artefakte enthalten die aus dem Konzept, der Recherche und den bisherigen 
 * der Browser spricht nie direkt mit der Konsole
 * Sitzungsende oder Reboot beendet den Support-Zustand
 
-## Offene Fragen vor der Umsetzung
+## Ehemals offene Punkte
 
-* Braucht es neben `pin` und `mitarbeiteraccount` weitere Audit-Informationen?
-* Welche fachlichen Fehlercodes sollen für Zielauflösung, SSH-Aufbau und Sitzungsabbruch reserviert werden?
+* Die fuer den aktuellen Scope benoetigten Audit-Informationen sind im Vertragsstand dokumentiert.
+* Die fachlichen Fehlercodes des aktuellen Scope sind im Vertragsstand gespiegelt.
 
 ## Aktueller Umsetzungsstand
 
@@ -62,11 +62,11 @@ Diese Artefakte enthalten die aus dem Konzept, der Recherche und den bisherigen 
 * Zielkonsole, SSH-Sitzung und Fehlerstrategie sind als fachliche Bausteine dokumentiert.
 * Zielidentifikation ueber Session-Metadaten und IP-Adresse, Gateway-Schluessel in `authorized_keys`, kein Pro-Sitzung-Account sowie die Dokumentationsform aus OpenAPI-Draft und begleitendem Markdown sind eingearbeitet.
 * Der Zielaccount `pi`, die Ausklammerung von Schluessellaufzeit und Rotation aus der Spezifikation sowie minimale PTY-Regeln fuer regulaeres Terminalverhalten sind eingearbeitet.
-* Verbleibend offen sind nun nur noch moegliche zusaetzliche Audit-Daten und die fachliche Fehlercode-Liste, die sinnvoll erst mit Implementierungserkenntnissen geschaerft werden.
+* Zielaufloesung, SSH-Authentisierung, PTY-Regeln und Fehlerstrategie sind fuer den aktuellen Scope nachgezogen.
 
-## Statusbegruendung
+## Abschlussbegruendung
 
-Dieser Plan wartet jetzt bewusst auf Implementierungserkenntnisse, weil die verbleibenden offenen Punkte unmittelbar von konkreten Fehlerfaellen und eventuellen Audit-Anforderungen der spaeteren Gateway- und Konsolenimplementierung abhaengen.
+Dieser Plan ist fuer den aktuellen Scope abgeschlossen, weil Zielaufloesung, SSH-Sitzungsaufbau, Sicherheitsgrenzen und Fehlerfaelle in den Vertragsartefakten und den Gateway-/Agent-/OpenVPN-Statusdokumenten gespiegelt sind.
 
 ## Verbindliche Arbeitsregel
 
@@ -78,8 +78,7 @@ Dieser Plan wartet jetzt bewusst auf Implementierungserkenntnisse, weil die verb
 
 Dieser Plan ist umgesetzt, wenn Zielauswahl, SSH-Authentisierung, Sitzungsparameter, Fehlerfälle, Sicherheitsanforderungen und Cleanup-Verhalten für Gateway ↔ Konsole abgestimmt dokumentiert sind.
 
-## Nächste Schritte für Folge-Agenten
+## Naechste Schritte fuer Folge-Agenten
 
-1. Plan erst dann wieder aktivieren, wenn aus der Implementierung konkrete Fehler- oder zusaetzliche Audit-Anforderungen vorliegen.
-2. Danach Fehlercode-Liste und gegebenenfalls Audit-Erweiterungen in Draft und Begleitdokumente uebernehmen.
-3. Anschließend den Draft auf belastbaren Vertragsstand heben.
+1. Diesen Plan nur bei spaeteren SSH-/Zielsystemaenderungen oder neuen Sicherheitsbefunden wieder oeffnen.
+2. Neue Audit- oder Fehleranforderungen direkt in Plan und Vertragsartefakte zurueckspiegeln.

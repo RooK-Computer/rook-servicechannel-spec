@@ -1,8 +1,8 @@
 # Spezifikationsplan 01 – RooK UI ↔ RooK Agent (lokale IPC)
 
-Status: Wartet auf Implementierungserkenntnisse
+Status: Abgeschlossen
 
-Statushinweis: `Wartet auf Implementierungserkenntnisse` bedeutet, dass die konzeptionelle Arbeit an diesem Plan bewusst pausiert, bis neue belastbare Erkenntnisse aus der späteren Implementierung vorliegen.
+Statushinweis: `Abgeschlossen` bedeutet, dass die aus diesem Plan abgeleiteten Vertragsartefakte fuer den aktuellen Scope umgesetzt und auf den erreichten Implementierungsstand nachgezogen sind.
 
 ## Ziel der Spezifikation
 
@@ -68,22 +68,20 @@ Diese Artefakte enthalten die aus dem Konzept und den bisherigen Klaerungen bela
 * `PinExpired`
 * `ErrorRaised`
 
-## Offene Fragen vor der Umsetzung
+## Ehemals offene Punkte
 
-* Welche konkrete Syntax und Kompatibilitätsregel soll das Nachrichtenfeld `version` verwenden?
-* Welche fachlichen Fehlercodes sollen als erste verbindliche Einträge reserviert werden, sobald die Komponentenentwicklung startet?
-* Welche Zustandsübergänge zwischen `idle`, `online`, `online+vpnup` und `servicemode` sollen formal erlaubt sein?
+* Die konkrete Syntax und Kompatibilitaetsregel des Nachrichtenfelds `version` ist fuer den aktuellen Scope im Vertragsstand nachgezogen.
+* Erste verbindliche Fehlercodes und die tatsaechlichen Payload-Formen sind fuer den aktuellen Scope dokumentiert.
+* Die benoetigten Zustandsuebergaenge werden fuer den aktuellen Scope ueber die nachgezogenen Status- und Eventartefakte beschrieben.
 
 ## Aktueller Umsetzungsstand
 
 * Transport, Kommunikationsmuster sowie die im Konzept explizit benannten Kommandos und Events wurden in erste Arbeitsartefakte überführt.
 * Die bisherigen Klaerungen zu `type`, Nachrichtenrichtung, Support-Zustaenden sowie minimalen WLAN- und PIN-Feldern wurden eingearbeitet.
-* Ein erster OpenAPI-Entwurf für die Nachrichtenmodelle wurde angelegt.
-* Das Verbindungsmodell ist nun als Zwei-Socket-Modell mit genau einem ausstehenden Request präzisiert.
-* Socket-Namen, Response-Typisierung, PIN-Gültigkeit und `ConnectWifi`-Verhalten sind jetzt festgezogen.
-* Versionierungsfeld, numerische Fehlercodes sowie binäre WLAN-/VPN-Zustände sind jetzt festgelegt.
-* Verbleibend offen sind nur noch die genaue Versionssyntax, erste reservierte Fehlercodes und die formale Zustandsübergangsmatrix.
-* Diese verbleibenden Punkte werden erst weiter geschärft, wenn aus der Implementierung neue belastbare Erkenntnisse vorliegen.
+* Das OpenAPI-Artefakt fuer die Nachrichtenmodelle ist auf den aktuellen Vertragsstand nachgezogen.
+* Das Verbindungsmodell ist als Ein-Socket-Stream mit genau einem JSON-Objekt pro Zeile und gemeinsamem bidirektionalem Nachrichtenstrom praezisiert.
+* Socket-Pfad, Response-Typisierung, PIN-Gueltigkeit, `ConnectWifi`-Verhalten sowie die tatsaechlichen Action- und Event-Formen sind festgezogen.
+* Versionierungsfeld, Fehlercodes und die benoetigten beobachtbaren WLAN-/VPN-/Support-Zustaende sind fuer den aktuellen Scope dokumentiert.
 
 ## Verbindliche Arbeitsregel
 
@@ -95,8 +93,7 @@ Diese Artefakte enthalten die aus dem Konzept und den bisherigen Klaerungen bela
 
 Dieser Plan ist umgesetzt, wenn die Nachrichtenstruktur, die Kommandos, die Events, die Statusmodelle und die Fehlerfälle für UI ↔ Agent vollständig beschrieben und mit den offenen Fragen abgestimmt sind.
 
-## Nächste Schritte für Folge-Agenten
+## Naechste Schritte fuer Folge-Agenten
 
-1. Plan erst dann wieder aktivieren, wenn aus der Implementierung neue Erkenntnisse zu Versionierung, Fehlercodes oder Zustandsübergängen vorliegen.
-2. Danach die verbleibenden offenen Punkte konkretisieren und in die Spezifikation zurückführen.
-3. Anschließend den OpenAPI-Entwurf von Draft auf belastbaren Vertragsstand heben.
+1. Diesen Plan nur bei neuen Produktentscheidungen oder spaeteren Betriebsbefunden wieder oeffnen.
+2. Aenderungen an IPC-Nachrichten, Fehlercodes oder Zustandsmodellen direkt in Plan und Vertragsartefakte zurueckspiegeln.

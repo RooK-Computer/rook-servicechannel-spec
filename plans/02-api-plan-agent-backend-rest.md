@@ -1,8 +1,8 @@
 # Spezifikationsplan 02 – RooK Agent ↔ RooK Backend (REST)
 
-Status: Wartet auf Implementierungserkenntnisse
+Status: Abgeschlossen
 
-Statushinweis: `Wartet auf Implementierungserkenntnisse` bedeutet, dass die konzeptionelle Arbeit an diesem Plan bewusst pausiert, bis neue belastbare Erkenntnisse aus der späteren Implementierung vorliegen.
+Statushinweis: `Abgeschlossen` bedeutet, dass die aus diesem Plan abgeleiteten REST-Vertragsartefakte fuer den aktuellen Scope umgesetzt und nachgezogen sind.
 
 ## Ziel der Spezifikation
 
@@ -59,10 +59,10 @@ Diese Artefakte enthalten die aus Konzept und Nutzerklaerungen belastbar ableitb
 * periodische Lebenszeichen des Agent
 * Beendigung bei manuellem Ende, Timeout oder Reboot
 
-## Offene Fragen vor der Umsetzung
+## Ehemals offene Punkte
 
-* Welche fachlichen Fehlercodes sollen als erste verbindliche Einträge reserviert werden?
-* Welche Fehler gelten als retry-fähig und welche nicht?
+* Die fachlichen Fehlercodes des aktuellen Scope sind im Vertragsstand dokumentiert.
+* Retry-, Heartbeat- und Timeout-Verhalten sind fuer den aktuellen Scope spezifiziert und mit dem erreichten Implementierungsstand abgeglichen.
 
 ## Aktueller Umsetzungsstand
 
@@ -73,11 +73,11 @@ Diese Artefakte enthalten die aus Konzept und Nutzerklaerungen belastbar ableitb
 * Konkrete Operationsnamen, Pfadversion `1` und das minimale Fehlerobjekt sind eingearbeitet.
 * VPN-Vertrauensdurchsetzung, Audit-Minimum und die aktuelle HTTP-Statuscode-Strategie sind jetzt ebenfalls festgehalten.
 * `status` und `endsession` fuehren jetzt den `pin` im Request mit, und als minimales Response-Modell fuer Start und Status gelten `status`, `pin` und `ipAddress`.
-* Verbleibend offen sind nur noch die detaillierte Fehlercode-Liste und Retry-Regeln, die sinnvoll erst mit Implementierungserkenntnissen geschaerft werden.
+* Fehlercodes, Retry-Regeln und Timeout-Semantik sind fuer den aktuellen Scope nachgezogen.
 
-## Statusbegruendung
+## Abschlussbegruendung
 
-Dieser Plan wartet jetzt bewusst auf Implementierungserkenntnisse, weil die verbleibenden offenen Punkte vor allem aus konkreten Fehlerfaellen und Retry-Szenarien der spaeteren Backend-Implementierung entstehen werden.
+Dieser Plan ist fuer den aktuellen Scope abgeschlossen, weil Session-Ressource, Endpunkte, Fehlerstrategie und Heartbeat-/Timeout-Semantik in den Vertragsartefakten und den Komponentenstatusdokumenten gespiegelt sind.
 
 ## Verbindliche Arbeitsregel
 
@@ -89,8 +89,7 @@ Dieser Plan wartet jetzt bewusst auf Implementierungserkenntnisse, weil die verb
 
 Dieser Plan ist umgesetzt, wenn die Session-Ressourcen, REST-Endpunkte, Datenmodelle, Fehlercodes, Zustände, Sicherheitsregeln und Timeout-Semantik für Agent ↔ Backend vollständig und abgestimmt spezifiziert sind.
 
-## Nächste Schritte für Folge-Agenten
+## Naechste Schritte fuer Folge-Agenten
 
-1. Plan erst dann wieder aktivieren, wenn aus der Implementierung konkrete Fehler- und Retry-Szenarien vorliegen.
-2. Danach Fehlercode-Liste und Retry-Regeln in Fehlerstrategie und OpenAPI-Draft uebernehmen.
-3. Anschließend den Draft auf belastbaren Vertragsstand heben.
+1. Diesen Plan nur bei spaeteren API-Aenderungen oder neuen Laufzeitbefunden wieder oeffnen.
+2. Neue Fehler- oder Retry-Szenarien direkt in Plan, OpenAPI und Fehlerstrategie zurueckspiegeln.

@@ -1,6 +1,6 @@
 # Implementierungsstatus – RooK Web-/API-Backend
 
-Status: In Arbeit
+Status: In Betrieb
 
 ## Zweck der Komponente
 
@@ -8,8 +8,8 @@ Das RooK Backend ist die zentrale Control Plane. Es verwaltet Support-Sitzungen,
 
 ## Aktueller Stand
 
-* Das eigentliche Backend ist weiterhin noch nicht fachlich implementiert, aber Detailplanung und technisches Bootstrap wurden gestartet und validiert.
-* Im Backend-Repository liegen fortsetzbare Teilplaene unter `plans/`, damit mehrere Agenten an klar abgegrenzten Arbeitspaketen weiterarbeiten koennen.
+* Das Backend ist fachlich implementiert und arbeitet fuer den aktuellen Scope als zentrale Control Plane im Betrieb.
+* Die repo-lokalen Teilplaene unter `plans/` sind fuer den aktuellen Scope abgeschlossen und dokumentieren den erreichten Umsetzungsweg.
 * Das lokale Drupal-/Docker-Grundgeruest wurde angelegt:
   * `composer.json` im Repo-Root
   * `composer.lock` und installierte Composer-Abhaengigkeiten
@@ -88,15 +88,14 @@ Das RooK Backend ist die zentrale Control Plane. Es verwaltet Support-Sitzungen,
 
 ## Nächste sinnvolle Schritte
 
-1. Die echte Ende-zu-Ende-Integration der aktualisierten Team-UI gegen eine laufende Gateway-Komponente nachvalidieren.
-2. Fehlercode- und Revocation-Semantik an den bestehenden API-Schnitten gezielt nachschärfen, statt neue Flaechen aufzumachen.
-3. Die Browser-Gateway-Protokolldetails fuer `resize` weiter explizit stabilisieren; der Integrationsstand stuetzt derzeit `columns` und `rows`.
-4. Weitere Integrations- oder Delivery-Anforderungen nur bei belastbarem Bedarf ergänzen, statt vorschnell neue Toolketten einzuführen.
+1. Neue Backend-Aenderungen nur noch als Betriebsbefund, Vertragsaenderung oder neue Ausbauphase dokumentieren.
+2. Fehlercode-, Revocation- oder Protokollnachschaerfungen nur bei belastbaren neuen Erkenntnissen nachziehen.
+3. Zusaetzliche Delivery- oder Betriebsanforderungen getrennt vom abgeschlossenen Grundstand fuehren.
 
 ## Aktuelle Integrationsbefunde
 
-* Die ersten interaktiven Integrationstests zeigen neue Folgearbeiten sowohl in der Team-UI als auch im Session-Lifecycle.
-* Erste backendseitige Folgearbeiten daraus wurden bereits umgesetzt:
+* Die ersten interaktiven Integrationstests haben Folgearbeiten in Team-UI und Session-Lifecycle sichtbar gemacht; diese sind fuer den aktuellen Scope nachgezogen.
+* Backendseitig wurden daraus insbesondere umgesetzt:
   * zentrale Heartbeat-/Timeout-Pruefung im Core statt duplizierter Ablaufpruefung in mehreren API-Schichten,
   * expliziter Rueckfall `active -> open`, ohne die uebergeordnete Support-Session zu schliessen,
   * Team-UI in React mit TypeScript als Quellbasis bei weiter committedem Laufzeit-Bundle,
@@ -104,13 +103,10 @@ Das RooK Backend ist die zentrale Control Plane. Es verwaltet Support-Sitzungen,
   * Debug-Informationen hinter einem klickbaren Info-Symbol,
   * vollbreite 4:3-Anordnung des Browser-Terminals mit Hoehenbegrenzung gegen die verfuegbare Bildschirmhoehe unter Beruecksichtigung der Drupal-Oberflaeche,
   * Menueeinbindung der Team-UI in die Hauptnavigation und des Konfigurationszugangs unter Drupal `Configuration/System`.
-* Fuer die offene Folgepflege bleiben aktuell vor allem:
-  * Ende-zu-Ende-Nachvalidierung der Team-UI gegen ein laufendes Gateway,
-  * weitere Schaerfung von Fehler- und Revocation-Semantik,
-  * laufende Abgleiche mit neuen Integrationsbefunden im `11`er-Dokument.
-* Die zentrale Einordnung, inklusive moeglichem Spezifikations- oder Recherchebedarf, wird in `11-integrationsbefunde-und-folgearbeiten.md` gepflegt.
+* Offene Pflichtnacharbeiten aus dieser ersten Integrationsrunde werden in diesem Dokument nicht mehr gefuehrt; neue Themen starten als eigener Befund oder Change-Request.
+* Die zentrale Einordnung der damaligen Befunde, inklusive moeglichem Spezifikations- oder Recherchebedarf, bleibt in `11-integrationsbefunde-und-folgearbeiten.md` nachvollziehbar.
 
 ## Hinweise für spätere Aktualisierung
 
-* Dieses Dokument soll waehrend der Umsetzung fortlaufend mit dem Stand von Bootstrap, Datenmodell, REST-Endpunkten, Rechtemodell, Gateway-Integration und Testabdeckung aktualisiert werden.
-* Relevante Planungs- und Architekturentscheidungen aus `plans/` sollen hier in verdichteter Form gespiegelt werden, sobald sie belastbar umgesetzt oder bewusst festgelegt sind.
+* Dieses Dokument soll kuenftig den laufenden Betriebsstand, neue Ausbauphasen und relevante Vertragsaenderungen spiegeln.
+* Relevante Planungs- und Architekturentscheidungen aus `plans/` bleiben hier in verdichteter Rueckschau sichtbar und werden nur bei neuen belastbaren Aenderungen erweitert.

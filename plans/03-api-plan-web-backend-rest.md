@@ -1,8 +1,8 @@
 # Spezifikationsplan 03 – Web-Frontend ↔ RooK Backend (REST)
 
-Status: Wartet auf Implementierungserkenntnisse
+Status: Abgeschlossen
 
-Statushinweis: `Wartet auf Implementierungserkenntnisse` bedeutet, dass die konzeptionelle Arbeit an diesem Plan bewusst pausiert, bis neue belastbare Erkenntnisse aus der späteren Implementierung vorliegen.
+Statushinweis: `Abgeschlossen` bedeutet, dass die aus diesem Plan abgeleiteten REST-Vertragsartefakte fuer den aktuellen Scope umgesetzt und nachgezogen sind.
 
 ## Ziel der Spezifikation
 
@@ -57,10 +57,10 @@ Diese Artefakte enthalten die aus Konzept und Nutzerklaerungen belastbar ableitb
 * Ausstellung einer kurzlebigen Terminal-Berechtigung durch das Backend
 * Statusanzeige der Support-Sitzung
 
-## Offene Fragen vor der Umsetzung
+## Ehemals offene Punkte
 
-* Welche konkreten Request- und Response-Modelle werden fuer `pinlookup`, `sessionstatus` und `requestshell` ueber die Minimalstruktur hinaus benoetigt?
-* Welche fachlichen Fehlercodes sollen verbindlich reserviert werden?
+* Die benoetigten Request-/Response-Modelle des aktuellen Scope sind in den Vertragsartefakten dokumentiert.
+* Die fachlichen Fehlercodes des aktuellen Scope sind im Vertragsstand nachgezogen.
 
 ## Aktueller Umsetzungsstand
 
@@ -69,11 +69,11 @@ Diese Artefakte enthalten die aus Konzept und Nutzerklaerungen belastbar ableitb
 * Login-Umfang, PIN-Semantik, Parallelnutzung, sichtbare Session-Felder, Rollenbasis und Grant-Grundmodell sind eingearbeitet.
 * URL-Muster, POST-only-Strategie, implizite Kopplung, opaque Token mit grundsaetzlicher Nicht-Wiederverwendung und Reconnect-Ausnahme sowie die minimale Fehlerstrategie sind eingearbeitet.
 * Konkrete Operationsnamen und erste konkrete API-Pfade sind eingearbeitet.
-* Verbleibend offen sind nur noch die detaillierten Request-/Response-Modelle und die fachliche Fehlercode-Liste, die sinnvoll erst mit weiteren Implementierungserkenntnissen geschaerft werden.
+* Request-/Response-Modelle, Rollenbezug und Fehlerstrategie sind fuer den aktuellen Scope nachgezogen.
 
-## Statusbegruendung
+## Abschlussbegruendung
 
-Dieser Plan wartet jetzt bewusst auf Implementierungserkenntnisse, weil die verbleibenden offenen Punkte vor allem aus konkreten Frontend- und Backend-Implementierungsdetails entstehen werden.
+Dieser Plan ist fuer den aktuellen Scope abgeschlossen, weil die benoetigten Frontend-zu-Backend-Operationen, Rollenannahmen, Grant-Ablaeufe und Fehlerfaelle in den Vertragsartefakten und den Komponentenstatusdokumenten gespiegelt sind.
 
 ## Verbindliche Arbeitsregel
 
@@ -85,8 +85,7 @@ Dieser Plan wartet jetzt bewusst auf Implementierungserkenntnisse, weil die verb
 
 Dieser Plan ist umgesetzt, wenn alle vom Web-Frontend benötigten REST-Endpunkte, Rollenanforderungen, Fehlerfälle, Response-Modelle und Grant-Abläufe vollständig und abgestimmt beschrieben sind.
 
-## Nächste Schritte für Folge-Agenten
+## Naechste Schritte fuer Folge-Agenten
 
-1. Plan erst dann wieder aktivieren, wenn aus der Implementierung konkrete Payload- und Fehlerfaelle vorliegen.
-2. Danach Request-/Response-Modelle und Fehlercode-Liste in den Draft uebernehmen.
-3. Anschließend den Draft auf belastbaren Vertragsstand heben.
+1. Diesen Plan nur bei spaeteren API-Aenderungen, UI-Ausbaustufen oder neuen Betriebsbefunden wieder oeffnen.
+2. Neue Payloads oder Fehlerfaelle direkt in Plan und Vertragsartefakte zurueckspiegeln.

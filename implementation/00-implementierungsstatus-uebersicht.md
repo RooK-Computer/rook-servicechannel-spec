@@ -6,7 +6,7 @@ Status: Aktiv gepflegt
 
 Dieses Dokument bündelt den aktuellen Implementierungsstand der Hauptkomponenten des RooK-Service-Channel-Systems.
 
-Es dient als gemeinsamer Einstiegspunkt für alle Teams, damit der aktuelle Entwicklungsstand, die offenen Arbeiten und die nächste sinnvolle Reihenfolge zentral sichtbar bleiben.
+Es dient als gemeinsamer Einstiegspunkt fuer alle Teams, damit der aktuelle Betriebsstand, der Abschluss der bisherigen Implementierungsplaene und neue Aenderungen zentral sichtbar bleiben.
 
 ## Statuswerte
 
@@ -14,6 +14,7 @@ Es dient als gemeinsamer Einstiegspunkt für alle Teams, damit der aktuelle Entw
 * `In Arbeit` – Die Implementierung läuft aktiv.
 * `Blockiert` – Die Komponente kann aktuell nicht sinnvoll weiterbearbeitet werden.
 * `Abgeschlossen` – Die geplante Implementierung für den aktuellen Scope ist umgesetzt.
+* `In Betrieb` – Die Komponente ist für den aktuellen Scope umgesetzt, in Nutzung und wird nur noch über Betriebsänderungen, neue Befunde oder neue Ausbaustufen fortgeschrieben.
 
 ## Komponenten
 
@@ -32,27 +33,28 @@ Es dient als gemeinsamer Einstiegspunkt für alle Teams, damit der aktuelle Entw
 ## Aktueller Gesamtstand
 
 * Fuer alle aktuell identifizierten Hauptkomponenten liegt ein gepflegtes Statusdokument vor.
-* Die OpenVPN-Infrastruktur ist fuer den aktuell geplanten Scope auf einem praktisch verifizierten Stand und wird in `03-openvpn-infrastruktur-status.md` als `Abgeschlossen` gefuehrt.
-* Die RooK UI auf der Konsole ist weiterhin `Nicht begonnen`.
-* Der RooK Agent steht nicht mehr auf einem reinen CLI-MVP-Zwischenstand, sondern auf einem reviewed freigegebenen Lieferstand mit Runtime-Kern, lokalem IPC, WLAN-/VPN-Integration, Debian-Paketierung und servicegebundenem Interaktivmodus; `02-rook-agent-status.md` fuehrt ihn entsprechend als freigegebene Paketierungs- und Betriebsgrundlage.
-* Das RooK Web-/API-Backend steht auf `In Arbeit`; zentrale Domain-, API- und erste Team-UI-Bausteine sind umgesetzt und lokal validiert.
-* Das Browser-Terminal-Gateway steht nicht mehr am Anfang, sondern auf einem umgesetzten Plan-06-Stand und wartet laut `05-browser-terminal-gateway-status.md` auf Review.
-* Nach den ersten interaktiven Integrationstests sind nun mehrere komponentenuebergreifende Nacharbeiten sichtbar geworden. Dazu gehoeren insbesondere Web-/Frontend-Nachschliffe, Browser-Terminal-Lifecycle-Themen sowie Fragen zum Agent-/Session-Lifecycle.
-* Die Spezifikationsarbeit ist damit nicht abgeschlossen, sondern geht in eine Phase ueber, in der Integrationsbefunde, Vertragsnachschaerfungen und Folgearbeiten fuer die Implementierungsrepos systematisch nachgezogen werden muessen.
+* Alle Hauptkomponenten werden fuer den aktuellen Scope nun als `In Betrieb` gefuehrt.
+* Die OpenVPN-Infrastruktur stellt den produktiv genutzten Transportpfad bereit.
+* Die RooK UI auf der Konsole ist umgesetzt, paketiert und an den laufenden Agenten angebunden.
+* Der RooK Agent laeuft als zentrale lokale Laufzeitkomponente mit Runtime-Kern, lokalem IPC, WLAN-/VPN-Integration und paketiertem Servicepfad im Betrieb.
+* Das RooK Web-/API-Backend arbeitet als produktiv genutzte Control Plane mit Domain-Modell, REST-Schnittstellen, Team-UI und Terminal-Grant-Verwaltung.
+* Das Browser-Terminal-Gateway ist umgesetzt, integriert und als Browser-Zugang zur Konsole im Betrieb.
+* Die bisherigen Implementierungsplaene sind abgeschlossen; neue Arbeiten entstehen nur noch aus spaeteren Betriebsbefunden, gezielten Produktaenderungen oder neuen Ausbaustufen.
+* Die Spezifikationsarbeit verschiebt sich damit von der initialen Implementierungsplanung auf Betriebsdokumentation, Vertragsnachpflege und die Einordnung spaeterer Aenderungen.
 
 ## Komponentenübergreifender Plan
 
-* Die empfohlene Umsetzungsreihenfolge ist in `10-komponentenuebergreifender-entwicklungsplan.md` beschrieben.
-* Dieser Plan soll als gemeinsame Leitlinie dienen und bei belastbaren neuen Erkenntnissen aktualisiert werden.
+* Die verfolgte Umsetzungsreihenfolge ist in `10-komponentenuebergreifender-entwicklungsplan.md` dokumentiert.
+* Das Dokument dient jetzt vor allem als nachvollziehbare Herleitung des erreichten Gesamtstands.
 * OpenVPN-bezogene Konfigurations- und Paketierungsartefakte werden innerhalb der OpenVPN-Komponente betrachtet.
 
 ## Integrationsbefunde
 
-* Die Befunde aus den ersten interaktiven Integrationstests werden zentral in `11-integrationsbefunde-und-folgearbeiten.md` gebuendelt.
-* Die dortige Aufgabe ist nicht nur Sammlung, sondern die Trennung zwischen Implementierungsarbeit, Spezifikationsnachschaerfung und moeglichem Rechercheauftrag.
-* Die betroffenen Komponentenstatusdokumente sollen ihre jeweils teamnahen Folgearbeiten parallel dazu nachziehen.
+* Die Befunde aus den ersten interaktiven Integrationstests bleiben zentral in `11-integrationsbefunde-und-folgearbeiten.md` dokumentiert.
+* Die dort zuerst abgeleiteten Folgearbeiten sind fuer den aktuellen Scope nachgezogen; das Dokument dient nun vor allem als Referenz fuer die damalige Einordnung und fuer spaetere neue Befunde.
+* Die betroffenen Komponentenstatusdokumente spiegeln den nachgezogenen Stand ihrer jeweiligen Komponente.
 
 ## Pflegehinweis
 
 * Jedes Team aktualisiert den Status der eigenen Komponente fortlaufend.
-* Relevante Änderungen am Gesamtfortschritt werden zusätzlich hier oder im komponentenübergreifenden Entwicklungsplan nachgezogen.
+* Relevante Aenderungen am Betriebsstand oder an neuen Ausbauphasen werden zusaetzlich hier nachgezogen.

@@ -1,10 +1,10 @@
 # Integrationsbefunde und Folgearbeiten
 
-Status: In Ausarbeitung
+Status: Aktiv gepflegt
 
 ## Zweck
 
-Dieses Dokument sammelt die Befunde aus den ersten interaktiven Integrationstests in einer Form, die fuer mehrere Teams gleichzeitig nutzbar ist.
+Dieses Dokument sammelt die Befunde aus den ersten interaktiven Integrationstests in einer Form, die fuer mehrere Teams gleichzeitig nutzbar bleibt.
 
 Es dient als zentraler Einstiegspunkt fuer:
 
@@ -15,7 +15,13 @@ Es dient als zentraler Einstiegspunkt fuer:
 * moeglichen Recherchebedarf,
 * konkrete Folgearbeiten je Team.
 
-Die betroffenen Komponentenstatusdokumente sollen auf dieses Dokument verweisen und ihre jeweils eigenen Arbeiten daraus ableiten.
+Die betroffenen Komponentenstatusdokumente verweisen auf dieses Dokument und spiegeln den nachgezogenen Stand ihrer jeweiligen Komponente.
+
+## Aktueller Stand
+
+* Die in diesem Dokument beschriebenen Erstbefunde wurden fuer den aktuellen Scope in den betroffenen Implementierungsrepos und Spec-Artefakten nachgezogen.
+* Die Detailabschnitte bleiben als Begruendung, Referenz und Herleitung spaeterer Entscheidungen erhalten.
+* Neue Betriebsbefunde sollen nicht in diese abgeschlossene Erstumsetzung hineingemischt, sondern als neuer Befund mit eigener Einordnung erfasst werden.
 
 ## Arbeitsregel fuer die Einordnung
 
@@ -79,6 +85,10 @@ Konkret fuer den aktuell gewuenschten Integrationsstand:
 
 Implementierungsarbeit
 
+**Stand heute**
+
+Umgesetzt und im Backend-Status als nachgezogener Integrationsstand gespiegelt.
+
 **Konzeptlage**
 
 Das Architekturkonzept verankert die Team-Oberflaeche als Web-Frontend des Backends, macht aber absichtlich kaum Layoutvorgaben. Der Befund ist daher derzeit eher Produkt- und Umsetzungsarbeit als Spec-Arbeit.
@@ -91,12 +101,12 @@ Aktuell keiner, solange sich nur Struktur, Layout und Bedienfuehrung aendern.
 
 Kein eigener Forschungsauftrag noetig, sofern das Problem rein in Layout und Bedienfuehrung liegt.
 
-**Folgearbeiten**
+**Nachgezogener Stand**
 
-* Backend-/Web-Team: Das zweispaltige Layout auf einen vertikalen Zwei-Block-Aufbau umstellen.
-* Backend-/Web-Team: Debug-Informationen hinter ein klickbares Info-Symbol legen.
-* Backend-/Web-Team: Den Terminalbereich vollbreit in 4:3 anordnen und seine Hoehe an die verfuegbare Viewport-Hoehe unter Einbezug der Drupal-Oberflaeche koppeln.
-* Backend-/Web-Team: Das Zielbild fuer die Team-Oberflaeche im eigenen Repo als UI-Aufgabe und Abnahmekriterium festhalten.
+* Das Backend-/Web-Team hat das Layout auf einen vertikalen Zwei-Block-Aufbau umgestellt.
+* Debug-Informationen liegen hinter einem klickbaren Info-Symbol.
+* Der Terminalbereich ist vollbreit im 4:3-Zuschnitt mit Hoehenbegrenzung gegen die verfuegbare Viewport-Hoehe angeordnet.
+* Das Zielbild der Team-Oberflaeche ist im Komponentenstatus als umgesetzter Stand gespiegelt.
 
 ### Befund 2 - Frontend noch in Plain JavaScript
 
@@ -116,6 +126,10 @@ Die Team-Oberflaeche soll in einer fuer die weitere Zusammenarbeit tragfaehigen,
 
 Implementierungsarbeit
 
+**Stand heute**
+
+Umgesetzt und im Backend-Status als verbindliche Quellbasis gespiegelt.
+
 **Konzeptlage**
 
 Im Architekturkonzept war fuer browserseitige Oberflaechen bisher React vorgesehen, aber keine Sprache festgelegt. Mit dieser Klaerung wird TypeScript fuer die Team-Oberflaeche nun als verbindliche Zielrichtung festgezogen.
@@ -132,10 +146,10 @@ Kein externer Forschungsauftrag erforderlich. Es braucht eher eine bewusste tech
 
 * Die Team-Oberflaeche soll kuenftig in TypeScript statt in Plain JavaScript fortgefuehrt werden.
 
-**Folgearbeiten**
+**Nachgezogener Stand**
 
-* Backend-/Web-Team: TypeScript-Migrationspfad fuer die bestehende Team-UI festlegen.
-* Backend-/Web-Team: Priorisierung und Schnitt des Migrationsumfangs im eigenen Repo festhalten.
+* Die Team-UI wird in React mit TypeScript als Quellbasis fortgefuehrt.
+* Der Migrationsschnitt ist fuer den aktuellen Scope umgesetzt und nicht mehr als offener Erstbefund gefuehrt.
 
 ### Befund 3 - Fehlende Menueeinbindung im Backend
 
@@ -161,6 +175,10 @@ Konkret fuer den aktuell gewuenschten Integrationsstand:
 
 Implementierungsarbeit
 
+**Stand heute**
+
+Umgesetzt und im Backend-Status gespiegelt.
+
 **Konzeptlage**
 
 Dieser Befund ist mit dem vorhandenen Konzept gut vereinbar und spricht primaer fuer fehlende Backend-UI-Integration.
@@ -173,11 +191,11 @@ Keiner, solange keine neuen Rollen-, Rechte- oder Navigationskonzepte eingefuehr
 
 Kein separater Forschungsauftrag erkennbar.
 
-**Folgearbeiten**
+**Nachgezogener Stand**
 
-* Backend-/Web-Team: Team-UI in der Hauptnavigation einhaengen und dort bevorzugt ganz oben platzieren.
-* Backend-/Web-Team: Konfigurationszugang unter `Configuration/System` einhaengen.
-* Backend-/Web-Team: Rollen- und Sichtbarkeitsregeln fuer diese Eintraege kurz mitdokumentieren.
+* Die Team-UI ist in der Hauptnavigation eingehaengt.
+* Der Konfigurationszugang ist unter `Configuration/System` erreichbar.
+* Rollen- und Sichtbarkeitsregeln sind im Backend-Stand mitgefuehrt.
 
 ### Befund 4 - Browser-Terminal-Timeout bei Inaktivitaet
 
@@ -197,6 +215,10 @@ Laengere Inaktivitaet eines geoeffneten Browser-Terminals soll den Zugriff nicht
 **Einordnung**
 
 Spezifikationsnachschaerfung
+
+**Stand heute**
+
+Nachgezogen und in die aktuelle Terminal-/Support-Semantik ueberfuehrt.
 
 **Konzeptlage**
 
@@ -220,11 +242,11 @@ Moeglich. Falls unklar bleibt, ob der Timeout aus Browser, Proxy, Gateway, SSH o
 * Browser, Gateway und Zwischeninfrastruktur sollen Keepalive-Mechanismen nutzen duerfen, damit ruhende Browser-Terminals nicht nur wegen Transport-Idle abbrechen.
 * Die Browser-Terminal-Sitzung ist fachlich von der uebergeordneten Support-Sitzung zu trennen.
 
-**Folgearbeiten**
+**Nachgezogener Stand**
 
-* Gateway-Team: Beobachteten Timeout reproduzierbar eingrenzen und die tatsaechliche Abbruchstelle benennen.
-* Gateway-Team: Vorschlag fuer gewuenschte Idle-/Keepalive-Regeln liefern.
-* Backend-/Spec-Pflege: Nach der Ursachenanalyse die gewuenschte Semantik im Konzept und gegebenenfalls im Gateway-Protokoll nachziehen.
+* Idle-, Keepalive- und Session-Abgrenzung wurden fuer den aktuellen Scope nachgezogen.
+* Fehlende Eingaben oder Resize-Ereignisse beenden eine autorisierte Browser-Terminal-Sitzung nicht automatisch.
+* Browser-Terminal-Sitzung und uebergeordnete Support-Sitzung sind fachlich getrennt dokumentiert.
 
 ### Befund 5 - Unerwuenschte Verbindungsunterbrechung durch den Gateway
 
@@ -244,6 +266,10 @@ Der Gateway soll eine geoeffnete Browser-Shell nicht allein wegen fehlender Tast
 **Einordnung**
 
 Spezifikationsnachschaerfung
+
+**Stand heute**
+
+Nachgezogen und im Gateway-Status als erreichte Laufzeitsemantik gespiegelt.
 
 **Konzeptlage**
 
@@ -265,10 +291,11 @@ Ja, falls nicht aus Logs oder Tests klar hervorgeht, ob der Abbruch auf Gateway-
 * Ein echter Browser-Disconnect beendet die Browser-Terminal-Sitzung, aber nicht automatisch die uebergeordnete Support-Sitzung.
 * Terminal-Grants bleiben fachlich an die Support-Sitzung gebunden und koennen nach Browser-Disconnect innerhalb eines kurzen Grace-Fensters fuer einen neuen Browser-Terminal-Aufbau wiederverwendet werden.
 
-**Folgearbeiten**
+**Nachgezogener Stand**
 
-* Gateway-Team: Laufzeit- und Infrastrukturgrenzen des Integrationspfads dokumentieren.
-* Spec-/Backend-/Gateway-Abstimmung: Gewuenschte Endgruende und Keepalive-Regeln verbindlich festhalten.
+* Die Browser-Shell wird nicht allein wegen fehlender Tastatureingaben beendet.
+* Browser-Disconnect, Support-Session und Reconnect-Fenster sind fachlich voneinander abgegrenzt.
+* Endgruende und Keepalive-Regeln sind fuer den aktuellen Scope festgezogen.
 
 ### Befund 6 - Beobachtetes Ende einer agentgestarteten Service-Session
 
@@ -288,6 +315,10 @@ Solange der Agent weiter gueltige Heartbeats sendet, soll die zugehoerige Suppor
 **Einordnung**
 
 Spezifikationsnachschaerfung
+
+**Stand heute**
+
+Nachgezogen und in Agent-/Backend-Status sowie in die uebergeordnete Session-Semantik ueberfuehrt.
 
 **Konzeptlage**
 
@@ -312,18 +343,21 @@ Ja, falls das beobachtete Ende nicht direkt durch bestehende Backend- oder Agent
 * Eine fehlende aktive Service-Bedienung beendet die Support-Session nicht automatisch.
 * Das fachliche Zurueckfallen von `active` nach `open` ist ein normaler Zustand und kein Session-Ende.
 
-**Folgearbeiten**
+**Nachgezogener Stand**
 
-* Agent-Team: Sicherstellen, dass Heartbeats im fraglichen Szenario weitergelaufen sind oder sauber beobachtbar werden.
-* Backend-Team: Pruefen, welche serverseitigen Cleanup-, Revocation- oder Timeout-Regeln das Session-Ende ausgeloest haben koennten.
-* Spec-Pflege: Gewuenschte Heartbeat-vs.-Timeout-Semantik verbindlich nachziehen.
+* Die Heartbeat-vs.-Timeout-Semantik ist fuer den aktuellen Scope verbindlich festgezogen.
+* Laufende Agent-Heartbeats halten die uebergeordnete Support-Session offen.
+* Das Zurueckfallen von `active` nach `open` ist als normaler Zwischenzustand dokumentiert.
 
-## Empfohlene naechste Bearbeitungsreihenfolge
+## Urspruengliche Bearbeitungsreihenfolge
 
 1. Agent-/Session-Lifecycle zuerst klaeren, weil hier das Rueckgrat des Systems betroffen ist.
 2. Danach Browser-Terminal-Lifecycle und Idle-/Keepalive-Semantik nachziehen.
 3. Parallel dazu die reinen Backend-/Web-UI-Arbeiten in eigene Repo-Aufgaben ueberfuehren.
 
+Diese Reihenfolge ist fuer die erste Integrationsrunde abgeschlossen. Neue Befunde werden kuenftig nach aktueller fachlicher Dringlichkeit priorisiert.
+
 ## Pflegehinweis
 
-Sobald ein Befund von "unklar" zu "erklärt" oder von "offen" zu "umgesetzt" wechselt, soll dieses Dokument die Einordnung aktualisieren und auf die konkreten Folgeartefakte in den Komponentenstatusdokumenten verweisen.
+* Dieses Dokument bleibt als Referenz fuer die erste Integrationsrunde erhalten.
+* Neue Befunde sollen als eigene Eintraege mit eigener Einordnung erfasst werden, statt die abgeschlossene Erstumsetzung wieder zu oeffnen.

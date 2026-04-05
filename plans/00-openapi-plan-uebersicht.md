@@ -1,12 +1,12 @@
 # OpenAPI-Planübersicht
 
-Status: Erstellt
+Status: Abgeschlossen
 
 ## Zweck
 
-Dieses Dokument bündelt die Spezifikationspläne für alle aktuell aus dem Konzept ableitbaren Schnittstellen im Projekt `rook-servicechannel-spec`.
+Dieses Dokument buendelt die Spezifikationsplaene fuer alle aus dem Konzept abgeleiteten Schnittstellen im Projekt `rook-servicechannel-spec`.
 
-Es dient als Einstiegspunkt für Folge-Agenten, falls der Kontext zwischendurch zurückgesetzt werden muss.
+Die initiale Planreihe ist fuer den aktuellen Scope abgeschlossen und dient jetzt als Einstiegspunkt fuer die Herleitung der bestehenden Vertragsartefakte.
 
 ## Statuswerte
 
@@ -31,11 +31,13 @@ Es dient als Einstiegspunkt für Folge-Agenten, falls der Kontext zwischendurch 
 5. `05-api-plan-gateway-console-ssh.md` – Terminal-Gateway ↔ Konsole (SSH über VPN)
 6. `06-api-plan-backend-gateway-terminal-grant.md` – RooK Backend ↔ Terminal-Gateway (Terminal-Grant / Validierung)
 
+Alle oben genannten Plaene sind fuer den aktuellen Scope abgeschlossen.
+
 ## Hinweise zur Abarbeitung
 
 * Die REST-Schnittstellen können direkt als OpenAPI-Spezifikationen vorbereitet werden.
 * Für nicht klassische HTTP-Schnittstellen ist vor der Umsetzung zu klären, **welcher Anteil verbindlich in OpenAPI beschrieben werden soll** und welche ergänzenden Artefakte zusätzlich in `schemas/` oder `models/` gepflegt werden.
-* Reihenfolgeempfehlung für die spätere Umsetzung:
+* Urspruenglich verfolgte Reihenfolge der Umsetzung:
   1. Agent ↔ Backend
   2. Web-Frontend ↔ Backend
   3. Backend ↔ Gateway
