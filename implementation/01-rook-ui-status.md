@@ -63,6 +63,7 @@ Die RooK UI ist die lokale Benutzeroberfläche auf der Konsole. Sie zeigt Zustä
   * fehlender Agent-/IPC-Zugriff fuehrt zu einem kontrollierten Abbruch des Produktpfads
 * Plan 06 ist umgesetzt:
   * die Default-Previews der produktiven Hauptscreens sind mit reviewbaren Beispielparametern hinterlegt
+  * Preview-Starts koennen jetzt zusaetzlich benannte Szenarien wie den Trennen-Bestaetigungsdialog im Status-Screen ueber `--scenario` aktivieren, ohne einen separaten Preview-Screen einzufuehren
   * der Terminal-Fallback verwendet im Normalbetrieb jetzt denselben interaktiven Laufzeitpfad wie der grafische Host
   * fehlender Agent-/IPC-Zugriff fuehrt damit auch im Diagnosepfad wieder zu einem kontrollierten Abbruch statt zu einem isolierten Stubscreen
   * ein aktiver Agent-Zustand fuehrt ueber den Produktstart reproduzierbar direkt in den Status-Screen mit PIN
