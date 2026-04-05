@@ -73,7 +73,7 @@ Die RooK UI ist die lokale Benutzeroberfläche auf der Konsole. Sie zeigt Zustä
   * `rook-console-integration` liefert die systemweite EmulationStation-/RetroPie-Integration als separates Paket
   * ein idempotentes Maintainer-Skript legt ein fehlendes System `RooK` in der systemweiten EmulationStation-Konfiguration an
   * vorhandene RooK-/Service-Eintraege werden dabei nur ergaenzt, nicht ueberschrieben
-  * fuer die Systemgrafik wird ein RooK-Theme-Snippet unter `carbon-2021` mit dem paketierten SVG-Logo angelegt; von uns zuvor ausgelieferte Theme-Dateien koennen bei Upgrades korrigiert werden
+  * fuer die Systemgrafik wird das paketierte SVG direkt unter `carbon-2021/art/systems/rook.svg` installiert; von uns zuvor ausgelieferte RooK-Theme-Snippets werden bei Upgrades entfernt
 
 ## Hauptaufgaben in der Umsetzung
 
