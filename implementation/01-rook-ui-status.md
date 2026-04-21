@@ -30,12 +30,13 @@ Die RooK UI ist die lokale Benutzeroberfläche auf der Konsole. Sie zeigt Zustä
   * Theme-Tokens fuer Farben, Typografie und Fokusstil
   * Preview-Registry mit Default-Zustaenden pro Hauptscreen
   * Backend-Erkennung fuer optionale SDL2/RmlUi-Anbindung
-* Plan 02b ist umgesetzt:
-  * die App startet jetzt standardmaessig ueber einen echten SDL2-/RmlUi-Host statt ueber den Terminal-Renderer
-  * Preview und Normalbetrieb laufen ueber denselben Navigations-, Fokus- und Render-Loop
-  * RmlUi wird mit FreeType-Schriftengine gebaut und laedt vendored Schriftdateien fuer echte Textdarstellung
-  * die grafische Laufzeit verarbeitet Tastatur- und grundlegende Gamepad-Eingaben innerhalb desselben Hosts
-  * der Terminal-Renderer bleibt nur noch als Diagnosepfad erhalten, falls der grafische Host nicht starten kann
+ * Plan 02b ist umgesetzt:
+   * die App startet jetzt standardmaessig ueber einen echten SDL2-/RmlUi-Host statt ueber den Terminal-Renderer
+   * Preview und Normalbetrieb laufen ueber denselben Navigations-, Fokus- und Render-Loop
+   * RmlUi wird mit FreeType-Schriftengine gebaut und laedt vendored Schriftdateien fuer echte Textdarstellung
+   * die grafische Laufzeit verarbeitet Tastatur- und grundlegende Gamepad-Eingaben innerhalb desselben Hosts
+   * der `kmsdrm`-Zielpfad versucht im Normalbetrieb jetzt zuerst einen beschleunigten SDL-Renderer und faellt nur bei Bedarf auf Software-Rendering zurueck
+   * der Terminal-Renderer bleibt nur noch als Diagnosepfad erhalten, falls der grafische Host nicht starten kann
 * Plan 03 ist umgesetzt:
   * Intent-Navigation fuer `NavigateTo`, `CloseApp` und `NoOp` ist technisch vorhanden
   * ein app-weiter Ruecksprung-Stack traegt den Preview-Flow zwischen mehreren Screens
