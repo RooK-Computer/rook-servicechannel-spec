@@ -1,8 +1,8 @@
 # Spezifikationsplan 06 – RooK Backend ↔ Terminal-Gateway (Terminal-Grant / Validierung)
 
-Status: Wartet auf Implementierungserkenntnisse
+Status: Abgeschlossen
 
-Statushinweis: `Wartet auf Implementierungserkenntnisse` bedeutet, dass die konzeptionelle Arbeit an diesem Plan bewusst pausiert, bis neue belastbare Erkenntnisse aus der späteren Implementierung vorliegen.
+Statushinweis: `Abgeschlossen` bedeutet, dass die aus diesem Plan abgeleiteten Grant-Vertragsartefakte fuer den aktuellen Scope umgesetzt und nachgezogen sind.
 
 ## Ziel der Spezifikation
 
@@ -50,10 +50,10 @@ Diese Artefakte enthalten die aus dem Konzept und den bereits geklaerten Nachbar
 * das Gateway validiert diese Berechtigung
 * erst danach wird die Verbindung zur Konsole aufgebaut
 
-## Offene Fragen vor der Umsetzung
+## Ehemals offene Punkte
 
-* Welche fachlichen Fehlercodes sollen als erste verbindliche Eintraege reserviert werden?
-* Wie werden Validierungsfehler fachlich von Backend-Ausfaellen getrennt?
+* Die fachlichen Fehlercodes des aktuellen Scope sind im Vertragsstand dokumentiert.
+* Die Trennung zwischen fachlichen Validierungsfehlern und Backend-Ausfaellen ist fuer den aktuellen Scope nachgezogen.
 
 ## Aktueller Umsetzungsstand
 
@@ -61,11 +61,11 @@ Diese Artefakte enthalten die aus dem Konzept und den bereits geklaerten Nachbar
 * Terminal-Grant, Grant-Lebenszyklus und Fehlerstrategie sind als fachliche Bausteine dokumentiert.
 * Online-Validierung gegen die HTTPS-URL des Backends, Bindung an Drupal-User, Session und Konsolen-IP, sofortige Einloesung bei Validierung, Reconnect-Ausnahme im 30-Sekunden-Fenster sowie fehlende separate Auditpflicht sind eingearbeitet.
 * Der konkrete Validierungspfad `/api/gateway/1/validateToken`, `POST` als Methode, die Minimalantwort mit Konsolen-IP sowie das minimale Fehlerobjekt sind eingearbeitet.
-* Verbleibend offen sind nur noch die fachliche Fehlercode-Liste und ihre Klassifikation gegenueber Backend-Ausfaellen, die sinnvoll erst mit Implementierungserkenntnissen geschaerft werden.
+* Grant-Format, Validierungsablauf, Reconnect-Regeln und Fehlerklassifikation sind fuer den aktuellen Scope nachgezogen.
 
-## Statusbegruendung
+## Abschlussbegruendung
 
-Dieser Plan wartet jetzt bewusst auf Implementierungserkenntnisse, weil die verbleibenden offenen Punkte unmittelbar aus konkreten Validierungs- und Ausfallszenarien der spaeteren Backend- und Gateway-Implementierung entstehen werden.
+Dieser Plan ist fuer den aktuellen Scope abgeschlossen, weil Grant-Lebenszyklus, Validierungsaufruf, Fehlerstrategie und Reconnect-Ausnahme in den Vertragsartefakten und den Komponentenstatusdokumenten gespiegelt sind.
 
 ## Verbindliche Arbeitsregel
 
@@ -77,8 +77,7 @@ Dieser Plan wartet jetzt bewusst auf Implementierungserkenntnisse, weil die verb
 
 Dieser Plan ist umgesetzt, wenn Grant-Format, Validierungsablauf, Sicherheitsregeln, Fehlerfälle und Audit-Aspekte für Backend ↔ Gateway vollständig und abgestimmt beschrieben sind.
 
-## Nächste Schritte für Folge-Agenten
+## Naechste Schritte fuer Folge-Agenten
 
-1. Plan erst dann wieder aktivieren, wenn aus der Implementierung konkrete Fehler- und Ausfallszenarien vorliegen.
-2. Danach Fehlercode-Liste und Fehlerklassifikation in Fehlerstrategie und OpenAPI-Draft uebernehmen.
-3. Anschließend den Draft auf belastbaren Vertragsstand heben.
+1. Diesen Plan nur bei spaeteren Grant-/Sicherheitsaenderungen oder neuen Laufzeitbefunden wieder oeffnen.
+2. Neue Validierungs- oder Fehleranforderungen direkt in Plan und Vertragsartefakte zurueckspiegeln.

@@ -1,6 +1,6 @@
 # Implementierungsstatus – RooK Agent auf der Konsole
 
-Status: Paketierung und Betriebsgrundlage freigegeben
+Status: In Betrieb
 
 ## Zweck der Komponente
 
@@ -8,7 +8,7 @@ Der RooK Agent ist der zentrale lokale Systemdienst für den Support-Modus. Er s
 
 ## Aktueller Stand
 
-* Die Umsetzungsplanung fuer dieses Repository wurde konkretisiert und in den Root-Dokumenten verankert.
+* Die Umsetzungsplanung fuer dieses Repository wurde konkretisiert, abgearbeitet und fuer den aktuellen Scope abgeschlossen.
 * Plan 01 wurde als Bootstrap-Phase umgesetzt, nach einem Review-Befund korrigiert, erneut validiert und anschliessend freigegeben.
 * Es gibt jetzt ein erstes Go-Projektgeruest mit ausfuehrbarem Einstiegspunkt, Konfigurationsmodell, Logging-Basis, Build-Makefile und ersten Tests.
 * Der anfangs gefundene Fehler im Bootstrap-Runloop wurde behoben; der Prozess bleibt nun bis zum Interrupt aktiv und beendet sich danach sauber.
@@ -50,7 +50,7 @@ Der RooK Agent ist der zentrale lokale Systemdienst für den Support-Modus. Er s
 * Die gemeinsame Spezifikation beschreibt die lokale IPC jetzt praezise auf Code-Stand: `AF_UNIX`/`SOCK_STREAM`, genau ein JSON-Objekt pro Zeile, Newline als Nachrichtenende, gemeinsamer bidirektionaler Stream fuer Requests, Responses und Events sowie die aktuelle Liste aller Actions und Payload-Formen.
 * Das OpenAPI-Artefakt `spec/openapi/01-ui-agent-local-ipc.openapi.yaml` ist auf denselben Stand nachgezogen und beschreibt jetzt den tatsaechlichen Ein-Socket-Streamvertrag statt eines frueheren Dual-Socket-Entwurfs.
 * Die ergaenzenden lokalen IPC-Spec-Dokumente wurden fuer `ScanWifi` ebenfalls auf den Implementierungsstand nachgezogen: Request ohne Payload, Erfolgs-Response als `WiFiScanPayload` mit `networks[].ssid` und zusaetzliches `WifiScanCompleted`-Event mit identischem Payload.
-* Die gemeinsame Architektur muss in einem spaeteren Schritt noch explizit um den Uebergang vom CLI-First-MVP zum wiederverwendbaren Runtime-Kern ergaenzt werden.
+* Der fruehere Nachzugsbedarf zwischen CLI-First-Herkunft und wiederverwendbarem Runtime-Kern ist fuer diese Planreihe abgeschlossen; neue Architekturarbeit entsteht nur noch bei spaeteren Ausbauaenderungen.
 
 ## Hauptaufgaben in der Umsetzung
 
@@ -70,24 +70,23 @@ Der RooK Agent ist der zentrale lokale Systemdienst für den Support-Modus. Er s
 
 ## Nächste sinnvolle Schritte
 
-1. Die naechsten Folgearbeiten aus Paket-Haertung, Betriebsfeinschliff oder weiterer Architekturangleichung priorisieren.
-2. Gemeinsame Architektur- und Implementierungsdokumente fuer den Uebergang vom CLI-First-MVP zum langfristigen Agent-Laufzeitmodell weiter nachziehen.
-3. Die Netzwerkintegration und den paketierten Betrieb in einer Zielumgebung gegen echte `nmcli`-, OpenVPN- und `systemd`-Signale haerten.
-4. Bei Bedarf einen naechsten repo-lokalen Folgeplan fuer haertere Service-/Operations-Anforderungen starten.
+1. Neue Betriebsbefunde oder Betriebsanforderungen als eigenstaendige Folgearbeit dokumentieren.
+2. Architektur- oder Vertragsaenderungen nur bei neuen Produktentscheidungen oder belastbaren Betriebserkenntnissen nachziehen.
+3. Weitere Service-/Operations-Anforderungen als neue Ausbauphase vom abgeschlossenen Grundstand trennen.
 
 ## Aktuelle Integrationsbefunde
 
 * Der erfolgreiche interaktive Integrationslauf hat den Session-Lifecycle gegen das Backend fuer den CLI-MVP praktisch bestaetigt.
 * Der daraus abgeleitete Schwerpunkt lag auf der Frage, wie Heartbeat-Eigentum, Beobachtbarkeit und Wiederanlauf in den eigentlichen Laufzeitkern ueberfuehrt werden.
-* Die zentrale Einordnung und die komponentenuebergreifenden Folgearbeiten dazu werden in `11-integrationsbefunde-und-folgearbeiten.md` gepflegt.
+* Die zentrale Einordnung der damals nachgezogenen Integrationsbefunde bleibt in `11-integrationsbefunde-und-folgearbeiten.md` nachvollziehbar.
 * Fuer dieses Statusdokument heisst das insbesondere:
-  * Heartbeat-, Netzwerk-, IPC-, interaktive Servicebedienung und Paketierungspfad sind nun bis zur installierbaren Debian-Auslieferung zusammengefuehrt.
-  * Der aktuelle Review hat diese erste Paketierungs- und Betriebsgrundlage als akzeptablen Delivery-Slice bestaetigt.
+  * Heartbeat-, Netzwerk-, IPC-, interaktive Servicebedienung und Paketierungspfad sind zu einem laufenden Betriebsstand zusammengefuehrt.
+  * Der Agent wird fuer den aktuellen Scope nicht mehr als vorbereitender Delivery-Slice, sondern als laufende Komponente gefuehrt.
 
 ## Hinweise für spätere Aktualisierung
 
-* Nach jedem abgeschlossenen Plan-Abschnitt ist vor dem naechsten Abschnitt ein Review-Stopp vorgesehen; dieser Status sollte hier jeweils sichtbar nachgefuehrt werden.
-* Nach dem Review des interaktiven CLI-MVPs sollen hier insbesondere der Stand des Uebergangs vom promptgetriebenen Werkzeug zum laenger laufenden Agent-Kern gepflegt werden.
+* Abgeschlossene Plan-Abschnitte bleiben hier nur in verdichteter Rueckschau sichtbar; neue Arbeiten sollen als neue Ausbauphase klar getrennt werden.
+* Weitere Aktualisierungen sollen hier vor allem den laufenden Betriebsstand, neue Ausbauarbeiten und relevante Integrationsbefunde spiegeln.
 * Der Ordner `plans/` im Root-Repository dient als detaillierte, fortschreibbare Arbeitsplanung fuer dieses Repo und sollte bei Fortschritt konsistent mit diesem Statusdokument gehalten werden.
 * Aus dem OpenVPN-Repository liegen bereits konkrete Integrationshinweise vor, die bei Start der Agent-Implementierung direkt genutzt werden sollten:
   * clientseitiger systemd-Dienst: `rook-openvpn-client.service`

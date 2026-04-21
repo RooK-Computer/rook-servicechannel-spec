@@ -1,6 +1,6 @@
 # Implementierungsstatus – RooK UI auf der Konsole
 
-Status: In Arbeit
+Status: In Betrieb
 
 ## Zweck der Komponente
 
@@ -8,8 +8,8 @@ Die RooK UI ist die lokale Benutzeroberfläche auf der Konsole. Sie zeigt Zustä
 
 ## Aktueller Stand
 
-* Die fachliche Konzeption der Komponente wurde im lokalen Repo konkretisiert.
-* Die Umsetzung wurde in eine sequenzielle lokale Planstruktur unter `plans/` zerlegt.
+* Die fachliche Konzeption der Komponente wurde im lokalen Repo konkretisiert und vollstaendig umgesetzt.
+* Die repo-lokale Planstruktur unter `plans/` ist fuer den aktuellen Scope abgeschlossen.
 * Plan 01 ist umgesetzt:
   * C++-Projektgrundlage und CMake-Build existieren
   * App-Shell und CLI-Umschaltung zwischen Normalbetrieb und Preview sind angelegt
@@ -76,6 +76,7 @@ Die RooK UI ist die lokale Benutzeroberfläche auf der Konsole. Sie zeigt Zustä
   * ein idempotentes Maintainer-Skript legt ein fehlendes System `RooK` in der systemweiten EmulationStation-Konfiguration an
   * vorhandene RooK-/Service-Eintraege werden dabei nur ergaenzt, nicht ueberschrieben
   * fuer die Systemgrafik wird das paketierte SVG direkt unter `carbon-2021/art/systems/rook.svg` installiert; von uns zuvor ausgelieferte RooK-Theme-Snippets werden bei Upgrades entfernt
+* Die Konsole-UI ist damit fuer den aktuellen Scope umgesetzt, paketiert und im Betrieb an den laufenden Agenten angebunden.
 
 ## Hauptaufgaben in der Umsetzung
 
@@ -92,11 +93,11 @@ Die RooK UI ist die lokale Benutzeroberfläche auf der Konsole. Sie zeigt Zustä
 
 ## Nächste sinnvolle Schritte
 
-1. Den jetzt erreichten Stand menschlich abnehmen und im Zielsystem mit echtem RooK-Agenten sowie echter EmulationStation-Konfiguration gegenpruefen.
-2. Eventuelle Integrationsbefunde aus der Zielumgebung als neue Folgearbeit erfassen statt abgeschlossene Plaene wieder aufzublaehen.
+1. Neue Betriebsbefunde oder Hardware-/Distributionsbesonderheiten nur noch als neue Folgearbeit dokumentieren.
+2. Aenderungen an UI-Verhalten, Paketierung oder Integration als neue Ausbauphase statt als Wiedereroeffnung abgeschlossener Plaene fuehren.
 
 ## Hinweise für spätere Aktualisierung
 
 * Dieses Dokument bleibt die kanonische statusbezogene Spiegelung im `spec`-Bereich.
 * Die eigentliche operative Reihenfolge liegt im lokalen Repo unter `plans/00-plan-index.md`.
-* Sobald die Implementierung beginnt, sollen hier mindestens Meilensteine, offene Blocker und der aktuelle Integrationsstand mit dem Agent ergänzt werden.
+* Weitere Aktualisierungen sollen hier kuenftig vor allem Betriebsveraenderungen, neue Ausbauphasen und relevante Integrationsbefunde spiegeln.

@@ -1,8 +1,8 @@
 # Spezifikationsplan 04 – Browser ↔ Terminal-Gateway (WebSocket)
 
-Status: Wartet auf Implementierungserkenntnisse
+Status: Abgeschlossen
 
-Statushinweis: `Wartet auf Implementierungserkenntnisse` bedeutet, dass die konzeptionelle Arbeit an diesem Plan bewusst pausiert, bis neue belastbare Erkenntnisse aus der späteren Implementierung vorliegen.
+Statushinweis: `Abgeschlossen` bedeutet, dass die aus diesem Plan abgeleiteten WebSocket-Vertragsartefakte fuer den aktuellen Scope umgesetzt und nachgezogen sind.
 
 ## Ziel der Spezifikation
 
@@ -52,12 +52,11 @@ Diese Artefakte enthalten die aus dem Konzept, der Dokumentationsrecherche und d
 * Gateway baut anschließend die eigentliche Verbindung zur Konsole auf
 * Datenstrom wird zwischen Browser und Konsole weitergeleitet
 
-## Offene Fragen vor der Umsetzung
+## Ehemals offene Punkte
 
-* Welche konkreten Payload-Modelle tragen `input`, `output`, `resize`, `error` und `close`?
-* Welche Close-Codes und Fehlertexte werden standardisiert?
-* Wie sieht das finale Fehlerformat aus?
-* Welche zusaetzlichen Payload-Felder braucht `authorize` langfristig neben dem Token, falls ueberhaupt?
+* Die benoetigten Payload-Modelle des aktuellen Scope sind in den Vertragsartefakten dokumentiert.
+* Close-Codes, Fehlertexte und Fehlerformat sind fuer den aktuellen Scope nachgezogen.
+* `authorize` und `authorized` sind als aktive Protokollteile verbindlich gespiegelt.
 
 ## Aktueller Umsetzungsstand
 
@@ -65,11 +64,11 @@ Diese Artefakte enthalten die aus dem Konzept, der Dokumentationsrecherche und d
 * Browser-Terminal-Sitzung, Grant-Bezug und Fehlerstrategie sind als fachliche Bausteine dokumentiert.
 * Die Recherche zu xterm.js und `@xterm/addon-attach` hat gezeigt, dass diese kein verbindliches Backend-Protokoll vorgeben; das Protokoll ist daher unsere eigene Vertragsentscheidung.
 * OpenAPI-Umfang, `authorize` als erste Client-Nachricht nach erfolgreichem Upgrade, `authorized` als Erfolgsbestaetigung, Text- und Binaerframe-Nutzung, minimales Nachrichtenset, Reconnect-Semantik und das Fehlen von Terminal-Metadaten sind jetzt festgelegt.
-* Verbleibend offen sind nur noch Payload-Details, Close-Codes und Fehlerformat, die sinnvoll erst mit Implementierungserkenntnissen geschaerft werden.
+* Payloads, Close-Verhalten, Keepalive- und Reconnect-Semantik sind fuer den aktuellen Scope nachgezogen.
 
-## Statusbegruendung
+## Abschlussbegruendung
 
-Dieser Plan wartet jetzt bewusst auf Implementierungserkenntnisse, weil die verbleibenden offenen Punkte unmittelbar von der konkreten Gateway-Implementierung und ihrem Fehlerverhalten abhaengen.
+Dieser Plan ist fuer den aktuellen Scope abgeschlossen, weil Handshake, Nachrichtenarten, Fehlerverhalten und Laufzeitsemantik in den Vertragsartefakten und den Gateway-/Backend-Statusdokumenten gespiegelt sind.
 
 ## Verbindliche Arbeitsregel
 
@@ -81,8 +80,7 @@ Dieser Plan wartet jetzt bewusst auf Implementierungserkenntnisse, weil die verb
 
 Dieser Plan ist umgesetzt, wenn Handshake, Nachrichtenarten, Fehlerverhalten, Zustände und Sicherheitsregeln für Browser ↔ Gateway eindeutig und abgestimmt beschrieben sind.
 
-## Nächste Schritte für Folge-Agenten
+## Naechste Schritte fuer Folge-Agenten
 
-1. Plan erst dann wieder aktivieren, wenn aus der Implementierung konkrete Payloads, Fehlerfaelle und Close-Codes vorliegen.
-2. Danach Payload-Modelle, Header-Namen und Fehlerformat in Draft und Begleitdokumente uebernehmen.
-3. Anschließend den Draft auf belastbaren Vertragsstand heben.
+1. Diesen Plan nur bei spaeteren Protokollaenderungen oder neuen Laufzeitbefunden wieder oeffnen.
+2. Neue Nachrichtentypen, Fehlerfaelle oder Sicherheitsregeln direkt in Plan und Vertragsartefakte zurueckspiegeln.
