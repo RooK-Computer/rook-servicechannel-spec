@@ -35,7 +35,7 @@ Die RooK UI ist die lokale Benutzeroberfläche auf der Konsole. Sie zeigt Zustä
    * Preview und Normalbetrieb laufen ueber denselben Navigations-, Fokus- und Render-Loop
    * RmlUi wird mit FreeType-Schriftengine gebaut und laedt vendored Schriftdateien fuer echte Textdarstellung
    * die grafische Laufzeit verarbeitet Tastatur- und grundlegende Gamepad-Eingaben innerhalb desselben Hosts
-   * der `kmsdrm`-Zielpfad versucht im Normalbetrieb jetzt zuerst einen beschleunigten SDL-Renderer und faellt nur bei Bedarf auf Software-Rendering zurueck
+   * der `kmsdrm`-Zielpfad versucht im Normalbetrieb jetzt zuerst `opengles2`, danach einen allgemeinen beschleunigten SDL-Renderer und faellt nur bei Bedarf auf Software-Rendering zurueck
    * der Terminal-Renderer bleibt nur noch als Diagnosepfad erhalten, falls der grafische Host nicht starten kann
 * Plan 03 ist umgesetzt:
   * Intent-Navigation fuer `NavigateTo`, `CloseApp` und `NoOp` ist technisch vorhanden
